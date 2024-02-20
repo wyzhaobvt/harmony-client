@@ -14,7 +14,7 @@ const Register = () => {
   return (
     <Card className="w-[350px] md:w-[423px]">
       <CardHeader>
-        <CardTitle>Create an Account</CardTitle>
+        <CardTitle className="mb-3">Create an Account</CardTitle>
         <CardDescription>
           Welcome to Harmony, where teamwork thrives and collaboration blossoms.
         </CardDescription>
