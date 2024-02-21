@@ -248,30 +248,19 @@ export function DataTableDemo() {
 
   return (
     <div className="w-full">
-      <div className="sm:flex sm:items-center">
-        <div className="flex items-center gap-5">
-          <div className="text-3xl font-semibold">bun-bunnies</div>
-          <div className="inline">
-            {true ? (
-              <>
-                <ChevronLeftIcon className="inline me-2" height={"30px"} width={"30px"}/>
-                <ChevronRightIcon className="inline" />
-              </>
-            ) : (
-              <>
-                <ArrowLeftIcon className="inline me-2" />
-                <ArrowRightIcon className="inline" />
-              </>
-            )}
-          </div>
+      <div className="flex items-center gap-6">
+        <div className="text-3xl font-semibold">bun-bunnies</div>
+        <div className="inline [&>svg]:inline [&>svg]:me-2 [&>svg]:h-6 [&>svg]:w-6">
+          <ArrowLeftIcon />
+          <ArrowRightIcon />
         </div>
-        <span>
-          /
-          <span className="underline px-2">test</span>
-          /
-          <span className="underline px-2">test</span>
-        </span>
       </div>
+      <span className="ms-3">
+        <span>/</span>
+        <span className="underline px-1 cursor-pointer">main</span>
+        <span>/</span>
+        <span className="underline px-1 cursor-pointer">src</span>
+      </span>
       <div className="flex items-center py-4 gap-3">
         <Input
           placeholder="Filter file..."
@@ -279,10 +268,10 @@ export function DataTableDemo() {
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm h-8"
         />
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="h-8">
             <Button variant="outline" className="ml-auto">
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
@@ -307,7 +296,7 @@ export function DataTableDemo() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button>Import</Button>
+        <Button className="h-8">Import</Button>
       </div>
       <div className="rounded-md border">
         <Table>
