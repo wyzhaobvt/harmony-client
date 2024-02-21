@@ -40,12 +40,12 @@ const Register = () => {
             {/* Password */}
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" placeholder="Password" />
+              <Input type="password" id="password" placeholder="Password" />
             </div>
             {/* Confirm Password */}
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input id="confirmPassword" placeholder="Confirm Password" />
+              <Input type="password" id="confirmPassword" placeholder="Confirm Password" />
             </div>
           </div>
         </form>
