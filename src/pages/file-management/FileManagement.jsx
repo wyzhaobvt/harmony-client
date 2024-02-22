@@ -69,6 +69,160 @@ const placeholderData = [
     size: "14B",
     date: 1350577804495,
   },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
+  {
+    id: "bhqecj4p",
+    title: "file-name5.txt",
+    type: "file",
+    size: "14B",
+    date: 1350577804495,
+  },
 ];
 
 
@@ -150,11 +304,11 @@ export default function FileManagement() {
         </DropdownMenu>
         <ImportFilePopup onFile={(file) => console.log("get file", file)} />
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border border-input">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border-input">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
@@ -179,6 +333,7 @@ export default function FileManagement() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="border-input"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

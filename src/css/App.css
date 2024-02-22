@@ -28,3 +28,7 @@ main {
   align-items: center;
   padding-top: 2rem;
 }
+
+#root {
+  position: relative;
+}

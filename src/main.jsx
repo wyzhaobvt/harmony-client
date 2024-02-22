@@ -6,8 +6,6 @@ import "./css/App.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <main> {/* main will contain <Outlet /> later */}
-      <App />
-    </main>
+    <App />
   </React.StrictMode>
 );
