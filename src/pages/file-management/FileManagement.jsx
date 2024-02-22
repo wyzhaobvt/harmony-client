@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import {
   CaretSortIcon,
   ChevronDownIcon,
@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/table";
 import ImportFilePopup from "./ImportFilePopup";
 
-const data = [
+const placeholderData = [
   {
     id: "m5gr84i9",
     title: "file-name1.txt",
@@ -218,13 +218,13 @@ export const columns = [
 ];
 
 export function DataTableDemo() {
-  const [sorting, setSorting] = React.useState([]);
-  const [columnFilters, setColumnFilters] = React.useState([]);
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
-    data,
+    data: placeholderData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -243,7 +243,7 @@ export function DataTableDemo() {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full md:w-4/5 px-5 md:px-0">
       <div className="flex items-center gap-6">
         <div className="text-3xl font-semibold">bun-bunnies</div>
         <div className="inline [&>svg]:inline [&>svg]:me-2 [&>svg]:h-6 [&>svg]:w-6">
