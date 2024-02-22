@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: light dark;
@@ -11,8 +15,7 @@
 
 html,
 body,
-#root,
-main {
+#root {
   height: 100%;
   width: 100%;
 }
@@ -27,6 +30,7 @@ main {
   flex-direction: column;
   align-items: center;
   padding-top: 2rem;
+  width: 100%;
 }
 
 #root {
