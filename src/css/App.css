@@ -26,5 +26,5 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;
+  padding-top: 2rem;
 }
