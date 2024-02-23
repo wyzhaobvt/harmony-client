@@ -100,10 +100,10 @@ const Register = () => {
                   id="firstName"
                   placeholder="First Name"
                   onChange={(event) => handleOnChange(event, "firstNameValue")}
-                  className={errors.firstNameError && "border-red-900"}
+                  className={errors.firstNameError && "border-red-500 dark:border-red-400"}
                 />
                 {errors.firstNameError && (
-                  <CardDescription className="text-red-900">
+                  <CardDescription className="text-red-500 dark:text-red-400">
                     First Name field is required
                   </CardDescription>
                 )}
@@ -115,10 +115,10 @@ const Register = () => {
                   id="lastName"
                   placeholder="Last Name"
                   onChange={(event) => handleOnChange(event, "lastNameValue")}
-                  className={errors.lastNameError && "border-red-900"}
+                  className={errors.lastNameError && "border-red-500 dark:border-red-400"}
                 />
                 {errors.lastNameError && (
-                  <CardDescription className="text-red-900">
+                  <CardDescription className="text-red-500 dark:text-red-400">
                     Last Name field is required
                   </CardDescription>
                 )}
@@ -131,10 +131,10 @@ const Register = () => {
                   id="email"
                   placeholder="Email"
                   onChange={(event) => handleOnChange(event, "emailValue")}
-                  className={errors.emailError && "border-red-900"}
+                  className={errors.emailError && "border-red-500 dark:border-red-400"}
                 />
                 {errors.emailError && (
-                  <CardDescription className="text-red-900">
+                  <CardDescription className="text-red-500 dark:text-red-400">
                     Email field is required
                   </CardDescription>
                 )}
@@ -150,10 +150,10 @@ const Register = () => {
                     handleOnChange(event, "passwordValue");
                     handlePasswordOnChange(event);
                   }}
-                  className={errors.passwordError && "border-red-900"}
+                  className={errors.passwordError && "border-red-500 dark:border-red-400"}
                 />
                 {errors.passwordError && (
-                  <CardDescription className="text-red-900">
+                  <CardDescription className="text-red-500 dark:text-red-400">
                     Password field is required
                   </CardDescription>
                 )}
@@ -168,23 +168,23 @@ const Register = () => {
                   onChange={(event) =>
                     handleOnChange(event, "confirmPasswordValue")
                   }
-                  className={errors.confirmPasswordError && "border-red-900"}
+                  className={errors.confirmPasswordError && "border-red-500 dark:border-red-400"}
                 />
                 {errors.confirmPasswordError && (
-                  <CardDescription className="text-red-900">
+                  <CardDescription className="text-red-500 dark:text-red-400">
                     Confirm Password field is required
                   </CardDescription>
                 )}
                 {isPasswordMatch === false &&
                   !errors.confirmPasswordError &&
                   !errors.passwordError && (
-                    <CardDescription className="text-red-900">
+                    <CardDescription className="text-red-500 dark:text-red-400">
                       Passwords do not match
                     </CardDescription>
                   )}
               </div>
               {checkedPassword.error && (
-                <CardDescription className="text-red-900">
+                <CardDescription className="text-red-500 dark:text-red-400">
                   {checkedPassword.message}
                 </CardDescription>
               )}
