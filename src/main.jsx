@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './components/App.jsx';
-import GroupDashboard from './pages/GroupDashboard.jsx';
-import './css/App.css';
+import { RouterProvider } from 'react-router-dom';
+import router from './router.jsx';
 import './css/globals.css';
+import './css/App.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* <App /> */}
-    <GroupDashboard />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
