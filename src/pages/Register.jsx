@@ -40,8 +40,6 @@ const Register = () => {
     setInputData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
-  console.log(inputData);
-
   const handlePasswordOnChange = (event) => {
     setCheckedPassword(checkValidPassword(event.target.value));
   };
