@@ -1,0 +1,23 @@
+{
+  "name": "Harmony",
+  "short_name": "Harmony",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "black",
+  "theme_color": "black",
+  "description": "Team collaboration",
+  "categories": [
+    "business",
+    "education",
+    "productivity",
+    "social",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/png"
+    }
+  ]
+}
