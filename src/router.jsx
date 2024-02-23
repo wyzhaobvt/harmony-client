@@ -1,4 +1,5 @@
 import App from "./components/App";
+import Login from "./pages/Login";
 import FileManagement from "./pages/file-management/FileManagement";
 import {createBrowserRouter} from "react-router-dom"
 export default createBrowserRouter([
@@ -17,6 +18,10 @@ export default createBrowserRouter([
           {
             path: "/files",
             element: <FileManagement />
+          },
+          {
+            path: "/login",
+            element: <Login />
           }
         ]
       },
