@@ -15,19 +15,19 @@ import { Label } from "@/components/ui/label";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
-    firstNameValue: "",
-    lastNameValue: "",
-    emailValue: "",
-    passwordValue: "",
-    confirmPasswordValue: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    firstNameError: null,
-    lastNameError: null,
-    emailError: null,
-    passwordError: null,
-    confirmPasswordError: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
   });
 
   const [checkedPassword, setCheckedPassword] = useState({
@@ -36,9 +36,11 @@ const Register = () => {
   });
   const [isPasswordMatch, setIsPasswordMatch] = useState(null);
 
-  const handleOnChange = (event, key) => {
-    setInputData((prev) => ({ ...prev, [key]: event.target.value }));
+  const handleOnChange = (event) => {
+    setInputData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
+
+  console.log(inputData);
 
   const handlePasswordOnChange = (event) => {
     setCheckedPassword(checkValidPassword(event.target.value));
@@ -47,23 +49,14 @@ const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const fieldsToValidate = [
-      "firstName",
-      "lastName",
-      "email",
-      "password",
-      "confirmPassword",
-    ];
-
-    fieldsToValidate.forEach((field) => {
-      const value = inputData[`${field}Value`];
-      setErrors((prev) => ({
-        ...prev,
-        [`${field}Error`]: !value ? true : false,
-      }));
+    // For each 'inputData' field, set the corresponding error to false if the inputData value is a truthy. 
+    // Else, set the error to be true.
+    Object.keys(inputData).forEach((field) => {
+      const value = inputData[field];
+      setErrors((prev) => ({ ...prev, [field]: value ? false : true }));
     });
 
-    inputData.passwordValue !== inputData.confirmPasswordValue
+    inputData.password !== inputData.confirmPassword
       ? setIsPasswordMatch(false)
       : setIsPasswordMatch(true);
   };
@@ -73,8 +66,10 @@ const Register = () => {
   };
 
   useEffect(() => {
+    // Set 'isErrors' to true if 'errors' has at least one truthy value
     const isErrors = Object.values(errors).some((error) => error === true);
 
+    // If the conditions are satisfied, submit the form
     if (!isErrors && !checkedPassword.error && isPasswordMatch) {
       finishSubmit();
     }
@@ -98,11 +93,13 @@ const Register = () => {
                 <Label htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
+                  name="firstName"
                   placeholder="First Name"
-                  onChange={(event) => handleOnChange(event, "firstNameValue")}
-                  className={errors.firstNameError && "border-red-500 dark:border-red-400"}
+                  onChange={handleOnChange}
+                  className={errors.firstName && "border-red-500 dark:border-red-400"}
                 />
-                {errors.firstNameError && (
+                {/* Error for First Name field */}
+                {errors.firstName && (
                   <CardDescription className="text-red-500 dark:text-red-400">
                     First Name field is required
                   </CardDescription>
@@ -113,11 +110,13 @@ const Register = () => {
                 <Label htmlFor="lastName">Last Name</Label>
                 <Input
                   id="lastName"
+                  name="lastName"
                   placeholder="Last Name"
-                  onChange={(event) => handleOnChange(event, "lastNameValue")}
-                  className={errors.lastNameError && "border-red-500 dark:border-red-400"}
+                  onChange={handleOnChange}
+                  className={errors.lastName && "border-red-500 dark:border-red-400"}
                 />
-                {errors.lastNameError && (
+                {/* Error for Last Name field */}
+                {errors.lastName && (
                   <CardDescription className="text-red-500 dark:text-red-400">
                     Last Name field is required
                   </CardDescription>
@@ -129,11 +128,13 @@ const Register = () => {
                 <Input
                   type="email"
                   id="email"
+                  name="email"
                   placeholder="Email"
-                  onChange={(event) => handleOnChange(event, "emailValue")}
-                  className={errors.emailError && "border-red-500 dark:border-red-400"}
+                  onChange={handleOnChange}
+                  className={errors.email && "border-red-500 dark:border-red-400"}
                 />
-                {errors.emailError && (
+                {/* Error for Email field */}
+                {errors.email && (
                   <CardDescription className="text-red-500 dark:text-red-400">
                     Email field is required
                   </CardDescription>
@@ -145,14 +146,16 @@ const Register = () => {
                 <Input
                   type="password"
                   id="password"
+                  name="password"
                   placeholder="Password"
                   onChange={(event) => {
-                    handleOnChange(event, "passwordValue");
+                    handleOnChange(event);
                     handlePasswordOnChange(event);
                   }}
-                  className={errors.passwordError && "border-red-500 dark:border-red-400"}
+                  className={errors.password && "border-red-500 dark:border-red-400"}
                 />
-                {errors.passwordError && (
+                {/* Error for Password field */}
+                {errors.password && (
                   <CardDescription className="text-red-500 dark:text-red-400">
                     Password field is required
                   </CardDescription>
@@ -164,25 +167,27 @@ const Register = () => {
                 <Input
                   type="password"
                   id="confirmPassword"
+                  name="confirmPassword"
                   placeholder="Confirm Password"
-                  onChange={(event) =>
-                    handleOnChange(event, "confirmPasswordValue")
-                  }
-                  className={errors.confirmPasswordError && "border-red-500 dark:border-red-400"}
+                  onChange={handleOnChange}
+                  className={errors.confirmPassword && "border-red-500 dark:border-red-400"}
                 />
-                {errors.confirmPasswordError && (
+                {/* Error for Confirm Password field */}
+                {errors.confirmPassword && (
                   <CardDescription className="text-red-500 dark:text-red-400">
                     Confirm Password field is required
                   </CardDescription>
                 )}
+                {/* Error for when passwords do not match */}
                 {isPasswordMatch === false &&
-                  !errors.confirmPasswordError &&
-                  !errors.passwordError && (
+                  !errors.confirmPassword &&
+                  !errors.password && (
                     <CardDescription className="text-red-500 dark:text-red-400">
                       Passwords do not match
                     </CardDescription>
                   )}
               </div>
+              {/* Error for when the password does not meet the requirements */}
               {checkedPassword.error && (
                 <CardDescription className="text-red-500 dark:text-red-400">
                   {checkedPassword.message}
