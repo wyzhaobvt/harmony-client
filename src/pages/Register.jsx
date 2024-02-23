@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import checkValidPassword from "../utils/checkValidPassword";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,25 +15,30 @@ import { Label } from "@/components/ui/label";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
-    firstNameValue: null,
-    lastNameValue: null,
-    emailValue: null,
-    passwordValue: null,
-    confirmPasswordValue: null
+    firstNameValue: "",
+    lastNameValue: "",
+    emailValue: "",
+    passwordValue: "",
+    confirmPasswordValue: ""
   });
 
   const [errors, setErrors] = useState({
-    firstNameError: false,
-    lastNameError: false,
-    emailError: false,
-    passwordError: false,
-    confirmPasswordError: false
+    firstNameError: null,
+    lastNameError: null,
+    emailError: null,
+    passwordError: null,
+    confirmPasswordError: null
   });
 
-  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+  const [checkedPassword, setCheckedPassword] = useState({ error: null, message: "" });
+  const [isPasswordMatch, setIsPasswordMatch] = useState(null);
 
   const handleOnChange = (event, key) => {
     setInputData(prev => ({ ...prev, [key]: event.target.value }));
+  }
+
+  const handlePasswordOnChange = (event) => {
+    setCheckedPassword(checkValidPassword(event.target.value));
   }
 
   const handleSubmit = (event) => {
@@ -48,9 +54,21 @@ const Register = () => {
     inputData.passwordValue !== inputData.confirmPasswordValue
       ? setIsPasswordMatch(false)
       : setIsPasswordMatch(true);
-
-    console.log("Form submitted");
   };
+
+  const finishSubmit = () => {
+    console.log("Form submitted");
+  }
+
+  useEffect(() => {
+    const isErrors = Object.values(errors).some(
+      (error) => error === true
+    );
+
+    if (!isErrors && !checkedPassword.error && isPasswordMatch) {
+      finishSubmit();
+    }
+  }, [errors, checkedPassword.error, isPasswordMatch]);
 
   return (
     <Card className="w-[350px] md:w-[423px]">
@@ -116,7 +134,10 @@ const Register = () => {
                 type="password"
                 id="password"
                 placeholder="Password"
-                onChange={(event) => handleOnChange(event, "passwordValue")}
+                onChange={(event) => {
+                  handleOnChange(event, "passwordValue");
+                  handlePasswordOnChange(event);
+                }}
                 className={errors.passwordError && "border-red-900"}
               />
               {errors.passwordError && (
@@ -142,12 +163,19 @@ const Register = () => {
                   Confirm Password field is required
                 </CardDescription>
               )}
-              {!isPasswordMatch && !errors.confirmPasswordError && !errors.passwordError && (
-                <CardDescription className="text-red-900">
-                  Passwords do not match
-                </CardDescription>
-              )}
+              {isPasswordMatch === false &&
+                !errors.confirmPasswordError &&
+                !errors.passwordError && (
+                  <CardDescription className="text-red-900">
+                    Passwords do not match
+                  </CardDescription>
+                )}
             </div>
+            {checkedPassword.error && (
+              <CardDescription className="text-red-900">
+                {checkedPassword.message}
+              </CardDescription>
+            )}
             {/* Create Account Button */}
             <div className="flex justify-end mt-3">
               <Button type="submit" variant="outline">
