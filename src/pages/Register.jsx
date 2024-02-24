@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
+
 import checkValidPassword from "../utils/checkValidPassword";
 
 import { Button } from "@/components/ui/button";
@@ -34,7 +36,18 @@ const Register = () => {
     error: null,
     message: "",
   });
+
   const [isPasswordMatch, setIsPasswordMatch] = useState(null);
+  const [isHiddenPassword, setIsHiddenPassword] = useState(true);
+  const [isHiddenConfirmPassword, setIsHiddenConfirmPassword] = useState(true);
+
+  const handlePasswordVisibility = () => {
+    setIsHiddenPassword(prev => !prev);
+  }
+
+  const handleConfirmPasswordVisibility = () => {
+    setIsHiddenConfirmPassword(prev => !prev);
+  }
 
   const handleOnChange = (event) => {
     setInputData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -94,7 +107,9 @@ const Register = () => {
                   name="firstName"
                   placeholder="First Name"
                   onChange={handleOnChange}
-                  className={errors.firstName && "border-red-500 dark:border-red-400"}
+                  className={
+                    errors.firstName && "border-red-500 dark:border-red-400"
+                  }
                 />
                 {/* Error for First Name field */}
                 {errors.firstName && (
@@ -111,7 +126,9 @@ const Register = () => {
                   name="lastName"
                   placeholder="Last Name"
                   onChange={handleOnChange}
-                  className={errors.lastName && "border-red-500 dark:border-red-400"}
+                  className={
+                    errors.lastName && "border-red-500 dark:border-red-400"
+                  }
                 />
                 {/* Error for Last Name field */}
                 {errors.lastName && (
@@ -129,7 +146,9 @@ const Register = () => {
                   name="email"
                   placeholder="Email"
                   onChange={handleOnChange}
-                  className={errors.email && "border-red-500 dark:border-red-400"}
+                  className={
+                    errors.email && "border-red-500 dark:border-red-400"
+                  }
                 />
                 {/* Error for Email field */}
                 {errors.email && (
@@ -141,17 +160,34 @@ const Register = () => {
               {/* Password */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={(event) => {
-                    handleOnChange(event);
-                    handlePasswordOnChange(event);
-                  }}
-                  className={errors.password && "border-red-500 dark:border-red-400"}
-                />
+                <div className="relative">
+                  <Input
+                    type={isHiddenPassword ? "password" : "text"}
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={(event) => {
+                      handleOnChange(event);
+                      handlePasswordOnChange(event);
+                    }}
+                    className={
+                      errors.password
+                        ? "border-red-500 dark:border-red-400 pr-10"
+                        : "pr-10"
+                    }
+                  />
+                  {isHiddenPassword ? (
+                    <EyeOpenIcon
+                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
+                      onClick={handlePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeClosedIcon
+                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
+                      onClick={handlePasswordVisibility}
+                    />
+                  )}
+                </div>
                 {/* Error for Password field */}
                 {errors.password && (
                   <CardDescription className="text-red-500 dark:text-red-400">
@@ -162,14 +198,31 @@ const Register = () => {
               {/* Confirm Password */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  onChange={handleOnChange}
-                  className={errors.confirmPassword && "border-red-500 dark:border-red-400"}
-                />
+                <div className="relative">
+                  <Input
+                    type={isHiddenConfirmPassword ? "password" : "text"}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    onChange={handleOnChange}
+                    className={
+                      errors.confirmPassword
+                        ? "border-red-500 dark:border-red-400 pr-10"
+                        : "pr-10"
+                    }
+                  />
+                  {isHiddenConfirmPassword ? (
+                    <EyeOpenIcon
+                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
+                      onClick={handleConfirmPasswordVisibility}
+                    />
+                  ) : (
+                    <EyeClosedIcon
+                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
+                      onClick={handleConfirmPasswordVisibility}
+                    />
+                  )}
+                </div>
                 {/* Error for Confirm Password field */}
                 {errors.confirmPassword && (
                   <CardDescription className="text-red-500 dark:text-red-400">
