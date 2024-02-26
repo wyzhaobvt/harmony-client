@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 
 import checkValidPassword from "../utils/checkValidPassword";
 
@@ -15,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
+import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
@@ -174,17 +174,10 @@ const Register = () => {
                         : "pr-10"
                     }
                   />
-                  {isHiddenPassword ? (
-                    <EyeOpenIcon
-                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
-                      onClick={handlePasswordVisibility}
-                    />
-                  ) : (
-                    <EyeClosedIcon
-                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
-                      onClick={handlePasswordVisibility}
-                    />
-                  )}
+                  <PasswordVisibilityToggle 
+                    isHidden={isHiddenPassword}
+                    handleToggle={handlePasswordVisibility}
+                  />
                 </div>
                 {/* Error for Password field */}
                 <StatusMessage
@@ -208,17 +201,10 @@ const Register = () => {
                         : "pr-10"
                     }
                   />
-                  {isHiddenConfirmPassword ? (
-                    <EyeOpenIcon
-                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
-                      onClick={handleConfirmPasswordVisibility}
-                    />
-                  ) : (
-                    <EyeClosedIcon
-                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
-                      onClick={handleConfirmPasswordVisibility}
-                    />
-                  )}
+                  <PasswordVisibilityToggle 
+                    isHidden={isHiddenConfirmPassword}
+                    handleToggle={handleConfirmPasswordVisibility}
+                  />
                 </div>
                 {/* Error for Confirm Password field */}
                 <StatusMessage
