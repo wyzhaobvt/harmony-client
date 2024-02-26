@@ -23,8 +23,6 @@ const Login = () => {
     password: null
   });
 
-  const [submit, setSubmit] = useState(false);
-
   const handleOnChange = (event) => {
     setInputData((prev) => ({
       ...prev,
@@ -41,8 +39,6 @@ const Login = () => {
       const value = inputData[field];
       setErrors((prev) => ({ ...prev, [field]: value ? false : true }));
     });
-
-    setSubmit(true);
   };
 
   const finishSubmit = () => {
@@ -50,14 +46,14 @@ const Login = () => {
   }
 
   useEffect(() => {
-    // Set 'isErrors' to true if 'errors' has at least one truthy value
-    const isErrors = Object.values(errors).some((error) => error === true);
+    // Set 'isErrors' to true if 'errors' has at least one truthy value or one null value
+    const isErrors = Object.values(errors).some((error) => error === true || error === null);
 
-    // If the conditions are satisfied, submit the form
-    if (!isErrors && submit) {
+    // If the condition is satisfied, submit the form
+    if (!isErrors) {
       finishSubmit();
     }
-  }, [errors, submit]);
+  }, [errors]);
 
   return (
     <div className="h-[calc(100vh-6rem)] flex items-center">
