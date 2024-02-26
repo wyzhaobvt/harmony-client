@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +25,12 @@ const Login = () => {
     password: null
   });
 
+  const [isHiddenPassword, setIsHiddenPassword] = useState(true);
+
+  const handlePasswordVisibility = () => {
+    setIsHiddenPassword(prev => !prev);
+  }
+
   const handleOnChange = (event) => {
     setInputData((prev) => ({
       ...prev,
@@ -34,7 +41,7 @@ const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // For each 'inputData' field, set the corresponding error to false if the inputData value is a truthy. 
+    // For each 'inputData' field, set the corresponding error to false if the inputData value is a truthy.
     // Else, set the error to be true.
     Object.keys(inputData).forEach((field) => {
       const value = inputData[field];
@@ -44,11 +51,13 @@ const Login = () => {
 
   const finishSubmit = () => {
     console.log("Logged in");
-  }
+  };
 
   useEffect(() => {
     // Set 'isErrors' to true if 'errors' has at least one truthy value or one null value
-    const isErrors = Object.values(errors).some((error) => error === true || error === null);
+    const isErrors = Object.values(errors).some(
+      (error) => error === true || error === null
+    );
 
     // If the condition is satisfied, submit the form
     if (!isErrors) {
@@ -91,16 +100,31 @@ const Login = () => {
               {/* Password */}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleOnChange}
-                  className={
-                    errors.password && "border-red-500 dark:border-red-400"
-                  }
-                />
+                <div className="relative">
+                  <Input
+                    type={isHiddenPassword ? "password" : "text"}
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleOnChange}
+                    className={
+                      errors.password
+                        ? "border-red-500 dark:border-red-400 pr-10"
+                        : "pr-10"
+                    }
+                  />
+                  {isHiddenPassword ? (
+                    <EyeOpenIcon
+                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
+                      onClick={handlePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeClosedIcon
+                      className="ml-2 h-4 w-4 absolute inset-y-3 right-3 cursor-pointer select-none"
+                      onClick={handlePasswordVisibility}
+                    />
+                  )}
+                </div>
                 {/* Error for Password Field */}
                 <StatusMessage
                   error={errors.password}
