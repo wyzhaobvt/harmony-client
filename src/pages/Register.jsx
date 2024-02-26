@@ -77,8 +77,8 @@ const Register = () => {
   };
 
   useEffect(() => {
-    // Set 'isErrors' to true if 'errors' has at least one truthy value
-    const isErrors = Object.values(errors).some((error) => error === true);
+    // Set 'isErrors' to true if 'errors' has at least one truthy value or one null value
+    const isErrors = Object.values(errors).some((error) => error === true || error === null);
 
     // If the conditions are satisfied, submit the form
     if (!isErrors && !checkedPassword.error && isPasswordMatch) {
