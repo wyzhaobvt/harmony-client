@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import StatusMessage from "../components/ui/status-message";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
@@ -112,11 +113,10 @@ const Register = () => {
                   }
                 />
                 {/* Error for First Name field */}
-                {errors.firstName && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    First Name field is required
-                  </CardDescription>
-                )}
+                <StatusMessage
+                  error={errors.firstName}
+                  message="First Name field is required"
+                />
               </div>
               {/* Last name */}
               <div className="flex flex-col space-y-1.5">
@@ -131,11 +131,10 @@ const Register = () => {
                   }
                 />
                 {/* Error for Last Name field */}
-                {errors.lastName && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    Last Name field is required
-                  </CardDescription>
-                )}
+                <StatusMessage
+                  error={errors.lastName}
+                  message="Last Name field is required"
+                />
               </div>
               {/* Email */}
               <div className="flex flex-col space-y-1.5">
@@ -151,11 +150,10 @@ const Register = () => {
                   }
                 />
                 {/* Error for Email field */}
-                {errors.email && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    Email field is required
-                  </CardDescription>
-                )}
+                <StatusMessage
+                  error={errors.email}
+                  message="Email field is required"
+                />
               </div>
               {/* Password */}
               <div className="flex flex-col space-y-1.5">
@@ -189,11 +187,10 @@ const Register = () => {
                   )}
                 </div>
                 {/* Error for Password field */}
-                {errors.password && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    Password field is required
-                  </CardDescription>
-                )}
+                <StatusMessage
+                  error={errors.password}
+                  message="Password field is required"
+                />
               </div>
               {/* Confirm Password */}
               <div className="flex flex-col space-y-1.5">
@@ -224,26 +221,25 @@ const Register = () => {
                   )}
                 </div>
                 {/* Error for Confirm Password field */}
-                {errors.confirmPassword && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    Confirm Password field is required
-                  </CardDescription>
-                )}
+                <StatusMessage
+                  error={errors.confirmPassword}
+                  message="Confirm Password field is required"
+                />
                 {/* Error for when passwords do not match */}
-                {isPasswordMatch === false &&
-                  !errors.confirmPassword &&
-                  !errors.password && (
-                    <CardDescription className="text-red-500 dark:text-red-400">
-                      Passwords do not match
-                    </CardDescription>
-                  )}
+                <StatusMessage
+                  error={
+                    isPasswordMatch === false &&
+                    !errors.confirmPassword &&
+                    !errors.password
+                  }
+                  message="Passwords do not match"
+                />
               </div>
               {/* Error for when the password does not meet the requirements */}
-              {checkedPassword.error && (
-                <CardDescription className="text-red-500 dark:text-red-400">
-                  {checkedPassword.message}
-                </CardDescription>
-              )}
+              <StatusMessage
+                error={checkedPassword.error}
+                message={checkedPassword.message}
+              />
               {/* Create Account Button */}
               <div className="flex justify-end mt-3">
                 <Button type="submit" variant="outline">
