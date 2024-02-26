@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import StatusMessage from "../components/ui/status-message";
 
 const Login = () => {
   const [inputData, setInputData] = useState({
@@ -82,11 +83,10 @@ const Login = () => {
                   }
                 />
                 {/* Error for Email field */}
-                {errors.email && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    Email field is required
-                  </CardDescription>
-                )}
+                <StatusMessage
+                  error={errors.email}
+                  message="Email field is required"
+                />
               </div>
               {/* Password */}
               <div className="flex flex-col space-y-1.5">
@@ -101,11 +101,11 @@ const Login = () => {
                     errors.password && "border-red-500 dark:border-red-400"
                   }
                 />
-                {errors.password && (
-                  <CardDescription className="text-red-500 dark:text-red-400">
-                    Password field is required
-                  </CardDescription>
-                )}
+                {/* Error for Password Field */}
+                <StatusMessage
+                  error={errors.password}
+                  message="Password field is required"
+                />
               </div>
               {/* Log in Button */}
               <div className="flex justify-end mt-3">
