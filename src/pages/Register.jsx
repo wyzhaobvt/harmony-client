@@ -169,7 +169,7 @@ const Register = () => {
                       handlePasswordOnChange(event);
                     }}
                     className={
-                      errors.password
+                      errors.password || isPasswordMatch === false
                         ? "border-red-500 dark:border-red-400 pr-10"
                         : "pr-10"
                     }
@@ -203,7 +203,7 @@ const Register = () => {
                     placeholder="Confirm Password"
                     onChange={handleOnChange}
                     className={
-                      errors.confirmPassword
+                      errors.confirmPassword || isPasswordMatch === false
                         ? "border-red-500 dark:border-red-400 pr-10"
                         : "pr-10"
                     }
