@@ -28,7 +28,7 @@ function Sidebar() {
                     <h1 className="text-2xl font-bold mb-0">Harmony</h1>
                   </div>
                 </DrawerTrigger>
-                <hr className="mb-2" style={{background: 'black', color: 'black', borderColor: 'black', height: '3px' }}/>
+                <hr className="mb-2 text-black dark:text-white bg-black dark:bg-white" style={{ borderColor: 'black', height: '3px' }}/>
               </DrawerTitle>
               <DrawerDescription asChild className="p-0 mt-2 ml-0">
                 <div className="">
