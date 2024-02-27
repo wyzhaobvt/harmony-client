@@ -1,5 +1,6 @@
 import React from 'react';
 import Message from './Message';
+import Event from './Event';
 import { Menu, Phone, Calendar, UserRoundPlus } from 'lucide-react';
 import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 
@@ -47,7 +48,7 @@ function GroupDashboard() {
             </div>
           </div>
         </div>
-        <div className="utils">
+        <div className="utils max-w-min">
           <CustomCalendar
             mode="single"
             selected={date}
@@ -57,13 +58,11 @@ function GroupDashboard() {
           <div className="day-breakdown rounded-md border border-input p-4">
             <h1 className="font-semibold text-3xl mb-3">Today</h1>
             <div className="events">
-              <div className="event w-full mb-2">
-                <div className="event-details w-full">
-                  <h2 className="font-semibold">Dentist Appointment</h2>
-                  <p>12:00 PM</p>
-                  <hr />
-                </div>
-              </div>
+              <Event name="Meeting" time="10:00 AM" />
+              <Event name="Bob’s Reminder" time="11:30 AM" />
+              <Event name="Lunch Break" time="1:00 PM" />
+              <Event name="Brainstorming Session" time="2:30 PM" />
+              <Event name="Charlie’s DIY Dentistry Workshop" time="5:30 PM" />
             </div>
           </div>
         </div>
