@@ -30,14 +30,14 @@ function Sidebar() {
                 </DrawerTrigger>
                 <hr className="mb-2" style={{background: 'black', color: 'black', borderColor: 'black', height: '3px' }}/>
               </DrawerTitle>
-              <DrawerDescription asChild className="p-0 mt-2 ml-3">
-                <div>
-                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg h-15 w-full justify-start" variant="ghost"><LayoutDashboardIcon className="mr-2 h-8 w-8" style={{color: 'black'}}/>Dashboard</Button></div>
-                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg h-15 w-full justify-start" variant="ghost"><ChatBubbleIcon className="mr-2 h-6 w-6" style={{color: 'black'}}/>Chat</Button></div>
-                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg h-15 w-full justify-start" variant="ghost"><UsersIcon className="mr-2 h-6 w-6" style={{color: 'black'}}/>Groups</Button></div>
-                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg h-15 w-full justify-start" variant="ghost"><FilesIcon className="mr-2 h-6 w-6" style={{color: 'black'}}/>File Management</Button></div>
-                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg h-15 w-full justify-start" variant="ghost"><CalendarIcon className="mr-2 h-6 w-6" style={{color: 'black'}}/>Calendar</Button></div>
-                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg h-15 w-full justify-start" variant="ghost"><CircleUserRoundIcon className="mr-2 h-6 w-6 " style={{color: 'black'}}/>Profile</Button></div>
+              <DrawerDescription asChild className="p-0 mt-2 ml-0">
+                <div className="">
+                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Dashboard</Button></div>
+                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Chat</Button></div>
+                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Groups</Button></div>
+                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>File Management</Button></div>
+                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Calendar</Button></div>
+                  <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><CircleUserRoundIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Profile</Button></div>
                 </div>
               </DrawerDescription>
             </DrawerHeader>
