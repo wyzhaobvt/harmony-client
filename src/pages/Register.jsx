@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import checkValidPassword from "../utils/checkValidPassword";
 
@@ -238,7 +239,7 @@ const Register = () => {
         <CardFooter className="flex justify-start">
           <CardDescription>
             Already have an account?{" "}
-            <span className="underline cursor-pointer">Log In</span>
+            <Link className="text-primary underline cursor-pointer" to="/login">Log In</Link>
           </CardDescription>
         </CardFooter>
       </Card>
