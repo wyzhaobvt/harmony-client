@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -136,7 +137,7 @@ const Login = () => {
         <CardFooter className="flex justify-start">
           <CardDescription>
             Don't have an account?{" "}
-            <span className="underline cursor-pointer">Sign Up</span>
+            <Link className="text-primary underline cursor-pointer" to="/register">Sign Up</Link>
           </CardDescription>
         </CardFooter>
       </Card>
