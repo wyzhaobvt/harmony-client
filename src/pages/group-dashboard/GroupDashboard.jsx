@@ -1,13 +1,14 @@
 import React from 'react';
 import Message from './Message';
 import { Menu, Phone, Calendar, UserRoundPlus } from 'lucide-react';
+import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 
 function GroupDashboard() {
+  const [date, setDate] = React.useState(new Date());
   return (
-    // <div className="md:w-4/5">
-    <div className="w-[786px]">
-      <div className="content-body">
-        <div className="chat">
+    <div className="md:w-3/4 flex justify-center">
+      <div className="content-body flex">
+        <div className="chat me-3">
           <div className="chatbox border border-input rounded-lg px-8 py-6 gap-4">
             <div className="chatbox--header flex items-center mb-4">
               <h1 className="font-semibold text-3xl me-auto">
@@ -43,6 +44,26 @@ function GroupDashboard() {
                 time="9:08 AM"
                 avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
               />
+            </div>
+          </div>
+        </div>
+        <div className="utils">
+          <CustomCalendar
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+            className="rounded-md border border-input h-fit mb-3"
+          />
+          <div className="day-breakdown rounded-md border border-input p-4">
+            <h1 className="font-semibold text-3xl mb-3">Today</h1>
+            <div className="events">
+              <div className="event w-full mb-2">
+                <div className="event-details w-full">
+                  <h2 className="font-semibold">Dentist Appointment</h2>
+                  <p>12:00 PM</p>
+                  <hr />
+                </div>
+              </div>
             </div>
           </div>
         </div>
