@@ -23,12 +23,12 @@ function Sidebar() {
             <DrawerHeader>
               <DrawerTitle className="mb-2">
                 <DrawerTrigger className="d-inline mb-2">
-                  <div className="d-flex w-full ml-5 mb-0" style={{borderRadius: '8px', padding: 10}}>
+                  <div className="d-flex w-full ml-6 mb-0" style={{borderRadius: '8px', padding: 4}}>
                     <HamburgerMenuIcon className="mr-3 mt-1 h-7 w-7"/>
                     <h1 className="text-2xl font-bold mb-0">Harmony</h1>
                   </div>
                 </DrawerTrigger>
-                <hr className="mb-0" style={{  background: 'black', color: 'black', borderColor: 'black', height: '3px', }}/>
+                <hr className="mb-2" style={{background: 'black', color: 'black', borderColor: 'black', height: '3px' }}/>
               </DrawerTitle>
               <DrawerDescription asChild className="p-0 mt-2 ml-3">
                 <div>
