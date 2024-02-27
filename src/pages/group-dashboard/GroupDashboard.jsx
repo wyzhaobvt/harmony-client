@@ -16,8 +16,8 @@ function GroupDashboard() {
                 forgetful-dentists
               </h1>
               <div className="icons flex gap-4 p-3">
-                <Phone size={28} className="" />
-                <UserRoundPlus size={28} className="" />
+                <Phone size={24} />
+                <UserRoundPlus size={24} />
               </div>
             </div>
             <div className="chat-messages">
