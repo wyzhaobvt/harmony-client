@@ -7,9 +7,9 @@ import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 function GroupDashboard() {
   const [date, setDate] = React.useState(new Date());
   return (
-    <div className="md:w-3/4 flex justify-center">
-      <div className="content-body flex">
-        <div className="chat me-3">
+    <div className="md:w-7/12 flex justify-center">
+      <div className="content-body flex w-full">
+        <div className="chat me-3 w-full">
           <div className="chatbox border border-input rounded-lg px-8 py-6 gap-4">
             <div className="chatbox--header flex items-center mb-4">
               <h1 className="font-semibold text-3xl me-auto">
