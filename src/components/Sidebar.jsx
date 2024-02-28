@@ -50,48 +50,35 @@ function Sidebar() {
     return (
       <>
         <Drawer direction='left'>
-          <DrawerTrigger className="mt-1 ml-5">
-            <HamburgerMenuIcon className="mr-0 h-7 w-7"/> 
+          <DrawerTrigger className="">
+            <HamburgerMenuIcon className="h-7 w-7"/> 
           </DrawerTrigger>
-          <DrawerContent className='top-0 right-0 left-0 mt-0 w-[250px] rounded-none'>
+          <DrawerContent className='top-0 left-0 mt-0 w-[250px] rounded-none border-none shadow shadow-primary'>
             <DrawerHeader>
-              <DrawerTitle className="mb-2">
-                <DrawerTrigger className="d-inline mb-2">
-                  <div className="d-flex w-full ml-6 mb-0" style={{borderRadius: '8px', padding: 4}}>
-                    <HamburgerMenuIcon className="mr-3 mt-1 h-7 w-7"/>
+              <DrawerTitle className="mb-4 h-12 flex items-center shadow-md dark:shadow-black">
+                <DrawerClose className="flex px-3 items-center gap-3">
+                    <HamburgerMenuIcon className="h-7 w-7"/>
                     <h1 className="text-2xl font-bold mb-0">Harmony</h1>
-                  </div>
-                </DrawerTrigger>
-                <hr className="mb-2 text-black dark:text-white bg-black dark:bg-white" style={{ borderColor: 'black', height: '3px' }}/>
+                </DrawerClose>
               </DrawerTitle>
             </DrawerHeader>
-            <div className="p-0 mt-2 ml-0">
-              {links.map(({name, icon, path}, i)=>{
+            <div className="flex flex-col grow gap-3">
+              {links.map(({ icon, name, path }, i) => {
                 return (
                   <DrawerClose key={i} asChild>
-                    <div className="mb-6 sidebar-menu-item">
-                      <Link to={path}>
+                    <Link to={path}>
                       <Button
-                        className="text-lg w-full justify-start p-7 h-10"
+                        className="text-lg w-full justify-start px-5 h-10"
                         variant="ghost"
                       >
                         {icon}
                         {name}
                       </Button>
-                  </Link>
-                    </div>
-
+                    </Link>
                   </DrawerClose>
                 );
               })}
-              {/* <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Chat</Button></div>
-              <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Groups</Button></div>
-              <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>File Management</Button></div>
-              <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Calendar</Button></div>
-              <div className="mb-6 sidebar-menu-item"><Button className="text-lg w-full justify-start p-7 h-10" variant="ghost"><CircleUserRoundIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>Profile</Button></div>
-              <div className="">
-              </div> */}
-            </div>
+          </div>
             <DrawerFooter>
               <DrawerClose asChild>
                 <Button className="w-full"><LogOutIcon className="mr-2 h-6 w-6"/>Logout</Button>
