@@ -36,3 +36,7 @@ main {
 #root {
   position: relative;
 }
+
+.d-flex {
+  display: flex;
+}

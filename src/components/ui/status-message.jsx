@@ -9,5 +9,5 @@ const StatusMessage = ({ error, message, className }) => {
     </>
   );
 };
-
+  
 export default StatusMessage;
