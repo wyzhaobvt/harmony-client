@@ -11,6 +11,7 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: var(--background);
+  --nav-bar-height: 3rem
 }
 
 html,
@@ -25,14 +26,25 @@ body {
   min-width: 320px;
 }
 
+nav {
+  height: var(--nav-bar-height);
+}
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 2rem;
   width: 100%;
+  min-height: calc(100% - var(--nav-bar-height));
 }
 
 #root {
   position: relative;
+}
+
+.video-call-tile {
+  --gap: 5px;
+  --tile-min-width: 190px;
+  --spots: calc( 100% / ( 190 + var(--gap) ) );
+  
 }
