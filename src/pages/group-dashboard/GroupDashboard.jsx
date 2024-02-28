@@ -56,7 +56,12 @@ function GroupDashboard() {
             className="rounded-md border border-input h-fit mb-3"
           />
           <div className="day-breakdown rounded-md border border-input p-4">
-            <h1 className="font-semibold text-3xl mb-3">Today</h1>
+            <div className="flex justify-between items-center mb-3">
+              <h1 className="font-semibold text-3xl">Today</h1>
+              <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
+                Add
+              </button>
+            </div>
             <div className="events">
               <Event name="Meeting" time="10:00 AM" />
               <Event name="Bob’s Reminder" time="11:30 AM" />
