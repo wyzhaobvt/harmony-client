@@ -45,9 +45,3 @@ main {
 .d-flex {
   display: flex;
 }
-
-.video-call-tile {
-  --gap: 5px;
-  --tile-min-width: 190px;
-  --spots: calc( 100% / ( 190 + var(--gap) ) );
-}
