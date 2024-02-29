@@ -41,42 +41,41 @@ export default function VideoChat() {
   const [muted, setMuted] = useState(true);
   const [spotlight, setSpotlight] = useState(null);
   const [streams, setStreams] = useState([]);
-  const tiles = [...streams, ...users].map((tile, i) => {
-    let element = null;
-    if (tile instanceof MediaStream) {
-      element = (
-        <VideoStream
-          key={i}
-          stream={tile}
-          className="aspect-video w-56 rounded-lg"
-          onClick={() => {
-            setSpotlight((prev) => {
-              return prev == element ? null : element;
-            });
-          }}
-          muted
-        />
-      );
-    } else {
-      element = (
-        <div
-          key={i}
-          className="aspect-video flex w-56 rounded-lg justify-center items-center"
-          style={{ backgroundColor: tile.color }}
-          onClick={() => {
-            setSpotlight((prev) => {
-              return prev == element ? null : element;
-            });
-          }}
-        >
-          <div className="w-20 h-20 bg-white opacity-50 rounded-full flex items-center justify-center text-black text-2xl">
-            {tile.color.slice(1, 3).toUpperCase()}
-          </div>
+  const streamTiles = streams.map((stream,i)=>{
+    const element = (
+      <VideoStream
+        key={"video_"+i}
+        stream={stream}
+        className="aspect-video w-56 rounded-lg"
+        onClick={() => {
+          setSpotlight((prev) => {
+            return prev == element ? null : element;
+          });
+        }}
+        muted
+      />
+    );
+    return element
+  })
+  const userTiles = users.map(((user, i)=>{
+    const element = (
+      <div
+        key={"user_"+i}
+        className="aspect-video flex w-56 rounded-lg justify-center items-center"
+        style={{ backgroundColor: user.color }}
+        onClick={() => {
+          setSpotlight((prev) => {
+            return prev == element ? null : element;
+          });
+        }}
+      >
+        <div className="w-20 h-20 bg-white opacity-50 rounded-full flex items-center justify-center text-black text-2xl">
+          {user.color.slice(1, 3).toUpperCase()}
         </div>
-      );
-    }
-    return element;
-  });
+      </div>
+    );
+    return element
+  }))
 
   function handleMuteClick() {
     setMuted((prev) => !prev);
@@ -85,7 +84,6 @@ export default function VideoChat() {
   function handleVideoStartClick() {}
 
   function handleOnStream(stream) {
-    console.log("stream", stream);
     setStreams((prev) => [...prev, stream]);
   }
 
@@ -96,7 +94,7 @@ export default function VideoChat() {
       </div>
       <div className="flex flex-grow w-full px-5 items-center">
         <div className="flex flex-wrap justify-center gap-3">
-          {tiles}
+          {[...streamTiles, ...userTiles]}
         </div>
       </div>
       <div className="bg-secondary-foreground dark:bg-secondary max-h-12 min-h-12 fixed w-full bottom-0 flex grow text-white justify-between items-center px-8">
