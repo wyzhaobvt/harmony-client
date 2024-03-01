@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { AvatarIcon } from "@radix-ui/react-icons";
-import { EditProfilePicture } from "./EditProfilePicture";
+import { EditProfilePictureDialog } from "./EditProfilePictureDialog";
 import StatusMessage from "../../components/ui/status-message";
 
 // Dummy data. Will be replaced by data of current user from database.
@@ -69,7 +69,7 @@ const Profile = () => {
             <div className="bg-white border border-neutral-200 h-[250px] w-[250px] rounded-full flex items-center justify-center relative">
               <AvatarIcon className="text-black w-28 h-28" />
               {/* Change Profile Picture Button */}
-              <EditProfilePicture />
+              <EditProfilePictureDialog />
             </div>
           </div>
           {/* First Name */}

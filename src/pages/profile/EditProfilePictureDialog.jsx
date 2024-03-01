@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 
-export function EditProfilePicture() {
+export function EditProfilePictureDialog() {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
