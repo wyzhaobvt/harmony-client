@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +12,28 @@ import {
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 
 export function EditProfilePicture() {
+  const [file, setFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const fileInputRef = useRef(null);
+
+  const handleFileOnChange = (event) => {
+    setFile(event.target.files[0]);
+    setPreviewImage(URL.createObjectURL(event.target.files[0]));
+  }
+
+  const deleteImage = () => {
+    setPreviewImage(null);
+  }
+
+  const handleFileUpload = () => {
+    const formData = new FormData();
+    formData.append("image", file, file.name);
+
+    // Send HTTP request with formData to upload image
+    console.log(formData);
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -29,24 +52,54 @@ export function EditProfilePicture() {
           {/* Container for profile picture and Upload Photo and Delete buttons */}
           <div className="flex flex-col items-center">
             {/* Profile Picture */}
-            <div className="bg-white border border-neutral-200 h-[250px] w-[250px] rounded-full flex items-center justify-center relative mb-[16px]">
-              <AvatarIcon className="text-black w-28 h-28" />
+            <div className="bg-white h-[250px] w-[250px] rounded-full mb-[16px]">
+              {previewImage ? (
+                // Preview image
+                <div
+                  className="bg-cover bg-center h-full w-full rounded-full"
+                  style={{ backgroundImage: `url(${previewImage})` }}
+                />
+              ) : (
+                // Default icon
+                <div className="flex justify-center items-center h-full w-full rounded-full border border-neutral-200">
+                  <AvatarIcon className="text-black w-28 h-28" />
+                </div>
+              )}
             </div>
             {/* Upload Photo and Delete buttons */}
             <div className="flex justify-center w-full gap-3">
-              <Button className="w-[120px]">Upload Photo</Button>
-              <Button className="w-[120px]">Delete</Button>
+              <input
+                type="file"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleFileOnChange}
+              />
+              {/* Choose Image Button */}
+              <Button
+                className="w-[120px]"
+                onClick={() => fileInputRef.current.click()}
+              >
+                Choose Image
+              </Button>
+              {/* Delete Button */}
+              <Button className="w-[120px]" onClick={deleteImage}>
+                Delete
+              </Button>
             </div>
           </div>
         </div>
         <DialogFooter>
           <div className="flex justify-center w-full gap-3">
-            <DialogTrigger>
+            {/* Cancel Button */}
+            <DialogTrigger asChild>
               <Button className="w-[190px]">Cancel</Button>
             </DialogTrigger>
-            <Button type="submit" className="w-[190px]">
-              Save
-            </Button>
+            {/* Save Button */}
+            <DialogTrigger asChild>
+              <Button onClick={handleFileUpload} className="w-[190px]">
+                Save
+              </Button>
+            </DialogTrigger>
           </div>
         </DialogFooter>
       </DialogContent>
