@@ -1,33 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import CameraIcon from "../components/icons/CameraIcon";
 import MicrophoneIcon from "../components/icons/MicrophoneIcon";
 import MicrophoneMuteIcon from "../components/icons/MicrophoneMuteIcon";
 import { Button } from "@/components/ui/button";
 import VideoSelector from "../components/VideoSelector";
-
-function VideoStream({ displayStream, cameraStream, className, ...props }) {
-  const mainVideo = useRef(null);
-  const secondaryVideo = useRef(null);
-  const [swapStream, setSwapStream] = useState(false);
-  const mainStream = displayStream && cameraStream ? (swapStream ? cameraStream : displayStream) : displayStream || cameraStream || null
-  const secondaryStream = !displayStream ? null : cameraStream ? (swapStream ? displayStream : cameraStream) : cameraStream || null
-  useEffect(() => {
-    if (mainStream) mainVideo.current.srcObject = mainStream;
-    if (secondaryStream) secondaryVideo.current.srcObject = secondaryStream;
-  }, [mainStream, secondaryStream]);
-  function onSecondaryClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    setSwapStream(prev=>!prev)
-  }
-  return <div className={`${className} relative`}>
-    {mainStream && <video ref={mainVideo} className={className + " relative !w-full"} {...props} autoPlay playsInline></video>}
-    {secondaryStream && <video ref={secondaryVideo} className={className + " " + "absolute top-2 right-2 !w-[25%] outline outline-1 !rounded-sm"} {...props} autoPlay playsInline onClick={onSecondaryClick}></video>}
-    
-  </div>
-  return <video ref={video} {...props} autoPlay playsInline></video>;
-}
+import VideoStream from "../components/VideoStream";
 
 export default function VideoChat() {
   const users = [
@@ -58,9 +36,7 @@ export default function VideoChat() {
   const [streams, setStreams] = useState({});
   const [spotlight, setSpotlight] = useState(null);
   const userName = "user1"
-  // useEffect(()=>{
-  //   if (spotlight && !spotlight.props.displayStream && !spotlight.props.cameraStream) setSpotlight(null)
-  // }, [streams])
+
   const streamTiles = Object.entries(streams).reduce((prev, [username, {display, camera}],i)=>{
     const element = (
       <VideoStream
@@ -114,13 +90,6 @@ export default function VideoChat() {
         return rest
       }
       return {...prev, [userName]: streams}
-      if (prev[userName]) {
-        let {[userName]: _, ...rest} = prev
-        // if (spotlight && !spotlight.props.displayStream && !spotlight.props.cameraStream) setSpotlight(null)
-        return {[userName]: streams, ...rest}
-      }
-      if (imStreaming === false) setImStreaming(true)
-      return {...prev, userNamestreams}
     });
   }
 
