@@ -105,7 +105,6 @@ export default function VideoSelector({ triggerButton, onStream }) {
               onValueChange={(value) => {
                 setSelectedCamera(value);
               }}
-              value={selectedCamera}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Camera" />

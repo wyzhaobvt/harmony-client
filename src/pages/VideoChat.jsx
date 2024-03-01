@@ -81,7 +81,6 @@ export default function VideoChat() {
   function handleVideoStartClick() {}
 
   function handleOnStream(streams) {
-    console.log(streams)
     setStreams((prev) => {
       if (!imStreaming) setImStreaming(true)
       if (!streams.camera && !streams.display) {
