@@ -3,14 +3,15 @@ import Message from './Message';
 import Event from './Event';
 import { Menu, Phone, Calendar, UserRoundPlus } from 'lucide-react';
 import { Calendar as CustomCalendar } from '@/components/ui/calendar';
+import Textarea from './Textarea';
 
 function GroupDashboard() {
   const [date, setDate] = React.useState(new Date());
   return (
-    <div className="md:w-7/12 flex justify-center">
+    <div className="md:w-7/12 flex justify-center h-[100px]">
       <div className="content-body flex w-full">
-        <div className="chat me-3 w-full">
-          <div className="chatbox border border-input rounded-lg px-8 py-6 gap-4">
+        <div className="chat me-3 w-full ">
+          <div className="chatbox border border-input rounded-lg px-8 py-6 gap-4 mb-3">
             <div className="chatbox--header flex items-center mb-4">
               <h1 className="font-semibold text-3xl me-auto">
                 forgetful-dentists
@@ -20,7 +21,7 @@ function GroupDashboard() {
                 <UserRoundPlus size={24} />
               </div>
             </div>
-            <div className="chat-messages">
+            <div className="chat-messages overflow-y-auto max-h-[30vh]">
               <Message
                 name="Bob Johnson"
                 message="Hey team, remember that meeting today at 10?"
@@ -45,8 +46,48 @@ function GroupDashboard() {
                 time="9:08 AM"
                 avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
               />
+              <Message
+                name="Alice Smith"
+                message="I'm in! Let's do it!"
+                time="9:08 AM"
+                avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
+              />
+              <Message
+                name="Alice Smith"
+                message="I'm in! Let's do it!"
+                time="9:08 AM"
+                avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
+              />
+              <Message
+                name="Alice Smith"
+                message="I'm in! Let's do it!"
+                time="9:08 AM"
+                avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
+              />
+              <Message
+                name="Alice Smith"
+                message="I'm in! Let's do it!"
+                time="9:08 AM"
+                avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
+              />
+              <Message
+                name="Alice Smith"
+                message="I'm in! Let's do it!"
+                time="9:08 AM"
+                avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
+              />
+              <Message
+                name="Alice Smith"
+                message="I'm in! Let's do it!"
+                time="9:08 AM"
+                avatar="src\assets\img\pexels-andrea-piacquadio-774909.jpg"
+              />
             </div>
           </div>
+          <Textarea
+            placeholder="Type your message here."
+            className="resize-none"
+          />
         </div>
         <div className="utils max-w-min">
           <CustomCalendar
