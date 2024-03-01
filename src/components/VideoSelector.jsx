@@ -92,8 +92,8 @@ export default function VideoSelector({ triggerButton, onStream }) {
       <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
       <PopoverContent className="w-auto h-auto border-input m-5">
         <div className="flex gap-5">
-          <div className={`flex items-center ${streams.display && "text-red-600"}`}>
-            <Button disabled={!hasPermission} onClick={handleSelectDisplayClick}>{ streams.display ? "Stop Display" : "Select Display"}</Button>
+          <div className="flex items-center">
+            <Button disabled={!hasPermission} className={`${streams.display && "text-red-600"}`} onClick={handleSelectDisplayClick}>{ streams.display ? "Stop Display" : "Select Display"}</Button>
           </div>
           <div className="h-auto flex flex-col justify-center items-center">
             <Separator orientation="vertical" className="h-2/5 w-[2px]" />
@@ -105,6 +105,7 @@ export default function VideoSelector({ triggerButton, onStream }) {
               onValueChange={(value) => {
                 setSelectedCamera(value);
               }}
+              value={selectedCamera}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Camera" />
