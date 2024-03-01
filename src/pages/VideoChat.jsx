@@ -6,11 +6,26 @@ import MicrophoneMuteIcon from "../components/icons/MicrophoneMuteIcon";
 import { Button } from "@/components/ui/button";
 import VideoSelector from "../components/VideoSelector";
 
-function VideoStream({ stream, ...props }) {
-  const video = useRef(null);
+function VideoStream({ displayStream, cameraStream, className, ...props }) {
+  const mainVideo = useRef(null);
+  const secondaryVideo = useRef(null);
+  const [swapStream, setSwapStream] = useState(false);
+  const mainStream = displayStream && cameraStream ? (swapStream ? cameraStream : displayStream) : displayStream || cameraStream || null
+  const secondaryStream = !displayStream ? null : cameraStream ? (swapStream ? displayStream : cameraStream) : cameraStream || null
   useEffect(() => {
-    video.current.srcObject = stream;
-  }, [video]);
+    if (mainStream) mainVideo.current.srcObject = mainStream;
+    if (secondaryStream) secondaryVideo.current.srcObject = secondaryStream;
+  }, [mainStream, secondaryStream]);
+  function onSecondaryClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    setSwapStream(prev=>!prev)
+  }
+  return <div className={`${className} relative`}>
+    {mainStream && <video ref={mainVideo} className={className + " relative !w-full"} {...props} autoPlay playsInline></video>}
+    {secondaryStream && <video ref={secondaryVideo} className={className + " " + "absolute top-2 right-2 !w-[25%] outline outline-1 !rounded-sm"} {...props} autoPlay playsInline onClick={onSecondaryClick}></video>}
+    
+  </div>
   return <video ref={video} {...props} autoPlay playsInline></video>;
 }
 
@@ -39,25 +54,31 @@ export default function VideoChat() {
     { name: "user21", type: "normal", color: "#4F7E6A" },
   ].slice(0, 8);
   const [muted, setMuted] = useState(true);
+  const [imStreaming, setImStreaming] = useState(false)
+  const [streams, setStreams] = useState({});
   const [spotlight, setSpotlight] = useState(null);
-  const [streams, setStreams] = useState([]);
-  const streamTiles = streams.map((stream,i)=>{
+  const userName = "user1"
+  // useEffect(()=>{
+  //   if (spotlight && !spotlight.props.displayStream && !spotlight.props.cameraStream) setSpotlight(null)
+  // }, [streams])
+  const streamTiles = Object.entries(streams).reduce((prev, [username, {display, camera}],i)=>{
     const element = (
       <VideoStream
         key={"video_"+i}
-        stream={stream}
+        displayStream={display}
+        cameraStream={camera}
         className="aspect-video w-56 rounded-lg"
         onClick={() => {
           setSpotlight((prev) => {
-            return prev == element ? null : element;
+            return prev && prev.type == "stream" && prev.name == username ? null : {type: "stream", name: username};
           });
         }}
         muted
       />
     );
-    return element
-  })
-  const userTiles = users.map(((user, i)=>{
+    return {...prev, [username]: element}
+  }, {})
+  const userTiles = users.reduce((prev, user, i)=>{
     const element = (
       <div
         key={"user_"+i}
@@ -65,7 +86,7 @@ export default function VideoChat() {
         style={{ backgroundColor: user.color }}
         onClick={() => {
           setSpotlight((prev) => {
-            return prev == element ? null : element;
+            return prev && prev.type == "user" && prev.name == user.name ? null : {type: "user", name: user.name};
           });
         }}
       >
@@ -74,8 +95,8 @@ export default function VideoChat() {
         </div>
       </div>
     );
-    return element
-  }))
+    return {...prev, [user.name]: element}
+  },{})
 
   function handleMuteClick() {
     setMuted((prev) => !prev);
@@ -83,25 +104,41 @@ export default function VideoChat() {
 
   function handleVideoStartClick() {}
 
-  function handleOnStream(stream) {
-    setStreams((prev) => [...prev, stream]);
+  function handleOnStream(streams) {
+    console.log(streams)
+    setStreams((prev) => {
+      if (!imStreaming) setImStreaming(true)
+      if (!streams.camera && !streams.display) {
+        const {[userName]: _, ...rest} = prev
+        setImStreaming(false)
+        return rest
+      }
+      return {...prev, [userName]: streams}
+      if (prev[userName]) {
+        let {[userName]: _, ...rest} = prev
+        // if (spotlight && !spotlight.props.displayStream && !spotlight.props.cameraStream) setSpotlight(null)
+        return {[userName]: streams, ...rest}
+      }
+      if (imStreaming === false) setImStreaming(true)
+      return {...prev, userNamestreams}
+    });
   }
 
   return (
     <div className="w-full h-full flex-grow flex flex-col gap-5 mb-24">
       <div className="w-full flex flex-col items-center px-10 [&>*]:w-[clamp(200px,100%,calc(70vh*(16/9)-10rem))]">
-        {spotlight}
+        {spotlight !== null && (spotlight.type === "stream" ? streamTiles[spotlight.name] : userTiles[spotlight.name])}
       </div>
       <div className="flex flex-grow w-full px-5 items-center">
         <div className="flex flex-wrap justify-center gap-3">
-          {[...streamTiles, ...userTiles]}
+          {[...Object.values(streamTiles), ...Object.values(userTiles)]}
         </div>
       </div>
       <div className="bg-secondary-foreground dark:bg-secondary max-h-12 min-h-12 fixed w-full bottom-0 flex grow text-white justify-between items-center px-8">
         <div className="flex gap-4 sm:w-1/3">
           <Button
             variant="ghost"
-            className="flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground w-16"
+            className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground w-16 ${muted && "text-red-400 hover:text-red-400"}`}
             onClick={handleMuteClick}
           >
             {muted ? (
@@ -116,11 +153,11 @@ export default function VideoChat() {
             triggerButton={
               <Button
                 variant="ghost"
-                className="flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground"
+                className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground ${streams[userName] && "text-green-400 hover:text-green-400"}`}
                 onClick={handleVideoStartClick}
               >
                 <CameraIcon className="w-5 h-5" />
-                <div className="text-xs">Start Video</div>
+                <div className={`text-xs`}>{imStreaming ? "Streaming" :"Start Video"}</div>
               </Button>
             }
           />
