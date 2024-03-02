@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,12 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose
 } from "@/components/ui/dialog";
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 
-export function EditProfilePictureDialog() {
+export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture }) {
   const [file, setFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(profilePicture);
+  const [syncImage, setSyncImage] = useState(0);
 
   const fileInputRef = useRef(null);
 
@@ -27,17 +29,31 @@ export function EditProfilePictureDialog() {
   }
 
   const handleFileUpload = () => {
-    const formData = new FormData();
-    formData.append("image", file, file.name);
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file, file.name);
 
-    // Send HTTP request with formData to upload image
-    console.log(formData);
+      // Send HTTP request with formData to upload image
+      console.log(formData);
+    }
+
+    handleSetProfilePicture(previewImage);
   }
+
+  // Each time the Edit Profile Picture button is clicked, synchronize 
+  // the preview image to match the current profile picture
+  useEffect(() => {
+    setPreviewImage(profilePicture);
+  }, [syncImage]);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-white border border-neutral-200 shadow w-[50px] h-[50px] rounded-full absolute bottom-0 right-5 hover:bg-slate-50 p-0">
+        {/* Edit Profile Picture Button */}
+        <Button
+          onClick={() => setSyncImage((prev) => prev + 1)}  // Runs useEffect when clicked
+          className="bg-white border border-neutral-200 shadow w-[50px] h-[50px] rounded-full absolute bottom-0 right-5 hover:bg-slate-50 p-0"
+        >
           <Pencil2Icon className="text-black h-6 w-6" />
         </Button>
       </DialogTrigger>
@@ -91,15 +107,15 @@ export function EditProfilePictureDialog() {
         <DialogFooter>
           <div className="flex justify-center w-full gap-3">
             {/* Cancel Button */}
-            <DialogTrigger asChild>
+            <DialogClose asChild>
               <Button className="w-[190px]">Cancel</Button>
-            </DialogTrigger>
+            </DialogClose>
             {/* Save Button */}
-            <DialogTrigger asChild>
+            <DialogClose asChild>
               <Button onClick={handleFileUpload} className="w-[190px]">
                 Save
               </Button>
-            </DialogTrigger>
+            </DialogClose>
           </div>
         </DialogFooter>
       </DialogContent>

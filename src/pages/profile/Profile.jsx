@@ -15,6 +15,8 @@ const user = {
 }
 
 const Profile = () => {
+  const [profilePicture, setProfilePicture] = useState(null);
+
   const [userData, setUserData] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -26,6 +28,10 @@ const Profile = () => {
     lastName: null,
     email: null
   });
+
+  const handleSetProfilePicture = (value) => {
+    setProfilePicture(value);
+  }
 
   const handleOnChange = (event) => {
     setUserData(prev => ({ ...prev, [event.target.name]: event.target.value }))
@@ -66,10 +72,24 @@ const Profile = () => {
         <div className="grid w-full items-center gap-4">
           {/* Profile Picture */}
           <div className="flex justify-center mb-[34px]">
-            <div className="bg-white border border-neutral-200 h-[250px] w-[250px] rounded-full flex items-center justify-center relative">
-              <AvatarIcon className="text-black w-28 h-28" />
+            <div className="bg-white h-[250px] w-[250px] rounded-full relative">
+              {profilePicture ? (
+                // Profile picture
+                <div
+                  className="bg-cover bg-center h-full w-full rounded-full"
+                  style={{ backgroundImage: `url(${profilePicture})` }}
+                />
+              ) : (
+                // Default icon
+                <div className="flex justify-center items-center h-full w-full rounded-full border border-neutral-200">
+                  <AvatarIcon className="text-black w-28 h-28" />
+                </div>
+              )}
               {/* Change Profile Picture Button */}
-              <EditProfilePictureDialog />
+              <EditProfilePictureDialog
+                profilePicture={profilePicture}
+                handleSetProfilePicture={handleSetProfilePicture}
+              />
             </div>
           </div>
           {/* First Name */}
