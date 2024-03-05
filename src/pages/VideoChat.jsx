@@ -32,37 +32,44 @@ export default function VideoChat() {
     { name: "user21", type: "normal", color: "#4F7E6A" },
   ].slice(0, 8);
   const [muted, setMuted] = useState(true);
-  const [imStreaming, setImStreaming] = useState(false)
+  const [imStreaming, setImStreaming] = useState(false);
   const [streams, setStreams] = useState({});
   const [spotlight, setSpotlight] = useState(null);
-  const userName = "user1"
+  const userName = "user1";
 
-  const streamTiles = Object.entries(streams).reduce((prev, [username, {display, camera}],i)=>{
-    const element = (
-      <VideoStream
-        key={"video_"+i}
-        displayStream={display}
-        cameraStream={camera}
-        className="aspect-video w-56 rounded-lg"
-        onClick={() => {
-          setSpotlight((prev) => {
-            return prev && prev.type == "stream" && prev.name == username ? null : {type: "stream", name: username};
-          });
-        }}
-        muted
-      />
-    );
-    return {...prev, [username]: element}
-  }, {})
-  const userTiles = users.reduce((prev, user, i)=>{
+  const streamTiles = Object.entries(streams).reduce(
+    (prev, [username, { display, camera }], i) => {
+      const element = (
+        <VideoStream
+          key={"video_" + i}
+          displayStream={display}
+          cameraStream={camera}
+          className="aspect-video w-56 rounded-lg"
+          onClick={() => {
+            setSpotlight((prev) => {
+              return prev && prev.type == "stream" && prev.name == username
+                ? null
+                : { type: "stream", name: username };
+            });
+          }}
+          muted
+        />
+      );
+      return { ...prev, [username]: element };
+    },
+    {}
+  );
+  const userTiles = users.reduce((prev, user, i) => {
     const element = (
       <div
-        key={"user_"+i}
+        key={"user_" + i}
         className="aspect-video flex w-56 rounded-lg justify-center items-center"
         style={{ backgroundColor: user.color }}
         onClick={() => {
           setSpotlight((prev) => {
-            return prev && prev.type == "user" && prev.name == user.name ? null : {type: "user", name: user.name};
+            return prev && prev.type == "user" && prev.name == user.name
+              ? null
+              : { type: "user", name: user.name };
           });
         }}
       >
@@ -71,8 +78,8 @@ export default function VideoChat() {
         </div>
       </div>
     );
-    return {...prev, [user.name]: element}
-  },{})
+    return { ...prev, [user.name]: element };
+  }, {});
 
   function handleMuteClick() {
     setMuted((prev) => !prev);
@@ -82,68 +89,82 @@ export default function VideoChat() {
 
   function handleOnStream(streams) {
     setStreams((prev) => {
-      if (!imStreaming) setImStreaming(true)
+      if (!imStreaming) setImStreaming(true);
       if (!streams.camera && !streams.display) {
-        const {[userName]: _, ...rest} = prev
-        setImStreaming(false)
-        return rest
+        const { [userName]: _, ...rest } = prev;
+        setImStreaming(false);
+        return rest;
       }
-      return {...prev, [userName]: streams}
+      return { ...prev, [userName]: streams };
     });
   }
 
   return (
     <div className="w-full h-full flex-grow flex flex-col gap-5 mb-24">
-      <div className="w-full flex flex-col items-center px-10 [&>*]:w-[clamp(200px,100%,calc(70vh*(16/9)-10rem))]">
-        {spotlight !== null && (spotlight.type === "stream" ? streamTiles[spotlight.name] : userTiles[spotlight.name])}
+      <div className="w-full flex flex-col items-center px-10 group [&>*]:w-[clamp(200px,100%,calc(70vh*(16/9)+12rem))]">
+        {spotlight !== null &&
+          (spotlight.type === "stream"
+            ? streamTiles[spotlight.name]
+            : userTiles[spotlight.name])}
       </div>
       <div className="flex flex-grow w-full px-5 items-center">
         <div className="flex flex-wrap justify-center gap-3">
           {[...Object.values(streamTiles), ...Object.values(userTiles)]}
         </div>
       </div>
-      <div className="bg-secondary-foreground dark:bg-secondary max-h-12 min-h-12 fixed w-full bottom-0 flex grow text-white justify-between items-center px-8">
-        <div className="flex gap-4 sm:w-1/3">
-          <Button
-            variant="ghost"
-            className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground w-16 ${muted && "text-red-400 hover:text-red-400"}`}
-            onClick={handleMuteClick}
-          >
-            {muted ? (
-              <MicrophoneMuteIcon className="w-5 h-5" />
-            ) : (
-              <MicrophoneIcon className="w-5 h-5" />
-            )}
-            <div className="text-xs">{muted ? "Unmute" : "Mute"}</div>
-          </Button>
-          <VideoSelector
-            onStream={handleOnStream}
-            triggerButton={
-              <Button
-                variant="ghost"
-                className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground ${streams[userName] && "text-green-400 hover:text-green-400"}`}
-                onClick={handleVideoStartClick}
-              >
-                <CameraIcon className="w-5 h-5" />
-                <div className={`text-xs`}>{imStreaming ? "Streaming" :"Start Video"}</div>
-              </Button>
-            }
-          />
+      <div
+        className={`bg-secondary-foreground dark:bg-secondary fixed w-full bottom-0 flex flex-col text-white`}
+      >
+        <div className="flex justify-between items-center px-8 w-full grow min-h-12 max-h-12">
+          <div className="flex gap-4 sm:w-1/3">
+            <Button
+              variant="ghost"
+              className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground w-16 ${
+                muted && "text-red-400 hover:text-red-400"
+              }`}
+              onClick={handleMuteClick}
+            >
+              {muted ? (
+                <MicrophoneMuteIcon className="w-5 h-5" />
+              ) : (
+                <MicrophoneIcon className="w-5 h-5" />
+              )}
+              <div className="text-xs">{muted ? "Unmute" : "Mute"}</div>
+            </Button>
+            <VideoSelector
+              onStream={handleOnStream}
+              triggerButton={
+                <Button
+                  variant="ghost"
+                  className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground ${
+                    streams[userName] && "text-green-400 hover:text-green-400"
+                  }`}
+                  onClick={handleVideoStartClick}
+                >
+                  <CameraIcon className="w-5 h-5" />
+                  <div className={`text-xs`}>
+                    {imStreaming ? "Streaming" : "Start Video"}
+                  </div>
+                </Button>
+              }
+            />
+          </div>
+          <div className="flex w-1/3 justify-center">
+            <Button
+              variant="ghost"
+              className="flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground"
+            >
+              <ChatBubbleIcon className="w-5 h-5" />
+              <div className="text-xs">Chat</div>
+            </Button>
+          </div>
+          <div className="flex w-1/3 justify-end">
+            <Button className="h-7 bg-primary-foreground text-primary hover:bg-zinc-300 dark:bg-primary dark:text-primary-foreground dark:hover:bg-zinc-300">
+              Leave
+            </Button>
+          </div>
         </div>
-        <div className="flex w-1/3 justify-center">
-          <Button
-            variant="ghost"
-            className="flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground"
-          >
-            <ChatBubbleIcon className="w-5 h-5" />
-            <div className="text-xs">Chat</div>
-          </Button>
-        </div>
-        <div className="flex w-1/3 justify-end">
-          <Button className="h-7 bg-primary-foreground text-primary hover:bg-zinc-300 dark:bg-primary dark:text-primary-foreground dark:hover:bg-zinc-300">
-            Leave
-          </Button>
-        </div>
+        {navigator.standalone && <div className="h-4"></div>}
       </div>
     </div>
   );
