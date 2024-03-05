@@ -11,8 +11,9 @@ import {
   DialogClose
 } from "@/components/ui/dialog";
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
+import { ProfilePicture } from "../../components/ProfilePicture";
 
-export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture }) {
+export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, className }) {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(profilePicture);
   const [syncImage, setSyncImage] = useState(0);
@@ -51,8 +52,8 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
       <DialogTrigger asChild>
         {/* Edit Profile Picture Button */}
         <Button
-          onClick={() => setSyncImage((prev) => prev + 1)}  // Runs useEffect when clicked
-          className="bg-white border border-neutral-200 shadow w-[50px] h-[50px] rounded-full absolute bottom-0 right-5 hover:bg-slate-50 p-0"
+          onClick={() => setSyncImage((prev) => prev + 1)} // Runs useEffect when clicked
+          className={`bg-white border border-neutral-200 shadow w-[50px] h-[50px] rounded-full hover:bg-slate-50 p-0 ${className}`}
         >
           <Pencil2Icon className="text-black h-6 w-6" />
         </Button>
@@ -68,20 +69,10 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
           {/* Container for profile picture and Upload Photo and Delete buttons */}
           <div className="flex flex-col items-center">
             {/* Profile Picture */}
-            <div className="bg-white h-[250px] w-[250px] rounded-full mb-[16px]">
-              {previewImage ? (
-                // Preview image
-                <div
-                  className="bg-cover bg-center h-full w-full rounded-full"
-                  style={{ backgroundImage: `url(${previewImage})` }}
-                />
-              ) : (
-                // Default icon
-                <div className="flex justify-center items-center h-full w-full rounded-full border border-neutral-200">
-                  <AvatarIcon className="text-black w-28 h-28" />
-                </div>
-              )}
-            </div>
+            <ProfilePicture
+              profilePicture={previewImage}
+              className="size-[250px] mb-[16px]"
+            />
             {/* Upload Photo and Delete buttons */}
             <div className="flex justify-center w-full gap-3">
               <input
@@ -92,13 +83,18 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
               />
               {/* Choose Image Button */}
               <Button
+                variant="outline"
                 className="w-[120px]"
                 onClick={() => fileInputRef.current.click()}
               >
                 Choose Image
               </Button>
               {/* Delete Button */}
-              <Button className="w-[120px]" onClick={deleteImage}>
+              <Button
+                variant="destructive"
+                className="w-[120px]"
+                onClick={deleteImage}
+              >
                 Delete
               </Button>
             </div>
@@ -108,11 +104,17 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
           <div className="flex justify-center w-full gap-3">
             {/* Cancel Button */}
             <DialogClose asChild>
-              <Button className="w-[190px]">Cancel</Button>
+              <Button variant="outline" className="w-[190px]">
+                Cancel
+              </Button>
             </DialogClose>
             {/* Save Button */}
             <DialogClose asChild>
-              <Button onClick={handleFileUpload} className="w-[190px]">
+              <Button
+                variant="outline"
+                onClick={handleFileUpload}
+                className="w-[190px]"
+              >
                 Save
               </Button>
             </DialogClose>

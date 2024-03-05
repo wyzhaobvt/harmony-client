@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { AvatarIcon } from "@radix-ui/react-icons";
 import { EditProfilePictureDialog } from "./EditProfilePictureDialog";
 import StatusMessage from "../../components/ui/status-message";
+import { ProfilePicture } from "../../components/ProfilePicture";
 
 // Dummy data. Will be replaced by data of current user from database.
 const user = {
@@ -70,25 +70,18 @@ const Profile = () => {
       </h1>
       <form onSubmit={handleSubmit}>
         <div className="grid w-full items-center gap-4">
-          {/* Profile Picture */}
           <div className="flex justify-center mb-[34px]">
-            <div className="bg-white h-[250px] w-[250px] rounded-full relative">
-              {profilePicture ? (
-                // Profile picture
-                <div
-                  className="bg-cover bg-center h-full w-full rounded-full"
-                  style={{ backgroundImage: `url(${profilePicture})` }}
-                />
-              ) : (
-                // Default icon
-                <div className="flex justify-center items-center h-full w-full rounded-full border border-neutral-200">
-                  <AvatarIcon className="text-black w-28 h-28" />
-                </div>
-              )}
+            <div className="relative">
+              {/* Profile Picture */}
+              <ProfilePicture
+                profilePicture={profilePicture}
+                className="size-[250px]"
+              />
               {/* Change Profile Picture Button */}
               <EditProfilePictureDialog
                 profilePicture={profilePicture}
                 handleSetProfilePicture={handleSetProfilePicture}
+                className="absolute bottom-0 right-5"
               />
             </div>
           </div>
