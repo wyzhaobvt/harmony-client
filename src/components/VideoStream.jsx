@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import {Button} from "@/components/ui/button"
-import { FullscreenIcon } from "lucide-react";
 import { EnterFullScreenIcon } from "@radix-ui/react-icons";
 import isMobileDevice from "../utils/isMobileDevice";
 
