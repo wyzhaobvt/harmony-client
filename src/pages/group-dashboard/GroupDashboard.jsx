@@ -4,6 +4,7 @@ import Event from './Event';
 import { Menu, Phone, Calendar, UserRoundPlus } from 'lucide-react';
 import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 import Textarea from './Textarea';
+import './GroupDashboard.css';
 
 function GroupDashboard() {
   const [date, setDate] = React.useState(new Date());
@@ -21,7 +22,7 @@ function GroupDashboard() {
                 <UserRoundPlus size={24} />
               </div>
             </div>
-            <div className="chat-messages overflow-y-auto max-h-[30vh]">
+            <div className="chat-messages overflow-y-auto max-h-[50vh] custom-scrollbar">
               <Message
                 name="Bob Johnson"
                 message="Hey team, remember that meeting today at 10?"
