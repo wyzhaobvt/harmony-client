@@ -125,7 +125,7 @@ function GroupDashboard() {
                   <DialogTrigger>
                     <Calendar size={24} className="xl:hidden" />
                   </DialogTrigger>
-                  <DialogContent className="w-fit p-12">
+                  <DialogContent className="w-fit p-12 max-h-[80vh] overflow-y-auto">
                     <CustomCalendar
                       mode="single"
                       selected={date}
