@@ -80,6 +80,7 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
                 className="hidden"
                 ref={fileInputRef}
                 onChange={handleFileOnChange}
+                accept="image/png, image/jpeg, image/jpg, image/jfif"
               />
               {/* Choose Image Button */}
               <Button
