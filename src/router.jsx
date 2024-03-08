@@ -1,5 +1,7 @@
 import App from './components/App';
-import GroupDashboard from './pages/group-dashboard/GroupDashboard';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Group from './pages/group-dashboard/GroupDashboard';
 import FileManagement from './pages/file-management/FileManagement';
 import { createBrowserRouter } from 'react-router-dom';
 export default createBrowserRouter([
@@ -28,8 +30,16 @@ export default createBrowserRouter([
             element: <FileManagement />,
           },
           {
+            path: '/login',
+            element: <Login />,
+          },
+          {
+            path: '/register',
+            element: <Register />,
+          },
+          {
             path: '/group',
-            element: <GroupDashboard />,
+            element: <Group />,
           },
         ],
       },

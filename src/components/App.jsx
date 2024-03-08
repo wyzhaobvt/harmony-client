@@ -1,8 +1,7 @@
 import { Outlet } from 'react-router';
-import FileManagement from '../pages/file-management/FileManagement';
 import setTheme from '../utils/setTheme';
 import ThemeSwitcher from './ThemeSwitcher';
-import { Menu } from 'lucide-react';
+import Sidebar from './Sidebar';
 
 function App() {
   setTheme();
@@ -10,7 +9,7 @@ function App() {
     <>
       <nav className="z-50 w-full h-[72px] bg-background sticky top-0 flex items-center px-3 justify-between group shadow-md dark:shadow-black">
         <div className="flex items-center gap-3">
-          <Menu size={28} />
+          <Sidebar />
           <div className="font-bold text-2xl">Harmony</div>
         </div>
         <div>
