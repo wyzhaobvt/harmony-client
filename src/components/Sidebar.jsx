@@ -44,6 +44,10 @@ const links = [
     name: "Profile",
     path: "/profile"
   },
+  {
+    name: "Video Chat",
+    path: "/video"
+  }
 ]
 
 function Sidebar() {
