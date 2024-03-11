@@ -13,6 +13,13 @@ import {
 } from '@/components/ui/dialog';
 import Textarea from './Textarea';
 import './GroupDashboard.css';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 function GroupDashboard() {
   const [date, setDate] = React.useState(new Date());
@@ -37,42 +44,6 @@ function GroupDashboard() {
         "Don't worry, I'll bring a drill and some pliers. We'll multitask!",
       time: '9:07 AM',
       avatar: 'src\\assets\\img\\pexels-nitin-khajotia-1516680.jpg',
-    },
-    {
-      name: 'Alice Smith',
-      message: "I'm in! Let's do it!",
-      time: '9:08 AM',
-      avatar: 'src\\assets\\img\\pexels-andrea-piacquadio-774909.jpg',
-    },
-    {
-      name: 'Alice Smith',
-      message: "I'm in! Let's do it!",
-      time: '9:08 AM',
-      avatar: 'src\\assets\\img\\pexels-andrea-piacquadio-774909.jpg',
-    },
-    {
-      name: 'Alice Smith',
-      message: "I'm in! Let's do it!",
-      time: '9:08 AM',
-      avatar: 'src\\assets\\img\\pexels-andrea-piacquadio-774909.jpg',
-    },
-    {
-      name: 'Alice Smith',
-      message: "I'm in! Let's do it!",
-      time: '9:08 AM',
-      avatar: 'src\\assets\\img\\pexels-andrea-piacquadio-774909.jpg',
-    },
-    {
-      name: 'Alice Smith',
-      message: "I'm in! Let's do it!",
-      time: '9:08 AM',
-      avatar: 'src\\assets\\img\\pexels-andrea-piacquadio-774909.jpg',
-    },
-    {
-      name: 'Alice Smith',
-      message: "I'm in! Let's do it!",
-      time: '9:08 AM',
-      avatar: 'src\\assets\\img\\pexels-andrea-piacquadio-774909.jpg',
     },
     {
       name: 'Alice Smith',
@@ -139,15 +110,14 @@ function GroupDashboard() {
                           Add
                         </button>
                       </div>
-                      <div className="events">
-                        <Event name="Meeting" time="10:00 AM" />
-                        <Event name="Bob’s Reminder" time="11:30 AM" />
-                        <Event name="Lunch Break" time="1:00 PM" />
-                        <Event name="Brainstorming Session" time="2:30 PM" />
-                        <Event
-                          name="Charlie’s DIY Dentistry Workshop"
-                          time="5:30 PM"
-                        />
+                      <div className="event-list">
+                        {events.map((event, index) => (
+                          <Event
+                            key={index}
+                            name={event.name}
+                            time={event.time}
+                          />
+                        ))}
                       </div>
                     </div>
                   </DialogContent>
