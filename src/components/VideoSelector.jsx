@@ -16,15 +16,12 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import isMobileDevice from "../utils/isMobileDevice";
+import { peer } from "../utils/globals.js";
 
 export default function VideoSelector({ triggerButton, onStream }) {
   const [mediaDevices, setMediaDevices] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState(null);
-  const [streams, setStreams] = useState({
-    myStream: true,
-    camera: null,
-    display: null,
-  });
+  const [streams, setStreams] = useState(getStreams());
   const hasPermission = "mediaDevices" in navigator;
 
   useEffect(() => {
@@ -35,53 +32,40 @@ export default function VideoSelector({ triggerButton, onStream }) {
     }) || [];
   }, []);
 
+  function getStreams() {
+    return {myStream: true, display: peer.myStreams.has("screen"), camera: peer.myStreams.has("camera")}
+  }
+
   function handleSelectDisplayClick() {
-    if (streams.display) {
-      streams.display.getTracks().forEach((track) => {
-        track.stop();
-      });
-      const obj = {
-        ...streams,
-        display: null,
-      };
-      setStreams(obj);
-      if (typeof onStream === "function") onStream(obj);
+    if (peer.myStreams.has("screen")) {
+      peer.stopScreen();
+      setStreams(getStreams());
+      if (typeof onStream === "function") onStream();
       return;
     }
+
     navigator.mediaDevices
       .getDisplayMedia({ video: true, audio: true })
       .then((stream) => {
         stream.getTracks().forEach((track) => {
           track.addEventListener("ended", () => {
-            const obj = {
-              ...streams,
-              display: null,
-            };
-            setStreams(obj);
-            if (typeof onStream === "function") onStream(obj);
+            peer.stopScreen();
+            setStreams(getStreams());
+            if (typeof onStream === "function") onStream();
           });
         });
-        const obj = {
-          ...streams,
-          display: stream,
-        };
-        setStreams(obj);
-        if (typeof onStream === "function") onStream(obj);
+        peer.startScreen(stream);
+        setStreams(getStreams());
+        if (typeof onStream === "function") onStream();
       })
       .catch(() => {});
   }
 
   function handleSelectCameraClick() {
     if (streams.camera) {
-      streams.camera.getTracks().forEach((track) => {
-        track.stop();
-      });
-      const obj = {
-        ...streams,
-        camera: null,
-      };
-      setStreams(obj);
-      if (typeof onStream === "function") onStream(obj);
+      peer.stopCamera()
+      setStreams(getStreams());
+      if (typeof onStream === "function") onStream();
       return;
     }
     navigator.mediaDevices
@@ -89,25 +73,23 @@ export default function VideoSelector({ triggerButton, onStream }) {
         video:
           selectedCamera === "default"
             ? true
-            : selectedCamera === "front" ? {facingMode: {ideal: "user"}} : selectedCamera === "rear" ? {facingMode: {ideal: "environment"}} : { deviceId: { exact: mediaDevices[selectedCamera].deviceId } },
+            : selectedCamera === "front"
+            ? { facingMode: { ideal: "user" } }
+            : selectedCamera === "rear"
+            ? { facingMode: { ideal: "environment" } }
+            : { deviceId: { exact: mediaDevices[selectedCamera].deviceId } },
       })
       .then((stream) => {
         stream.getTracks().forEach((track) => {
           track.addEventListener("ended", () => {
-            const obj = {
-              ...streams,
-              camera: null,
-            };
-            setStreams(obj);
-            if (typeof onStream === "function") onStream(obj);
+            peer.stopCamera()
+            setStreams(getStreams());
+            if (typeof onStream === "function") onStream();
           });
         });
-        const obj = {
-          ...streams,
-          camera: stream,
-        };
-        setStreams(obj);
-        if (typeof onStream === "function") onStream(obj);
+        peer.startCamera(stream)
+        setStreams(getStreams());
+        if (typeof onStream === "function") onStream();
       })
       .catch(() => {});
   }
@@ -121,7 +103,7 @@ export default function VideoSelector({ triggerButton, onStream }) {
             <>
               <div className="flex items-center">
                 <Button
-                  disabled={!hasPermission}
+                  disabled={!hasPermission || !peer.roomId}
                   className={`${streams.display && "text-red-600"}`}
                   onClick={handleSelectDisplayClick}
                 >
@@ -174,7 +156,7 @@ export default function VideoSelector({ triggerButton, onStream }) {
               </SelectContent>
             </Select>
             <Button
-              disabled={!hasPermission || selectedCamera === null}
+              disabled={!hasPermission || selectedCamera === null || !peer.roomId}
               className={`mt-5 ${streams.camera && "text-red-600"}`}
               onClick={handleSelectCameraClick}
             >
