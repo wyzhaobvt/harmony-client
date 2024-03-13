@@ -13,38 +13,67 @@ import {
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 import { ProfilePicture } from "../../components/ProfilePicture";
 
-export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, className }) {
-  const [file, setFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(profilePicture);
+export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, avatarId, className }) {
+  const [file, setFile] = useState("");
+  const [image, setImage] = useState(profilePicture);
   const [syncImage, setSyncImage] = useState(0);
 
   const fileInputRef = useRef(null);
 
-  const handleFileOnChange = (event) => {
-    setFile(event.target.files[0]);
-    setPreviewImage(URL.createObjectURL(event.target.files[0]));
-  }
+  const previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
 
-  const deleteImage = () => {
-    setPreviewImage(null);
-  }
-
-  const handleFileUpload = () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("image", file, file.name);
-
-      // Send HTTP request with formData to upload image
-      console.log(formData);
+    reader.onloadend = () => {
+      setImage(reader.result);
     }
+  }
 
-    handleSetProfilePicture(previewImage);
+  const handleFileOnChange = (event) => {
+    const file = event.target.files[0];
+    setFile(file);
+    previewFile(file);
+  }
+
+  const deletePreviewImage = () => {
+    setImage("");
+  }
+
+  const handleFileUpload = async () => {
+    if (image) {
+      const response = await fetch("http://localhost:5000/uploadAvatar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image, avatarId }),
+      });
+
+      const result = await response.json();
+      
+      try {
+        const uploadedImage = result.data.public_id;
+        handleSetProfilePicture(uploadedImage);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      handleSetProfilePicture(image);
+    }
+  }
+
+  const handleFileUpdate = async () => {
+    console.log("File updated");
+  }
+
+  const handleFileDelete = async () => {
+    console.log("File deleted");
   }
 
   // Each time the Edit Profile Picture button is clicked, synchronize 
   // the preview image to match the current profile picture
   useEffect(() => {
-    setPreviewImage(profilePicture);
+    setImage(profilePicture);
   }, [syncImage]);
 
   return (
@@ -69,8 +98,8 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
           {/* Container for profile picture and Upload Photo and Delete buttons */}
           <div className="flex flex-col items-center">
             {/* Profile Picture */}
-            <ProfilePicture
-              profilePicture={previewImage}
+            <ProfilePicture 
+              image={image}
               className="size-[250px] mb-[16px]"
             />
             {/* Upload Photo and Delete buttons */}
@@ -94,7 +123,7 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
               <Button
                 variant="destructive"
                 className="w-[120px]"
-                onClick={deleteImage}
+                onClick={deletePreviewImage}
               >
                 Delete
               </Button>

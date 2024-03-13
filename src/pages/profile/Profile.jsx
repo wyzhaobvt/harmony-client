@@ -11,12 +11,13 @@ import { ProfilePicture } from "../../components/ProfilePicture";
 const user = {
   firstName: "John",
   lastName: "Doe",
-  email: "jdoe@email.com"
+  email: "jdoe@email.com",
+  avatarId: "user-avatar/grnzki3lao7fvngvexyg"
 }
 
 const Profile = () => {
-  const [profilePicture, setProfilePicture] = useState(null);
-
+  const [profilePicture, setProfilePicture] = useState(user.avatarId);
+  
   const [userData, setUserData] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -74,13 +75,14 @@ const Profile = () => {
             <div className="relative">
               {/* Profile Picture */}
               <ProfilePicture
-                profilePicture={profilePicture}
+                image={profilePicture}
                 className="size-[250px]"
               />
               {/* Change Profile Picture Button */}
               <EditProfilePictureDialog
                 profilePicture={profilePicture}
                 handleSetProfilePicture={handleSetProfilePicture}
+                avatarId={user.avatarId}
                 className="absolute bottom-0 right-5"
               />
             </div>
