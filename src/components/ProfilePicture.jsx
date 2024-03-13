@@ -19,7 +19,7 @@ export function ProfilePicture({ image, className }) {
   return (
     <Avatar className={className}>
       {myImage ? (
-        <AdvancedImage cldImg={myImage} />
+        <AdvancedImage cldImg={myImage} className="object-cover" />
       ) : (
         <>
           <AvatarImage
