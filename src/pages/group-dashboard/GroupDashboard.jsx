@@ -1,29 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Message from './Message';
-import Event from './Event';
+import Utils from './Utils';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
 import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Textarea from './Textarea';
-import './GroupDashboard.css';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import Textarea from './Textarea';
+import { Textarea as TextareaCN } from '@/components/ui/textarea';
+import './GroupDashboard.css';
 
 function GroupDashboard() {
-  const [date, setDate] = React.useState(new Date());
-
   const [messages, setMessages] = useState([
     {
       name: 'Bob Johnson',
@@ -53,29 +49,6 @@ function GroupDashboard() {
     },
   ]);
 
-  const events = [
-    {
-      name: 'Meeting',
-      time: '10:00 AM',
-    },
-    {
-      name: 'Bob’s Reminder',
-      time: '11:30 AM',
-    },
-    {
-      name: 'Lunch Break',
-      time: '1:00 PM',
-    },
-    {
-      name: 'Brainstorming Session',
-      time: '2:30 PM',
-    },
-    {
-      name: 'Charlie’s DIY Dentistry Workshop',
-      time: '5:30 PM',
-    },
-  ];
-
   const addMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
@@ -97,29 +70,7 @@ function GroupDashboard() {
                     <Calendar size={24} className="xl:hidden" />
                   </DialogTrigger>
                   <DialogContent className="w-fit p-12 max-h-[80vh] overflow-y-auto">
-                    <CustomCalendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border border-input h-fit mb-3"
-                    />
-                    <div className="day-breakdown rounded-md border border-input p-4">
-                      <div className="flex justify-between items-center mb-3">
-                        <h1 className="font-semibold text-3xl">Today</h1>
-                        <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
-                          Add
-                        </button>
-                      </div>
-                      <div className="event-list">
-                        {events.map((event, index) => (
-                          <Event
-                            key={index}
-                            name={event.name}
-                            time={event.time}
-                          />
-                        ))}
-                      </div>
-                    </div>
+                    <Utils />
                   </DialogContent>
                 </Dialog>
               </div>
@@ -143,25 +94,7 @@ function GroupDashboard() {
           />
         </div>
         <div className="utils max-w-min hidden xl:block">
-          <CustomCalendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-md border border-input h-fit mb-3"
-          />
-          <div className="day-breakdown rounded-md border border-input p-4">
-            <div className="flex justify-between items-center mb-3">
-              <h1 className="font-semibold text-3xl">Today</h1>
-              <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
-                Add
-              </button>
-            </div>
-            <div className="event-list">
-              {events.map((event, index) => (
-                <Event key={index} name={event.name} time={event.time} />
-              ))}
-            </div>
-          </div>
+          <Utils />
         </div>
       </div>
     </div>
