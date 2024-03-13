@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Message from './Message';
 import Utils from './Utils';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
-import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 import {
   Dialog,
   DialogContent,
@@ -12,11 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import Textarea from './Textarea';
-import { Textarea as TextareaCN } from '@/components/ui/textarea';
 import './GroupDashboard.css';
 
 function GroupDashboard() {
