@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { addToTeam } from "../utils/db.js";
-import { peer } from "../utils/globals.js";
+import globals, { peer } from "../utils/globals.js";
 
 export default function CallTesting() {
   const [data, setData] = useState({
@@ -50,7 +50,9 @@ export default function CallTesting() {
 
   return (
     <div className="fixed top-14">
-      <small className="text-red-500">{data.error}</small>
+      <div>
+        {globals.email || "Not Logged In"}<small className="text-red-500">{data.error}</small>
+      </div>
       <div className="flex [&>div]:flex [&>div]:flex-col gap-2">
         <div>
           <input

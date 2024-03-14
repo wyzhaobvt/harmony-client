@@ -12,7 +12,7 @@ export default function setTheme(theme) {
   const themeElement =
     document.querySelector("meta[name=theme-color]") || createThemeElement();
   if (!theme) {
-    const stored = localStorage.getItem("harmony:theme");
+    const stored = localStorage.getItem("harmony_theme");
     if (!stored) {
       if (prefersDark()) {
         setDark();
@@ -24,23 +24,23 @@ export default function setTheme(theme) {
     }
     if (stored === "dark") {
       setDark();
-      return "light"
+      return "light";
     }
     if (stored === "light") {
       setLight();
-      return "dark"
+      return "dark";
     }
     return "test";
   } else if (theme === "os") {
-    localStorage.removeItem("harmony:theme");
+    localStorage.removeItem("harmony_theme");
     return setTheme();
   } else if (theme === "dark") {
     setDark();
-    localStorage.setItem("harmony:theme", "dark");
+    localStorage.setItem("harmony_theme", "dark");
     return "dark";
   } else if (theme === "light") {
     setLight();
-    localStorage.setItem("harmony:theme", "light");
+    localStorage.setItem("harmony_theme", "light");
     return "light";
   }
   function setLight() {

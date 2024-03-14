@@ -1,4 +1,4 @@
-import globals from "./globals";
+import globals, { peer } from "./globals";
 
 /**
  * Sends provided file to server
@@ -27,7 +27,24 @@ export function login({ email, password }) {
       email,
       password,
     }),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        globals.email = email;
+        localStorage.setItem("harmony_email", email);
+        getPeerAuthToken().then((token)=>{
+          peer.authToken = token
+        })
+      }
+      return data;
+    })
+    .catch((err) => {
+      return {
+        success: false,
+        message: "An error occurred: " + err,
+      };
+    });
 }
 
 export function register({ email, password }) {
@@ -41,18 +58,66 @@ export function register({ email, password }) {
       email,
       password,
     }),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        globals.email = email;
+        localStorage.setItem("harmony_email", email);
+        getPeerAuthToken().then((token)=>{
+          peer.authToken = token
+        })
+      }
+      return data;
+    })
+    .catch((err) => {
+      return {
+        success: false,
+        message: "An error occurred: " + err,
+      };
+    });
+}
+
+export function logout() {
+  fetch(authUrl("/logoutUser"), {
+    method: "POST",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log({ data });
+      if (data.success) {
+        globals.email = null;
+        localStorage.removeItem("harmony_email");
+        peer.authToken = null
+      }
+      return data;
+    })
+    .catch((err) => {
+      return {
+        success: false,
+        message: "An error occurred: " + err,
+      };
+    });
 }
 
 export function getPeerAuthToken(callback) {
-  fetch(authUrl("/peer/authenticate"), {
+  return fetch(authUrl("/peer/authenticate"), {
     credentials: "include",
-  }).then((data) => {
-    data.json().then((data) => {
-      if (!data.success) return;
-      if (typeof callback === "function") callback(data.data);
+  })
+    .then((res) => {
+      if (res.status !== 200) throw res.statusText
+      res.json().then((data) => {
+        if (!data.success) return data.data;
+        if (typeof callback === "function") callback(data.data);
+      });
+    })
+    .catch((err) => {
+      return {
+        success: false,
+        message: "An error occurred: " + err,
+      };
     });
-  });
 }
 
 export function addToTeam({ teamId, teamName, targetEmail }) {
@@ -67,7 +132,7 @@ export function addToTeam({ teamId, teamName, targetEmail }) {
       teamID: teamId,
       teamName: teamName,
     }),
-  }).then(data=>data.json());
+  }).then((data) => data.json());
 }
 
 function serverUrl(path) {
