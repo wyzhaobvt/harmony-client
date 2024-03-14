@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Message from './Message';
+import Event from './Event'
 import Utils from './Utils';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
+import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 import {
   Dialog,
   DialogContent,
@@ -21,22 +23,16 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import axios from 'axios';
+import { DateTime } from 'luxon'
+
 
 
 function GroupDashboard() {
 
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
+  const today = DateTime.local().toISODate();
+  
+  const [date, setDate] = React.useState(today);
 
-  const formattedDate = `${year}-${month}-${day}`;
-  console.log(formattedDate);
-
-  const initialDate = new Date();
-  console.log(initialDate);
-  const [date, setDate] = React.useState(formattedDate);
-  console.log('date:',date);
 
   const [messages, setMessages] = useState([
     {
@@ -83,18 +79,19 @@ function GroupDashboard() {
   ];
 
   const [events, setEvents] = useState([])
-  console.log(events);
+  // console.log(events);
 
 
   useEffect(() => {
     const fetchEvents = async () => {
-        console.log(date);
+
         try {
             if(date){
-            console.log(date);
-            const response = await axios.get(`http://localhost:5000/api/calendar/listevents/group2?date=${date.split('T')[0]}`)
+            const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
+            console.log(formattedDate);
+            const response = await axios.get(`http://localhost:5000/api/calendar/listevents/group2?date=${formattedDate}`)
             const data = response.data
-            console.log('Data from API:', data);
+            // console.log('Data from API:', data);
             if (Array.isArray(data)) {
               setEvents(data);
             } else {
