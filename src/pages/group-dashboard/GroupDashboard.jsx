@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Message from './Message';
-import Event from './Event';
+import Utils from './Utils';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
-import { Calendar as CustomCalendar } from '@/components/ui/calendar';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -139,29 +140,7 @@ function GroupDashboard() {
                     <Calendar size={24} className="xl:hidden" />
                   </DialogTrigger>
                   <DialogContent className="w-fit p-12 max-h-[80vh] overflow-y-auto">
-                    <CustomCalendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border border-input h-fit mb-3"
-                    />
-                    <div className="day-breakdown rounded-md border border-input p-4">
-                      <div className="flex justify-between items-center mb-3">
-                        <h1 className="font-semibold text-3xl">Today</h1>
-                        <button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-1 px-4 rounded">
-                          Add
-                        </button>
-                      </div>
-                      <div className="event-list">
-                        {events.map((event, index) => (
-                          <Event
-                            key={index}
-                            name={event.name}
-                            time={event.time}
-                          />
-                        ))}
-                      </div>
-                    </div>
+                    <Utils />
                   </DialogContent>
                 </Dialog>
               </div>
