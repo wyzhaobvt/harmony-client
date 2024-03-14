@@ -3,7 +3,7 @@ import VideoChat from './pages/VideoChat';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
-import Group from './pages/group-dashboard/GroupDashboard';
+import GroupDashboard from './pages/group-dashboard/GroupDashboard';
 import { createBrowserRouter } from 'react-router-dom';
 export default createBrowserRouter([
   {
@@ -43,8 +43,8 @@ export default createBrowserRouter([
             element: <Register />,
           },
           {
-            path: '/group',
-            element: <Group />,
+            path: '/group/:group',
+            element: <GroupDashboard />,
           },
         ],
       },

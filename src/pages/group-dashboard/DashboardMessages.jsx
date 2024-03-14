@@ -107,13 +107,13 @@ function Textarea({ placeholder, className, addMessage }) {
       />
       <div className="icons">
         <div className="absolute left-3 bottom-3 transform space-x-2 flex items-center">
-          <div onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+          <div className='cursor-pointer' onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
             <SmilePlus size={24} />
-          </div>
-          <Paperclip size={24} />
+          </div >
+          <Paperclip className='cursor-pointer' size={24} />
         </div>
         <div className="absolute right-3 bottom-3 transform space-x-2 flex items-center">
-          <Send size={24} onClick={sendMessage} />
+          <Send size={24} className='cursor-pointer' onClick={sendMessage} />
         </div>
       </div>
       {showEmojiPicker && (
@@ -127,9 +127,8 @@ function Textarea({ placeholder, className, addMessage }) {
 
 
 
-function DashboardMessages({date, setDate, messages, setMessages, groupName}) {  
-
-    
+function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
+              
       const addMessage = (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       };
@@ -139,15 +138,15 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
         <div className="chat xl:me-3 w-full">
           <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3">
             <div className="chatbox--header flex items-center mb-4">
-              <h1 className="font-semibold text-xl sm:text-2xl xl:text-3xl me-auto">
-                {groupName}
-              </h1>
+                <h1 className="font-semibold text-xl sm:text-2xl xl:text-3xl me-auto">
+                  {groupName}
+                </h1>
               <div className="icons flex gap-4 p-3">
-                <Phone size={24} />
-                <UserRoundPlus size={24} />
+                <Phone size={24} className='cursor-pointer' />
+                <UserRoundPlus className='cursor-pointer' size={24} />
                 <Dialog>
                   <DialogTrigger>
-                    <Calendar size={24} className="xl:hidden" />
+                    <Calendar size={24} className="xl:hidden cursor-pointer" />
                   </DialogTrigger>
                   <DialogContent className="w-fit p-12 max-h-[80vh] overflow-y-auto xl:hidden">
                     <div className='block xl:hidden'><DashboardCalendar date={date} setDate={setDate} /></div>
