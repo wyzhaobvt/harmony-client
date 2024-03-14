@@ -6,8 +6,10 @@ import { DateTime } from 'luxon'
 
 function GroupDashboard() {
 
+  // replace group1 with fetched name at some point?
+  const [groupName, setGroupName] = React.useState('group1');
+
   const today = DateTime.local().toISODate();
-  console.log('today',today);
   
   const [date, setDate] = React.useState(today);
 
@@ -27,11 +29,12 @@ function GroupDashboard() {
     },
   ]);
 
+
   return (
     <div className="md:w-3/4 xl:w-7/12 flex justify-center px-2">
       <div className="content-body flex w-full">
-        <DashboardMessages date={date} setDate={setDate} messages={messages} setMessages={setMessages} />
-        <div className='hidden xl:block'><DashboardCalendar date={date} setDate={setDate} /></div>
+        <DashboardMessages date={date} setDate={setDate} messages={messages} setMessages={setMessages} groupName={groupName} />
+        <div className='hidden xl:block'><DashboardCalendar date={date} setDate={setDate} groupName={groupName} /></div>
       </div>
     </div>
   );
