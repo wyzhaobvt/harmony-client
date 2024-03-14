@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { HomeIcon, ChatBubbleIcon, CalendarIcon, HamburgerMenuIcon } from "@radix-ui/react-icons"
 import { CircleUserRoundIcon, FilesIcon, LayoutDashboardIcon, LogOutIcon, UsersIcon } from "lucide-react"
 import { Link } from "react-router-dom"
+import { logout } from "../utils/db"
 
 const links = [
   {
@@ -85,7 +86,7 @@ function Sidebar() {
           </div>
             <DrawerFooter>
               <DrawerClose asChild>
-                <Button className="w-full"><LogOutIcon className="mr-2 h-6 w-6"/>Logout</Button>
+                <Button className="w-full" onClick={()=>{logout()}}><LogOutIcon className="mr-2 h-6 w-6"/>Logout</Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
