@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Message from './Message';
 import Event from './Event';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
@@ -20,9 +20,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import axios from 'axios';
+
 
 function GroupDashboard() {
-  const [date, setDate] = React.useState(new Date());
+
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day}`;
+  console.log(formattedDate);
+
+  const initialDate = new Date();
+  console.log(initialDate);
+  const [date, setDate] = React.useState(formattedDate);
+  console.log('date:',date);
 
   const [messages, setMessages] = useState([
     {
@@ -53,31 +67,59 @@ function GroupDashboard() {
     },
   ]);
 
-  const events = [
+  const sampleEvents = [
     {
       name: 'Meeting',
-      time: '10:00 AM',
+      startTime: '10:00 AM',
+      endTime: '11:00 AM',
+      description: 'Description goes here.'
     },
     {
       name: 'Bob’s Reminder',
-      time: '11:30 AM',
-    },
-    {
-      name: 'Lunch Break',
-      time: '1:00 PM',
-    },
-    {
-      name: 'Brainstorming Session',
-      time: '2:30 PM',
-    },
-    {
-      name: 'Charlie’s DIY Dentistry Workshop',
-      time: '5:30 PM',
+      startTime: '2:00 PM',
+      endTime: '3:00 PM',
+      description: 'Description goes here.'
     },
   ];
 
+  const [events, setEvents] = useState([])
+  console.log(events);
+
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+        console.log(date);
+        try {
+            if(date){
+            console.log(date);
+            const response = await axios.get(`http://localhost:5000/api/calendar/listevents/group2?date=${date.split('T')[0]}`)
+            const data = response.data
+            console.log('Data from API:', data);
+            if (Array.isArray(data)) {
+              setEvents(data);
+            } else {
+              setEvents([])
+              console.log('Data is not an array:', data);
+            }}
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    fetchEvents();
+}, [date]);
+
+  
+
   const addMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  const convertTo12HourFormat = (time) => {
+    const hours = parseInt(time.split(':')[0]);
+    const minutes = time.split(':')[1];
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const adjustedHours = hours % 12 || 12; // Convert hours greater than 12 to 12-hour format
+    return `${adjustedHours}:${minutes} ${period}`;
   };
 
   return (
@@ -157,8 +199,14 @@ function GroupDashboard() {
               </button>
             </div>
             <div className="event-list">
-              {events.map((event, index) => (
-                <Event key={index} name={event.name} time={event.time} />
+              {events.length === 0 ? (
+                <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
+                  <div className="event-details">
+                    <h2 className="font-semibold text-sm">No events on this date.</h2>
+                  </div>
+                </div>
+              ) : events.map((event, index) => (
+                <Event key={index} name={event.name} time={`${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}`} description={event.description} />
               ))}
             </div>
           </div>
