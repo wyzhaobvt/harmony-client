@@ -9,7 +9,10 @@ function Event({ name, time, description }) {
         <p className="text-sm">{time}</p>
         <p className="text-sm">{description}</p>
       </div>
-      <div className="delete-icon opacity-0 group-hover:opacity-100">
+      <div
+        className="delete-icon opacity-0 group-hover:opacity-100"
+        onClick={onDelete}
+      >
         <X />
       </div>
     </div>
