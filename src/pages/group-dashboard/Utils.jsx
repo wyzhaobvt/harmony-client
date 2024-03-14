@@ -74,6 +74,10 @@ function Utils() {
     },
   ]);
 
+  const deleteEvent = (index) => {
+    setEvents(events.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <CustomCalendar
@@ -124,7 +128,12 @@ function Utils() {
         </div>
         <div className="event-list">
           {events.map((event, index) => (
-            <Event key={index} name={event.name} time={event.time} />
+            <Event
+              key={index}
+              name={event.name}
+              time={event.time}
+              onDelete={() => deleteEvent(index)}
+            />
           ))}
         </div>
       </div>
