@@ -12,11 +12,11 @@ const user = {
   firstName: "John",
   lastName: "Doe",
   email: "jdoe@email.com",
-  avatarId: "user-avatar/grnzki3lao7fvngvexyg"
+  avatarLink: "https://res.cloudinary.com/dsyha6lpv/image/upload/v1710537686/user-avatar/ymmwukjeumgoyhbxw2sp.jpg"
 }
 
 const Profile = () => {
-  const [profilePicture, setProfilePicture] = useState(user.avatarId);
+  const [profilePicture, setProfilePicture] = useState(user.avatarLink);
   
   const [userData, setUserData] = useState({
     firstName: user.firstName,
@@ -82,7 +82,7 @@ const Profile = () => {
               <EditProfilePictureDialog
                 profilePicture={profilePicture}
                 handleSetProfilePicture={handleSetProfilePicture}
-                avatarId={user.avatarId}
+                avatarLink={user.avatarLink}
                 className="absolute bottom-0 right-5"
               />
             </div>

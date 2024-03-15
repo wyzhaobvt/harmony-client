@@ -13,7 +13,7 @@ import {
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 import { ProfilePicture } from "../../components/ProfilePicture";
 
-export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, avatarId, className }) {
+export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, avatarLink, className }) {
   const [file, setFile] = useState("");
   const [image, setImage] = useState(profilePicture);
   const [syncImage, setSyncImage] = useState(0);
@@ -46,13 +46,13 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image, avatarId }),
+        body: JSON.stringify({ image, avatarLink }),
       });
 
       const result = await response.json();
       
       try {
-        const uploadedImage = result.data.public_id;
+        const uploadedImage = result.data.secure_url;
         handleSetProfilePicture(uploadedImage);
       } catch (error) {
         console.log(error);
@@ -60,10 +60,6 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
     } else {
       handleSetProfilePicture(image);
     }
-  }
-
-  const handleFileUpdate = async () => {
-    console.log("File updated");
   }
 
   const handleFileDelete = async () => {
