@@ -3,6 +3,7 @@ import VideoChat from "./pages/VideoChat";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import FileManagement from "./pages/file-management/FileManagement";
+import PersonalDashboard from "./pages/personal-dashboard/PersonalDashboard"
 import {createBrowserRouter} from "react-router-dom"
 export default createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export default createBrowserRouter([
           {
             path: "/register",
             element: <Register />
+          },
+          {
+            path: "/personalDashboard",
+            element: <PersonalDashboard />
           }
         ]
       },
