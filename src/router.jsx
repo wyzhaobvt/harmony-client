@@ -1,5 +1,5 @@
 import App from './components/App';
-import VideoChat from './pages/VideoChat';
+import VideoCall from './pages/video-call/VideoCall';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
@@ -32,7 +32,7 @@ export default createBrowserRouter([
           },
           {
             path: '/video',
-            element: <VideoChat />,
+            element: <VideoCall />,
           },
           {
             path: '/login',

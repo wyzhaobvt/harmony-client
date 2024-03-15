@@ -1,10 +1,9 @@
+import { useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import CallRequestAlert from "./CallRequestAlert";
 import setTheme from "../utils/setTheme";
-import ThemeSwitcher from "./ThemeSwitcher";
-import Sidebar from "./Sidebar";
 import { peer } from "../utils/globals";
-import { useRef, useState } from "react";
+import Navbar from "./Navbar";
 
 function App() {
   const [callAlert, setCallAlert] = useState(null);
