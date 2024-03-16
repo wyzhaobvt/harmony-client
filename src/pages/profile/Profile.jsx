@@ -12,7 +12,7 @@ const user = {
   firstName: "John",
   lastName: "Doe",
   email: "jdoe@email.com",
-  avatarLink: "https://res.cloudinary.com/dsyha6lpv/image/upload/v1710537686/user-avatar/ymmwukjeumgoyhbxw2sp.jpg"
+  avatarLink: "https://res.cloudinary.com/dsyha6lpv/image/upload/v1710465057/user-avatar/tqgyeweyvomara5fg7ee.png"
 }
 
 const Profile = () => {

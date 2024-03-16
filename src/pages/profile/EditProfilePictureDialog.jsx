@@ -13,7 +13,7 @@ import {
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 import { ProfilePicture } from "../../components/ProfilePicture";
 
-export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, avatarLink, className }) {
+export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, className }) {
   const [file, setFile] = useState("");
   const [image, setImage] = useState(profilePicture);
   const [syncImage, setSyncImage] = useState(0);
@@ -40,30 +40,44 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
   }
 
   const handleFileUpload = async () => {
-    if (image) {
+    try {
       const response = await fetch("http://localhost:5000/uploadAvatar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image, avatarLink }),
+        body: JSON.stringify({ image, avatarLink: profilePicture }),
       });
-
+  
       const result = await response.json();
-      
-      try {
-        const uploadedImage = result.data.secure_url;
-        handleSetProfilePicture(uploadedImage);
-      } catch (error) {
-        console.log(error);
+      const uploadedImage = result.data.secure_url;
+
+      handleSetProfilePicture(uploadedImage);
+    } catch (error) {
+      return {
+        success: false,
+        message: `An error occurred: ${error.message}`
       }
-    } else {
-      handleSetProfilePicture(image);
     }
   }
 
   const handleFileDelete = async () => {
-    console.log("File deleted");
+    try {
+      handleSetProfilePicture(image);
+
+      await fetch("http://localhost:5000/deleteAvatar", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ avatarLink: profilePicture })
+      });
+    } catch (error) {
+      return {
+        success: false,
+        message: `An error occurred: ${error.message}`
+      }
+    }
   }
 
   // Each time the Edit Profile Picture button is clicked, synchronize 
@@ -138,7 +152,7 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
             <DialogClose asChild>
               <Button
                 variant="outline"
-                onClick={handleFileUpload}
+                onClick={image ? handleFileUpload : handleFileDelete}
                 className="w-[190px]"
               >
                 Save
