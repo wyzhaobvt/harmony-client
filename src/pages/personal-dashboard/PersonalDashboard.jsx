@@ -43,11 +43,11 @@ function PersonalDashboard() {
     },
     {
       name: "Alice Smith",
-      avatar: "img\\pexels-andrea-piacquadio-774909.jpg",
+      avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
     },
     {
       name: "Charlie Brown",
-      avatar: "img\\pexels-nitin-khajotia-1516680.jpg",
+      avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
     },
   ]);
 
