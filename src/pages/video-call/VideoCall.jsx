@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import CameraIcon from "../../components/icons/CameraIcon";
-import MicrophoneIcon from "../../components/icons/MicrophoneIcon";
-import MicrophoneMuteIcon from "../../components/icons/MicrophoneMuteIcon";
+
 import { Button } from "@/components/ui/button";
 import {
   ResizableHandle,
@@ -17,22 +16,23 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import VideoSelector from "../../components/VideoSelector";
+import VideoSelector from "./VideoSelector";
 import VideoStream from "../../components/VideoStream";
 import CallTesting from "../../components/CallTesting";
 import { peer } from "../../utils/globals";
 import stringToHexColor from "../../utils/stringToHexColor";
+import MicrophoneButton from "./MicrophoneButton";
 
 export default function VideoCall() {
   const [members, setMembers] = useState(peer.members);
   const [muted, setMuted] = useState(peer.isMicrophoneMuted);
   const [imStreaming, setImStreaming] = useState(false);
-  const [streams, setStreams] = useState({});
+  const [streams, setStreams] = useState(getStreams());
   const [spotlight, setSpotlight] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
 
-  const chatSwitchWidth = 639
+  const chatSwitchWidth = 639;
 
   const users = peer.roomId
     ? members.groups[peer.roomId]?.map((sid) => {
@@ -56,30 +56,34 @@ export default function VideoCall() {
     });
 
     peer.addEventListener("receivingChanged", () => {
-      const streams = Object.entries(peer.streams).reduce(
-        (prev, [socketId, streams]) => {
-          const display = streams["screen"];
-          const camera = streams["camera"];
-          if (!display && !camera) return prev;
-          prev[socketId] = {
-            display: streams["screen"] || null,
-            camera: streams["camera"] || null,
-          };
-          return prev;
-        },
-        {}
-      );
-      const display = peer.myStreams.get("screen");
-      const camera = peer.myStreams.get("camera");
-      if (display || camera) {
-        streams[peer.socketId] = {
-          display,
-          camera,
-        };
-      }
-      setStreams(streams);
+      setStreams(getStreams());
     });
   }, []);
+
+  function getStreams() {
+    const streams = Object.entries(peer.streams).reduce(
+      (prev, [socketId, streams]) => {
+        const display = streams["screen"];
+        const camera = streams["camera"];
+        if (!display && !camera) return prev;
+        prev[socketId] = {
+          display: streams["screen"] || null,
+          camera: streams["camera"] || null,
+        };
+        return prev;
+      },
+      {}
+    );
+    const display = peer.myStreams.get("screen");
+    const camera = peer.myStreams.get("camera");
+    if (display || camera) {
+      streams[peer.socketId] = {
+        display,
+        camera,
+      };
+    }
+    return streams;
+  }
 
   const streamTiles = Object.entries(streams).reduce(
     (prev, [username, { display, camera }], i) => {
@@ -176,13 +180,18 @@ export default function VideoCall() {
   const resizeChat = (
     <ResizablePanelGroup
       direction="horizontal"
-      className="w-full h-[100svh] flex-grow flex flex-col gap-5 mb-24 test"
+      className="w-full h-[100svh] flex-grow flex flex-col gap-5"
     >
-      <ResizablePanel minSize={(300/width) * 100} className="">
+      <ResizablePanel minSize={(300 / width) * 100} className="">
         {callMembers}
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={(340/width) * 100} minSize={(340/width) * 100}>test</ResizablePanel>
+      <ResizablePanel
+        defaultSize={(340 / width) * 100}
+        minSize={(340 / width) * 100}
+      >
+        test
+      </ResizablePanel>
     </ResizablePanelGroup>
   );
 
@@ -202,8 +211,11 @@ export default function VideoCall() {
   const sheetChat = (
     <>
       <Sheet defaultOpen={chatOpen} onOpenChange={setChatOpen}>
-        <SheetTrigger asChild >{chatButton}</SheetTrigger>
-        <SheetContent className="border-input" onClose={()=>setChatOpen(false)}>
+        <SheetTrigger asChild>{chatButton}</SheetTrigger>
+        <SheetContent
+          className="border-input"
+          onClose={() => setChatOpen(false)}
+        >
           <SheetHeader>
             <SheetTitle>Are you absolutely sure?</SheetTitle>
             <SheetDescription>
@@ -215,30 +227,21 @@ export default function VideoCall() {
       </Sheet>
     </>
   );
-  
+
   return (
     <>
       <div className="w-full h-full flex-grow flex flex-col gap-5 mb-20">
-        {chatOpen ? (width > chatSwitchWidth ? resizeChat : callMembers) : callMembers}
+        {chatOpen
+          ? width > chatSwitchWidth
+            ? resizeChat
+            : callMembers
+          : callMembers}
         <div
           className={`bg-secondary-foreground dark:bg-secondary fixed w-full bottom-0 flex flex-col text-white`}
         >
           <div className="flex justify-between items-center px-8 w-full grow min-h-12 max-h-12">
             <div className="flex gap-4 sm:w-1/3">
-              <Button
-                variant="ghost"
-                className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground w-16 ${
-                  muted && "text-red-400 hover:text-red-400"
-                }`}
-                onClick={handleMuteClick}
-              >
-                {muted ? (
-                  <MicrophoneMuteIcon className="w-5 h-5" />
-                ) : (
-                  <MicrophoneIcon className="w-5 h-5" />
-                )}
-                <div className="text-xs">{muted ? "Unmute" : "Mute"}</div>
-              </Button>
+              <MicrophoneButton muted={muted} muteClicked={handleMuteClick} />
               <VideoSelector
                 onStream={handleOnStream}
                 triggerButton={
@@ -258,7 +261,9 @@ export default function VideoCall() {
                 }
               />
             </div>
-            <div className="flex w-1/3 justify-center">{width > chatSwitchWidth ? chatButton : sheetChat}</div>
+            <div className="flex w-1/3 justify-center">
+              {width > chatSwitchWidth ? chatButton : sheetChat}
+            </div>
             <div className="flex w-1/3 justify-end">
               <Button
                 className="h-7 bg-primary-foreground text-primary hover:bg-zinc-300 dark:bg-primary dark:text-primary-foreground dark:hover:bg-zinc-300"

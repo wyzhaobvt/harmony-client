@@ -1,5 +1,5 @@
 import App from './components/App';
-import VideoCall from './pages/video-call/VideoCall';
+import VideoCall from './pages/video-call/VideoCallPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
