@@ -48,7 +48,12 @@ const links = [
   {
     name: "Video Chat",
     path: "/video"
-  }
+  },
+  {
+    icon: <LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white"/>,
+    name: "Personal Dashboard",
+    path: "/personalDashboard"
+  },
 ]
 
 function Sidebar() {
