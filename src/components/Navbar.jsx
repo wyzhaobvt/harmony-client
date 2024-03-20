@@ -18,7 +18,7 @@ export default function Navbar() {
             onClick={() => navigate("/video")}
           >
             <PhoneCall className="h-4 text-green-500" />
-            <span className="whitespace-nowrap hidden sm:block max-w-48 overflow-hidden overflow-ellipsis">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque praesentium maiores in excepturi minus debitis voluptates ipsam. Minima alias repudiandae, hic quas sunt fuga soluta dolore, eligendi ratione, adipisci odio.</span>
+            <span className="whitespace-nowrap hidden sm:block max-w-48 overflow-hidden overflow-ellipsis">Forgetful Dentists</span>
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BorderWidthIcon, ChatBubbleIcon } from "@radix-ui/react-icons";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import CameraIcon from "../../components/icons/CameraIcon";
 
 import { Button } from "@/components/ui/button";
@@ -8,21 +8,16 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoSelector from "./VideoSelector";
 import VideoStream from "../../components/VideoStream";
-import CallTesting from "../../components/CallTesting";
 import { peer } from "../../utils/globals";
 import stringToHexColor from "../../utils/stringToHexColor";
 import MicrophoneButton from "./MicrophoneButton";
 import DashboardMessages from "../group-dashboard/DashboardMessages";
+import FileManagement from "../file-management/FileManagement";
+import "./VideoCall.css";
 
 export default function VideoCall() {
   const [members, setMembers] = useState(peer.members);
@@ -31,6 +26,7 @@ export default function VideoCall() {
   const [streams, setStreams] = useState(getStreams());
   const [spotlight, setSpotlight] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [chatTab, setChatTab] = useState("chat");
   const [width, setWidth] = useState(window.innerWidth);
   const [groupName, setGroupName] = useState("test-group");
   const [date, setDate] = useState(new Date().toISOString());
@@ -181,15 +177,30 @@ export default function VideoCall() {
   );
 
   const chatComponent = (
-    <div className="p-2 h-full ps-0">
-      <DashboardMessages
-        date={date}
-        setDate={setDate}
-        groupName={groupName}
-        setGroupName={setGroupName}
-        messages={messages}
-        setMessages={setMessages}
-      />
+    <div className="p-2 h-full sm:ps-0 video-call--chat-tabs">
+      <Tabs
+        defaultValue={chatTab}
+        onValueChange={setChatTab}
+        className="h-full flex flex-col"
+      >
+        <TabsList className="self-start">
+          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="files">Files</TabsTrigger>
+        </TabsList>
+        <TabsContent value="chat" className="grow">
+          <DashboardMessages
+            date={date}
+            setDate={setDate}
+            groupName={groupName}
+            setGroupName={setGroupName}
+            messages={messages}
+            setMessages={setMessages}
+          />
+        </TabsContent>
+        <TabsContent value="files" className="grow overflow-auto">
+          <FileManagement />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 
