@@ -6,22 +6,38 @@ import { Button } from "@/components/ui/button";
 import { EditProfilePictureDialog } from "./EditProfilePictureDialog";
 import StatusMessage from "../../components/ui/status-message";
 import { ProfilePicture } from "../../components/ProfilePicture";
-
-// Dummy data. Will be replaced by data of current user from database.
-const user = {
-  firstName: "John",
-  lastName: "Doe",
-  email: "jdoe@email.com",
-  avatarLink: "https://res.cloudinary.com/dsyha6lpv/image/upload/v1710465057/user-avatar/tqgyeweyvomara5fg7ee.png"
-}
+import { getUser } from "../../utils/db";
 
 const Profile = () => {
-  const [profilePicture, setProfilePicture] = useState(user.avatarLink);
+  const [profilePicture, setProfilePicture] = useState("");
+
+  // Get user data when page loads
+  useEffect(() => {
+    const initializeData = async () => {
+      const data = await getUser();
+
+      if (!data.success) {
+        console.log(data.message);
+        return;
+      }
+
+      const user = data.data[0];
+      
+      setProfilePicture(user.profileURL);
+      setUserData({
+        firstName: user.username,
+        lastName: user.username,
+        email: user.email
+      })
+    }
+
+    initializeData();
+  }, []);
   
   const [userData, setUserData] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email
+    firstName: "",
+    lastName: "",
+    email: ""
   });
 
   const [errors, setErrors] = useState({
@@ -82,7 +98,7 @@ const Profile = () => {
               <EditProfilePictureDialog
                 profilePicture={profilePicture}
                 handleSetProfilePicture={handleSetProfilePicture}
-                avatarLink={user.avatarLink}
+                avatarLink={profilePicture}
                 className="absolute bottom-0 right-5"
               />
             </div>

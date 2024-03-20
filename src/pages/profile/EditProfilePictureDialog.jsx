@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
 import { ProfilePicture } from "../../components/ProfilePicture";
+import { uploadAvatar, deleteAvatar } from "../../utils/db";
 
 export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, className }) {
   const [file, setFile] = useState("");
@@ -40,43 +41,24 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
   }
 
   const handleFileUpload = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/uploadAvatar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ image, avatarLink: profilePicture }),
-      });
-  
-      const result = await response.json();
-      const uploadedImage = result.data.secure_url;
+    const data = await uploadAvatar(image, profilePicture);
 
-      handleSetProfilePicture(uploadedImage);
-    } catch (error) {
-      return {
-        success: false,
-        message: `An error occurred: ${error.message}`
-      }
+    if (!data.success) {
+      console.log(data.message);
+      return;
     }
+    
+    const uploadedImage = data.data.secure_url;
+    handleSetProfilePicture(uploadedImage);
   }
 
   const handleFileDelete = async () => {
-    try {
-      handleSetProfilePicture(image);
+    handleSetProfilePicture(image);
+    const data = deleteAvatar(profilePicture);
 
-      await fetch("http://localhost:5000/deleteAvatar", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ avatarLink: profilePicture })
-      });
-    } catch (error) {
-      return {
-        success: false,
-        message: `An error occurred: ${error.message}`
-      }
+    if (!data.success) {
+      console.log(data.message);
+      return;
     }
   }
 

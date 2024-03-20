@@ -101,6 +101,65 @@ export function logout() {
     });
 }
 
+export const getUser = async () => {
+  try {
+    const response = await fetch(authUrl("/getUser"), {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    }
+  }
+}
+
+export const uploadAvatar = async (image, avatarLink) => {
+  try {
+    const response = await fetch(authUrl("/uploadAvatar"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ image, avatarLink }),
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    }
+  }
+}
+
+export const deleteAvatar = async (avatarLink) => {
+  try {
+    const response = await fetch("http://localhost:5002/deleteAvatar", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ avatarLink })
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    }
+  }
+}
+
 export function getPeerAuthToken(callback) {
   return fetch(authUrl("/peer/authenticate"), {
     credentials: "include",
