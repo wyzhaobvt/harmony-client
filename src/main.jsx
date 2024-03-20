@@ -6,6 +6,7 @@ import {
 import router from "./router.jsx";
 import "./css/globals.css";
 import "./css/App.css";
+import "./utils/globals.js"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
