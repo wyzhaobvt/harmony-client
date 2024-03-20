@@ -47,6 +47,7 @@ function Textarea({ placeholder, className, addMessage }) {
 
   const handleEmojiSelect = (emoji) => {
     setText(text + emoji.native);
+    setShowEmojiPicker(false)
   };
 
   useEffect(() => {
