@@ -14,11 +14,11 @@ export default function Navbar() {
         <div className="font-bold text-2xl">Harmony</div>
         {location.pathname !== "/video" && peer.roomId && (
           <div
-            className="border-green-500 border-2 rounded-full ml-5 px-3 flex items-center justify-evenly gap-3 cursor-pointer"
+            className="border-green-500 border-2 rounded-full ml-5 px-3 flex items-center justify-evenly gap-3 cursor-pointer h-7 max-h-7"
             onClick={() => navigate("/video")}
           >
             <PhoneCall className="h-4 text-green-500" />
-            forgetful-dentists
+            <span className="whitespace-nowrap hidden sm:block max-w-48 overflow-hidden overflow-ellipsis">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque praesentium maiores in excepturi minus debitis voluptates ipsam. Minima alias repudiandae, hic quas sunt fuga soluta dolore, eligendi ratione, adipisci odio.</span>
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { BorderWidthIcon, ChatBubbleIcon } from "@radix-ui/react-icons";
 import CameraIcon from "../../components/icons/CameraIcon";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import CallTesting from "../../components/CallTesting";
 import { peer } from "../../utils/globals";
 import stringToHexColor from "../../utils/stringToHexColor";
 import MicrophoneButton from "./MicrophoneButton";
+import DashboardMessages from "../group-dashboard/DashboardMessages";
 
 export default function VideoCall() {
   const [members, setMembers] = useState(peer.members);
@@ -31,6 +32,9 @@ export default function VideoCall() {
   const [spotlight, setSpotlight] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
+  const [groupName, setGroupName] = useState("test-group");
+  const [date, setDate] = useState(new Date().toISOString());
+  const [messages, setMessages] = useState([]);
 
   const chatSwitchWidth = 639;
 
@@ -158,9 +162,8 @@ export default function VideoCall() {
 
   const callMembers = (
     <>
-      <div className="w-full h-full flex-grow flex flex-col gap-5">
-        <CallTesting />
-        <div className="w-full flex flex-col items-center px-10 group [&>*]:w-[clamp(200px,100%,calc(70vh*(16/9)+12rem))]">
+      <div className="w-full h-full flex-grow flex flex-col">
+        <div className="w-full flex flex-col items-center px-10 group mt-5 [&>*]:w-[clamp(200px,100%,calc(70vh*(16/9)+12rem))]">
           {spotlight !== null &&
             (spotlight.type === "stream"
               ? streamTiles[spotlight.uid]
@@ -177,22 +180,17 @@ export default function VideoCall() {
     </>
   );
 
-  const resizeChat = (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="w-full h-[100svh] flex-grow flex flex-col gap-5"
-    >
-      <ResizablePanel minSize={(300 / width) * 100} className="">
-        {callMembers}
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel
-        defaultSize={(340 / width) * 100}
-        minSize={(340 / width) * 100}
-      >
-        test
-      </ResizablePanel>
-    </ResizablePanelGroup>
+  const chatComponent = (
+    <div className="p-2 h-full ps-0">
+      <DashboardMessages
+        date={date}
+        setDate={setDate}
+        groupName={groupName}
+        setGroupName={setGroupName}
+        messages={messages}
+        setMessages={setMessages}
+      />
+    </div>
   );
 
   const chatButton = (
@@ -213,41 +211,31 @@ export default function VideoCall() {
       <Sheet defaultOpen={chatOpen} onOpenChange={setChatOpen}>
         <SheetTrigger asChild>{chatButton}</SheetTrigger>
         <SheetContent
-          className="border-input"
+          className="border-input p-0"
           onClose={() => setChatOpen(false)}
         >
-          <SheetHeader>
-            <SheetTitle>Are you absolutely sure?</SheetTitle>
-            <SheetDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </SheetDescription>
-          </SheetHeader>
+          {chatComponent}
         </SheetContent>
       </Sheet>
     </>
   );
 
-  return (
+  const callComponent = (
     <>
-      <div className="w-full h-full flex-grow flex flex-col gap-5 mb-20">
-        {chatOpen
-          ? width > chatSwitchWidth
-            ? resizeChat
-            : callMembers
-          : callMembers}
+      <div className="w-full h-full flex-grow flex flex-col" data-no-padding>
+        {callMembers}
         <div
-          className={`bg-secondary-foreground dark:bg-secondary fixed w-full bottom-0 flex flex-col text-white`}
+          className={`bg-secondary-foreground dark:bg-secondary text-white rounded-t-lg`}
         >
-          <div className="flex justify-between items-center px-8 w-full grow min-h-12 max-h-12">
-            <div className="flex gap-4 sm:w-1/3">
+          <div className="flex justify-between items-center px-3 w-full min-h-12 max-h-12 h-12">
+            <div className="flex gap-2 sm:gap-4 sm:flex-1">
               <MicrophoneButton muted={muted} muteClicked={handleMuteClick} />
               <VideoSelector
                 onStream={handleOnStream}
                 triggerButton={
                   <Button
                     variant="ghost"
-                    className={`flex flex-col justify-between items-center py-0.5 px-3 font-thin dark:hover:bg-primary-foreground ${
+                    className={`flex flex-col justify-between items-center py-0.5 font-thin dark:hover:bg-primary-foreground ${
                       streams[peer.socketId] &&
                       "text-green-400 hover:text-green-400"
                     }`}
@@ -261,10 +249,10 @@ export default function VideoCall() {
                 }
               />
             </div>
-            <div className="flex w-1/3 justify-center">
+            <div className="flex flex-1 justify-center">
               {width > chatSwitchWidth ? chatButton : sheetChat}
             </div>
-            <div className="flex w-1/3 justify-end">
+            <div className="flex flex-1 justify-end">
               <Button
                 className="h-7 bg-primary-foreground text-primary hover:bg-zinc-300 dark:bg-primary dark:text-primary-foreground dark:hover:bg-zinc-300"
                 onClick={() => {
@@ -279,5 +267,28 @@ export default function VideoCall() {
         </div>
       </div>
     </>
+  );
+
+  const resizeChat = (
+    <ResizablePanelGroup
+      data-no-padding
+      direction="horizontal"
+      className="w-full h-[100svh] flex-grow flex flex-col gap-1"
+    >
+      <ResizablePanel minSize={(300 / width) * 100} className="">
+        {callComponent}
+      </ResizablePanel>
+      <ResizableHandle className="bg-transparent" />
+      <ResizablePanel
+        defaultSize={(340 / width) * 100}
+        minSize={(340 / width) * 100}
+      >
+        <div className="h-full">{chatComponent}</div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
+  );
+
+  return (
+    <>{chatOpen && width > chatSwitchWidth ? resizeChat : callComponent}</>
   );
 }
