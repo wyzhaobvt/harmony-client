@@ -149,7 +149,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
                     <Calendar size={24} className="xl:hidden cursor-pointer" />
                   </DialogTrigger>
                   <DialogContent className="w-fit p-12 max-h-[80vh] overflow-y-auto xl:hidden">
-                    <div className='block xl:hidden'><DashboardCalendar date={date} setDate={setDate} /></div>
+                    <div className='block xl:hidden'><DashboardCalendar groupName={groupName} date={date} setDate={setDate} /></div>
                   </DialogContent>
                 </Dialog>
               </div>
