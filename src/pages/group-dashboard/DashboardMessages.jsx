@@ -59,7 +59,7 @@ function Textarea({ placeholder, className, addMessage }) {
         setShowEmojiPicker(false);
       }
     }
-
+    
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -126,16 +126,12 @@ function Textarea({ placeholder, className, addMessage }) {
   );
 }
 
-
-
 function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
-              
       const addMessage = (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       };
 
     return (
-        
         <div className="chat xl:me-3 w-full">
           <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3">
             <div className="chatbox--header flex items-center mb-4">
@@ -173,7 +169,6 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
             addMessage={addMessage}
           />
         </div>
-
     );
 }
 
