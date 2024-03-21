@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
 import DashboardCalendar from './DashboardCalendar'
+import GroupMembers from './GroupMembers';
 import {
   Dialog,
   DialogContent,
@@ -136,7 +137,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
           <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3">
             <div className="chatbox--header flex items-center mb-4">
                 <h1 className="font-semibold text-xl sm:text-2xl xl:text-3xl me-auto">
-                  {groupName}
+                  <GroupMembers groupName={groupName} />
                 </h1>
               <div className="icons flex gap-4 p-3">
                 <Phone size={24} className='cursor-pointer' />

@@ -17,6 +17,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea as TextareaCN } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+
+
 
 
 function Event({ name, time, date, description, onDelete}) {
@@ -37,6 +42,7 @@ function Event({ name, time, date, description, onDelete}) {
   );
 }
 
+
 function DashboardCalendar({date, setDate, groupName}) {
 
   const [events, setEvents] = useState([])
@@ -45,7 +51,7 @@ function DashboardCalendar({date, setDate, groupName}) {
     calendar: groupName,
     event: {name: '', date: '', startTime: '', endTime: '', description: ''},
   });
-  console.log(eventForm);
+  // console.log(eventForm);
 
   const monthNames = [
     'Jan.',
@@ -63,27 +69,31 @@ function DashboardCalendar({date, setDate, groupName}) {
   ];
 
   const handleEventChange = (e) => {
-    setEventForm({
-      ...eventForm,
+    const { id, value } = e.target || e;
+    setEventForm((prevEventForm) => ({
+      ...prevEventForm,
       event: {
-      ...eventForm.event,
-      [e.target.id]: e.target.value,
-    }})
+        ...prevEventForm.event,
+        [id]: value,
+      },
+    }));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // setEvents([...events, eventForm]);
     try {
-      // Make a POST request to your Express endpoint
       const response = await axios.post('http://localhost:5000/api/calendar/createevent', eventForm);
       console.log('Event added:', response.data);
-      return response.data; // Return the response data if needed
+      setEventForm({
+        calendar: groupName,
+        event: {name: '', date: '', startTime: '', endTime: '', description: ''},
+      }); // Reset form
+      return response.data;
     } catch (error) {
       console.error('Error adding event:', error);
       throw error; // Throw the error if needed
     }
-    setEventForm({   name: '', date: '', startTime: '', endTime: '', description: '' }); // Reset form
+    
   };
 
   const deleteEvent = (index) => {
@@ -101,11 +111,11 @@ function DashboardCalendar({date, setDate, groupName}) {
                 const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`)
                 const data = response.data
                 if (Array.isArray(data)) {
-                  console.log(data);
+                  // console.log(data);
                   setEvents(data);
                 } else {
                   setEvents([])
-                  console.log('Data is not an array:', data);
+                  // console.log('Data is not an array:', data);
                 }}
             } catch (error) {
                 console.error('Error:', error);
@@ -150,21 +160,25 @@ function DashboardCalendar({date, setDate, groupName}) {
                       value={eventForm.event.name}
                       onChange={handleEventChange}
                     />
-                    <Input
+                    <DatePicker className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"'
+                      selected={eventForm.event.date}
                       id="date"
-                      placeholder="Date"
+                      placeholderText="Date"
                       value={eventForm.event.date}
-                      onChange={handleEventChange}
+                      wrapperClassName="date-picker-wrapper" // Optional, for styling purposes
+                      dateFormat="yyyy-MM-dd"
+                      onChange={(date) => handleEventChange({ target: { id: 'date', value: date } })}
+                      autocomplete="off"
                     />
                     <Input
                       id="startTime"
-                      placeholder="Start Time"
+                      placeholder="Start Time (24hr Format)"
                       value={eventForm.event.startTime}
                       onChange={handleEventChange}
                     />
                     <Input
                       id="endTime"
-                      placeholder="End Time"
+                      placeholder="End Time (24hr Format)"
                       value={eventForm.event.endTime}
                       onChange={handleEventChange}
                     />
