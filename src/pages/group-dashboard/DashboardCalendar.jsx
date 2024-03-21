@@ -20,16 +20,13 @@ import { Button } from '@/components/ui/button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-
-
-
-
-function Event({ name, time, date, description, onDelete}) {
+function Event({ name, date, description, onDelete}) {
+  console.log(name, date, description);
   return (
     <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
       <div className="event-details">
         <h2 className="font-semibold text-sm">{name}</h2>
-        <p className="text-sm">{date} | {time}</p>
+        <p className="text-sm">{date.slice(0,10)} | {date.slice(11,16)} - {date.slice(20,25)}</p>
         <p className="text-sm">{description}</p>
       </div>
       <div
@@ -46,12 +43,12 @@ function Event({ name, time, date, description, onDelete}) {
 function DashboardCalendar({date, setDate, groupName}) {
 
   const [events, setEvents] = useState([])
+  console.log(events);
   
   const [eventForm, setEventForm] = useState({
     calendar: groupName,
     event: {name: '', date: '', startTime: '', endTime: '', description: ''},
   });
-  // console.log(eventForm);
 
   const monthNames = [
     'Jan.',
@@ -100,18 +97,20 @@ function DashboardCalendar({date, setDate, groupName}) {
     setEvents(events.filter((_, i) => i !== index));
   };
 
-    
-
+  // console.log(date);
     useEffect(() => {
         const fetchEvents = async () => {
             try {
+                // console.log('Use Effect Has Ran!');
+                setEvents([])
+                console.log('Use Effect - Date:',date);
                 if(date){
                 const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-                // console.log(formattedDate);
+                console.log('Use Effect - Formatted Date:', formattedDate);
                 const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`)
                 const data = response.data
                 if (Array.isArray(data)) {
-                  // console.log(data);
+                  console.log('Use Effect - Data:',data);
                   setEvents(data);
                 } else {
                   setEvents([])
@@ -138,7 +137,7 @@ function DashboardCalendar({date, setDate, groupName}) {
           <CustomCalendar
             mode="single"
             selected={date}
-            onSelect={setDate}
+            onSelect={(date) => setDate(date)}
             className="rounded-md border border-input h-fit mb-3"
           />
           <div className="day-breakdown rounded-md border border-input p-4">

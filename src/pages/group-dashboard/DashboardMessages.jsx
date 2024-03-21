@@ -30,7 +30,7 @@ function Message({ name, message, time, avatar }) {
       <img
         src={avatar || 'https://via.placeholder.com/40'}
         alt=""
-        className="rounded-full w-10 h-10 object-cover me-4 flex-shrink-0"
+        className="rounded-full w-10 h-10 object-cover me-4 flex-shrink-0 cursor-pointer"
       />
       <div className="message-body">
         <h1 className="font-semibold text-sm me-auto">{name}</h1>
