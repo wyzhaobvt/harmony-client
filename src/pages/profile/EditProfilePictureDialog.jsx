@@ -10,12 +10,11 @@ import {
   DialogTrigger,
   DialogClose
 } from "@/components/ui/dialog";
-import { Pencil2Icon, AvatarIcon } from "@radix-ui/react-icons";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import { ProfilePicture } from "../../components/ProfilePicture";
 import { uploadAvatar, deleteAvatar } from "../../utils/db";
 
 export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, className }) {
-  const [file, setFile] = useState("");
   const [image, setImage] = useState(profilePicture);
   const [syncImage, setSyncImage] = useState(0);
 
@@ -24,7 +23,6 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
   const previewFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-
     reader.onloadend = () => {
       setImage(reader.result);
     }
@@ -32,7 +30,6 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
 
   const handleFileOnChange = (event) => {
     const file = event.target.files[0];
-    setFile(file);
     previewFile(file);
   }
 
