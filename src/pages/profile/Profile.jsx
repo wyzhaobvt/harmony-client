@@ -6,34 +6,11 @@ import { Button } from "@/components/ui/button";
 import { EditProfilePictureDialog } from "./EditProfilePictureDialog";
 import StatusMessage from "../../components/ui/status-message";
 import { ProfilePicture } from "../../components/ProfilePicture";
-import { getUser } from "../../utils/db";
+import { getUser, updateUser } from "../../utils/db";
 
 const Profile = () => {
   const [profilePicture, setProfilePicture] = useState("");
 
-  // Get user data when page loads
-  useEffect(() => {
-    const initializeData = async () => {
-      const data = await getUser();
-
-      if (!data.success) {
-        console.log(data.message);
-        return;
-      }
-
-      const user = data.data[0];
-      
-      setProfilePicture(user.profileURL);
-      setUserData({
-        firstName: user.username,
-        lastName: user.username,
-        email: user.email
-      })
-    }
-
-    initializeData();
-  }, []);
-  
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -45,6 +22,29 @@ const Profile = () => {
     lastName: null,
     email: null
   });
+
+  // Get user data when page loads
+  useEffect(() => {
+    initializeData();
+  }, []);
+  
+  const initializeData = async () => {
+    const data = await getUser();
+
+    if (!data.success) {
+      console.log(data.message);
+      return;
+    }
+
+    const user = data.data[0];
+    
+    setProfilePicture(user.profileURL);
+    setUserData({
+      firstName: user.username.split(" ")[0],
+      lastName: user.username.split(" ").slice(1).join(" "),
+      email: user.email
+    })
+  }
 
   const handleSetProfilePicture = (value) => {
     setProfilePicture(value);
@@ -65,8 +65,16 @@ const Profile = () => {
     });
   };
 
-  const finishSubmit = () => {
-    console.log("Profile updated");
+  const finishSubmit = async () => {
+    const username = `${userData.firstName} ${userData.lastName}`
+    const data = await updateUser(username, userData.email);
+
+    if (!data.success) {
+      console.log(data.message);
+      return;
+    }
+
+    initializeData();
   }
 
   useEffect(() => {
@@ -111,7 +119,7 @@ const Profile = () => {
               name="firstName"
               placeholder="First Name"
               defaultValue={userData.firstName}
-              onChange={handleOnChange}
+              onInput={handleOnChange}
             />
             {/* Error for First Name field */}
             <StatusMessage
@@ -127,7 +135,7 @@ const Profile = () => {
               name="lastName"
               placeholder="Last Name"
               defaultValue={userData.lastName}
-              onChange={handleOnChange}
+              onInput={handleOnChange}
             />
             {/* Error for Last Name field */}
             <StatusMessage
@@ -144,7 +152,7 @@ const Profile = () => {
               name="email"
               placeholder="Email"
               defaultValue={userData.email}
-              onChange={handleOnChange}
+              onInput={handleOnChange}
             />
             {/* Error for Email field */}
             <StatusMessage

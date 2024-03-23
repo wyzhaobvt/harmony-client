@@ -118,6 +118,27 @@ export const getUser = async () => {
   }
 }
 
+export const updateUser = async (username, email) => {
+  try {
+    const response = await fetch(authUrl("/updateUser"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({ username, email })
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    }
+  }
+}
+
 export const uploadAvatar = async (image, avatarLink) => {
   try {
     const response = await fetch(authUrl("/uploadAvatar"), {
