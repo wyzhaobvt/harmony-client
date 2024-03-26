@@ -20,18 +20,37 @@ import { Button } from '@/components/ui/button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-function Event({ name, date, description, onDelete}) {
-  console.log(name, date, description);
+async function onDeleteEvent (groupName, name, refetchEvents) {
+
+  const isConfirmed = window.confirm('Are you sure you want to delete this event?');
+  if (!isConfirmed) {
+    return;
+  }
+
+  try {
+    const response = await axios.delete('http://localhost:5000/api/calendar/deleteevent', {
+      data: { calendar: groupName, eventName: name }
+    })
+    refetchEvents();
+    console.log('Event deleted:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    throw error;
+  }    
+};
+
+function Event(props) {
   return (
     <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
       <div className="event-details">
-        <h2 className="font-semibold text-sm">{name}</h2>
-        <p className="text-sm">{date.slice(0,10)} | {date.slice(11,16)} - {date.slice(20,25)}</p>
-        <p className="text-sm">{description}</p>
+        <h2 className="font-semibold text-sm">{props.name}</h2>
+        <p className="text-sm">{props.date.slice(0,10)} | {props.date.slice(11,16)} - {props.date.slice(20,25)}</p>
+        <p className="text-sm">{props.description}</p>
       </div>
       <div
-        className="delete-icon opacity-0 group-hover:opacity-100"
-        onClick={onDelete}
+        className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
+        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents)}
       >
         <X />
       </div>
@@ -41,6 +60,24 @@ function Event({ name, date, description, onDelete}) {
 
 
 function DashboardCalendar({date, setDate, groupName}) {
+
+  const refetchEvents = async () => {
+    try {
+      setEvents([]);
+      if (date) {
+        const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
+        const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`);
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setEvents(data);
+        } else {
+          setEvents([]);
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const [events, setEvents] = useState([])
   console.log(events);
@@ -84,33 +121,24 @@ function DashboardCalendar({date, setDate, groupName}) {
       setEventForm({
         calendar: groupName,
         event: {name: '', date: '', startTime: '', endTime: '', description: ''},
-      }); // Reset form
+      });
       return response.data;
     } catch (error) {
       console.error('Error adding event:', error);
-      throw error; // Throw the error if needed
+      throw error;
     }
-    
   };
 
-  const deleteEvent = (index) => {
-    setEvents(events.filter((_, i) => i !== index));
-  };
-
-  // console.log(date);
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 // console.log('Use Effect Has Ran!');
                 setEvents([])
-                console.log('Use Effect - Date:',date);
                 if(date){
                 const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-                console.log('Use Effect - Formatted Date:', formattedDate);
                 const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`)
                 const data = response.data
                 if (Array.isArray(data)) {
-                  console.log('Use Effect - Data:',data);
                   setEvents(data);
                 } else {
                   setEvents([])
@@ -207,8 +235,9 @@ function DashboardCalendar({date, setDate, groupName}) {
                   name={event.name} 
                   time={event.startTime ? `${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}` : 'All Day'} 
                   description={event.description}
-                  onDelete={() => deleteEvent(index)} 
                   date={event.date}
+                  groupName={groupName}
+                  refetchEvents={refetchEvents}
                 />
               ))}
             </div>
