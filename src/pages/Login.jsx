@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,28 +13,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
+import { login } from "../utils/db";
 
 const Login = () => {
   const [inputData, setInputData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
-
+  
   const [errors, setErrors] = useState({
     email: null,
-    password: null
+    password: null,
   });
-
+  
+  const [loginError, setLoginError] = useState(null);
+  
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
 
+  const navigate = useNavigate()
+
   const handlePasswordVisibility = () => {
-    setIsHiddenPassword(prev => !prev);
-  }
+    setIsHiddenPassword((prev) => !prev);
+  };
 
   const handleOnChange = (event) => {
     setInputData((prev) => ({
       ...prev,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     }));
   };
 
@@ -51,7 +55,15 @@ const Login = () => {
   };
 
   const finishSubmit = () => {
-    console.log("Logged in");
+    login({ email: inputData.email, password: inputData.password }).then(
+      (data) => {
+        if (!data.success) {
+          setLoginError(data.message);
+          return;
+        }
+        navigate("/")
+      }
+    );
   };
 
   useEffect(() => {
@@ -124,6 +136,7 @@ const Login = () => {
                   error={errors.password}
                   message="Password field is required"
                 />
+                <StatusMessage error={loginError} message={loginError} />
               </div>
               {/* Log in Button */}
               <div className="flex justify-end mt-3">
@@ -137,7 +150,12 @@ const Login = () => {
         <CardFooter className="flex justify-start">
           <CardDescription>
             Don't have an account?{" "}
-            <Link className="text-primary underline cursor-pointer" to="/register">Sign Up</Link>
+            <Link
+              className="text-primary underline cursor-pointer"
+              to="/register"
+            >
+              Sign Up
+            </Link>
           </CardDescription>
         </CardFooter>
       </Card>

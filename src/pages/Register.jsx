@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import checkValidPassword from "../utils/checkValidPassword";
 
@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
+import { register } from "../utils/db";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
@@ -44,15 +45,18 @@ const Register = () => {
   const [isHiddenConfirmPassword, setIsHiddenConfirmPassword] = useState(true);
 
   const handlePasswordVisibility = () => {
-    setIsHiddenPassword(prev => !prev);
-  }
+    setIsHiddenPassword((prev) => !prev);
+  };
 
   const handleConfirmPasswordVisibility = () => {
-    setIsHiddenConfirmPassword(prev => !prev);
-  }
+    setIsHiddenConfirmPassword((prev) => !prev);
+  };
 
   const handleOnChange = (event) => {
-    setInputData((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+    setInputData((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   const handlePasswordOnChange = (event) => {
@@ -62,7 +66,7 @@ const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // For each 'inputData' field, set the corresponding error to false if the inputData value is a truthy. 
+    // For each 'inputData' field, set the corresponding error to false if the inputData value is a truthy.
     // Else, set the error to be true.
     Object.keys(inputData).forEach((field) => {
       const value = inputData[field];
@@ -75,12 +79,22 @@ const Register = () => {
   };
 
   const finishSubmit = () => {
-    console.log("Form submitted");
+    register({ email: inputData.email, password: inputData.password }).then(
+      (data) => {
+        if (!data.success) {
+          setLoginError(data.message);
+          return;
+        }
+        navigate("/");
+      }
+    );
   };
 
   useEffect(() => {
     // Set 'isErrors' to true if 'errors' has at least one truthy value or one null value
-    const isErrors = Object.values(errors).some((error) => error === true || error === null);
+    const isErrors = Object.values(errors).some(
+      (error) => error === true || error === null
+    );
 
     // If the conditions are satisfied, submit the form
     if (!isErrors && !checkedPassword.error && isPasswordMatch) {
@@ -175,7 +189,7 @@ const Register = () => {
                         : "pr-10"
                     }
                   />
-                  <PasswordVisibilityToggle 
+                  <PasswordVisibilityToggle
                     isHidden={isHiddenPassword}
                     handleToggle={handlePasswordVisibility}
                   />
@@ -202,7 +216,7 @@ const Register = () => {
                         : "pr-10"
                     }
                   />
-                  <PasswordVisibilityToggle 
+                  <PasswordVisibilityToggle
                     isHidden={isHiddenConfirmPassword}
                     handleToggle={handleConfirmPasswordVisibility}
                   />
@@ -239,7 +253,9 @@ const Register = () => {
         <CardFooter className="flex justify-start">
           <CardDescription>
             Already have an account?{" "}
-            <Link className="text-primary underline cursor-pointer" to="/login">Log In</Link>
+            <Link className="text-primary underline cursor-pointer" to="/login">
+              Log In
+            </Link>
           </CardDescription>
         </CardFooter>
       </Card>
