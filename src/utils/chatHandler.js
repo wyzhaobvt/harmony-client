@@ -1,7 +1,7 @@
 const url = import.meta.env.VITE_CHAT_SERVER_ORIGIN;
 
 export function loadChat({ teamUid, teamName }) {
-  return fetch(url + "/loadTeamChat", {
+  return fetch(url + "/api/chat/load", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -19,7 +19,7 @@ export function loadChat({ teamUid, teamName }) {
 }
 
 export function sendChat({ teamUid, teamName, message }) {
-  return fetch(url + "/createTeamChat", {
+  return fetch(url + "/api/chat/create", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -38,7 +38,7 @@ export function sendChat({ teamUid, teamName, message }) {
 }
 
 export function editChat({ chatUid, teamUid, teamName, message }) {
-  return fetch(url + "/editTeamChat", {
+  return fetch(url + "/api/chat/edit", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -58,7 +58,7 @@ export function editChat({ chatUid, teamUid, teamName, message }) {
 }
 
 export function deleteChat({ chatUid, teamUid, teamName }) {
-  return fetch(url + "/deleteTeamChat", {
+  return fetch(url + "/api/chat/delete", {
     method: "DELETE",
     credentials: "include",
     headers: {
