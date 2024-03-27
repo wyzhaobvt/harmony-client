@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
 import { EditProfilePictureDialog } from "./EditProfilePictureDialog";
 import StatusMessage from "../../components/ui/status-message";
 import { ProfilePicture } from "../../components/ProfilePicture";
@@ -22,6 +24,10 @@ const Profile = () => {
     lastName: null,
     email: null
   });
+
+  const [serverResponse, setServerResponse] = useState({ success: null, message: "" });
+
+  const { toast } = useToast();
 
   // Get user data when page loads
   useEffect(() => {
@@ -69,12 +75,13 @@ const Profile = () => {
     const username = `${userData.firstName} ${userData.lastName}`
     const data = await updateUser(username, userData.email);
 
-    if (!data.success) {
-      console.log(data.message);
-      return;
+    if (data.success === true) {
+      toast({
+        description: data.message
+      });
     }
 
-    initializeData();
+    setServerResponse({ error: !data.success, message: data.message });
   }
 
   useEffect(() => {
@@ -159,6 +166,10 @@ const Profile = () => {
               error={errors.email}
               message="Email field is required"
             />
+            <StatusMessage
+              error={serverResponse.error}
+              message={serverResponse.message}
+            />
           </div>
           {/* Update Profile Button */}
           <div className="flex mt-3">
@@ -168,6 +179,7 @@ const Profile = () => {
           </div>
         </div>
       </form>
+      <Toaster />
     </div>
   );
 };
