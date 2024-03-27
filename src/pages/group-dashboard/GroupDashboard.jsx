@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardCalendar from './DashboardCalendar'
 import DashboardMessages from './DashboardMessages'
+import GroupMembers from './GroupMembers';
 import './GroupDashboard.css';
 import { DateTime } from 'luxon'
 import { useParams } from 'react-router-dom';

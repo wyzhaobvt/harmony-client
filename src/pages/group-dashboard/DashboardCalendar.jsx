@@ -17,19 +17,40 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea as TextareaCN } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
+async function onDeleteEvent (groupName, name, refetchEvents) {
 
-function Event({ name, time, date, description, onDelete}) {
+  const isConfirmed = window.confirm('Are you sure you want to delete this event?');
+  if (!isConfirmed) {
+    return;
+  }
+
+  try {
+    const response = await axios.delete('http://localhost:5000/api/calendar/deleteevent', {
+      data: { calendar: groupName, eventName: name }
+    })
+    refetchEvents();
+    console.log('Event deleted:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    throw error;
+  }    
+};
+
+function Event(props) {
   return (
     <div className="event flex items-center justify-between border-b hover:bg-secondary py-2 pe-2 group">
       <div className="event-details">
-        <h2 className="font-semibold text-sm">{name}</h2>
-        <p className="text-sm">{date} | {time}</p>
-        <p className="text-sm">{description}</p>
+        <h2 className="font-semibold text-sm">{props.name}</h2>
+        <p className="text-sm">{props.date.slice(0,10)} | {props.date.slice(11,16)} - {props.date.slice(20,25)}</p>
+        <p className="text-sm">{props.description}</p>
       </div>
       <div
-        className="delete-icon opacity-0 group-hover:opacity-100"
-        onClick={onDelete}
+        className="delete-icon opacity-0 group-hover:opacity-100 cursor-pointer"
+        onClick={() => onDeleteEvent(props.groupName, props.name, props.refetchEvents)}
       >
         <X />
       </div>
@@ -37,15 +58,34 @@ function Event({ name, time, date, description, onDelete}) {
   );
 }
 
+
 function DashboardCalendar({date, setDate, groupName}) {
 
+  const refetchEvents = async () => {
+    try {
+      setEvents([]);
+      if (date) {
+        const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
+        const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`);
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setEvents(data);
+        } else {
+          setEvents([]);
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const [events, setEvents] = useState([])
+  console.log(events);
   
   const [eventForm, setEventForm] = useState({
     calendar: groupName,
     event: {name: '', date: '', startTime: '', endTime: '', description: ''},
   });
-  console.log(eventForm);
 
   const monthNames = [
     'Jan.',
@@ -63,49 +103,46 @@ function DashboardCalendar({date, setDate, groupName}) {
   ];
 
   const handleEventChange = (e) => {
-    setEventForm({
-      ...eventForm,
+    const { id, value } = e.target || e;
+    setEventForm((prevEventForm) => ({
+      ...prevEventForm,
       event: {
-      ...eventForm.event,
-      [e.target.id]: e.target.value,
-    }})
+        ...prevEventForm.event,
+        [id]: value,
+      },
+    }));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // setEvents([...events, eventForm]);
     try {
-      // Make a POST request to your Express endpoint
       const response = await axios.post('http://localhost:5000/api/calendar/createevent', eventForm);
       console.log('Event added:', response.data);
-      return response.data; // Return the response data if needed
+      setEventForm({
+        calendar: groupName,
+        event: {name: '', date: '', startTime: '', endTime: '', description: ''},
+      });
+      return response.data;
     } catch (error) {
       console.error('Error adding event:', error);
-      throw error; // Throw the error if needed
+      throw error;
     }
-    setEventForm({   name: '', date: '', startTime: '', endTime: '', description: '' }); // Reset form
   };
-
-  const deleteEvent = (index) => {
-    setEvents(events.filter((_, i) => i !== index));
-  };
-
-    
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
+                // console.log('Use Effect Has Ran!');
+                setEvents([])
                 if(date){
                 const formattedDate = DateTime.fromJSDate(new Date(date)).toISODate();
-                // console.log(formattedDate);
                 const response = await axios.get(`http://localhost:5000/api/calendar/listevents/${groupName}?date=${formattedDate}`)
                 const data = response.data
                 if (Array.isArray(data)) {
-                  console.log(data);
                   setEvents(data);
                 } else {
                   setEvents([])
-                  console.log('Data is not an array:', data);
+                  // console.log('Data is not an array:', data);
                 }}
             } catch (error) {
                 console.error('Error:', error);
@@ -128,7 +165,7 @@ function DashboardCalendar({date, setDate, groupName}) {
           <CustomCalendar
             mode="single"
             selected={date}
-            onSelect={setDate}
+            onSelect={(date) => setDate(date)}
             className="rounded-md border border-input h-fit mb-3"
           />
           <div className="day-breakdown rounded-md border border-input p-4">
@@ -150,21 +187,25 @@ function DashboardCalendar({date, setDate, groupName}) {
                       value={eventForm.event.name}
                       onChange={handleEventChange}
                     />
-                    <Input
+                    <DatePicker className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"'
+                      selected={eventForm.event.date}
                       id="date"
-                      placeholder="Date"
+                      placeholderText="Date"
                       value={eventForm.event.date}
-                      onChange={handleEventChange}
+                      wrapperClassName="date-picker-wrapper" // Optional, for styling purposes
+                      dateFormat="yyyy-MM-dd"
+                      onChange={(date) => handleEventChange({ target: { id: 'date', value: date } })}
+                      autocomplete="off"
                     />
                     <Input
                       id="startTime"
-                      placeholder="Start Time"
+                      placeholder="Start Time (24hr Format)"
                       value={eventForm.event.startTime}
                       onChange={handleEventChange}
                     />
                     <Input
                       id="endTime"
-                      placeholder="End Time"
+                      placeholder="End Time (24hr Format)"
                       value={eventForm.event.endTime}
                       onChange={handleEventChange}
                     />
@@ -194,8 +235,9 @@ function DashboardCalendar({date, setDate, groupName}) {
                   name={event.name} 
                   time={event.startTime ? `${convertTo12HourFormat(event.startTime)} - ${convertTo12HourFormat(event.endTime)}` : 'All Day'} 
                   description={event.description}
-                  onDelete={() => deleteEvent(index)} 
                   date={event.date}
+                  groupName={groupName}
+                  refetchEvents={refetchEvents}
                 />
               ))}
             </div>

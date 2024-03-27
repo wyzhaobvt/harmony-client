@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Calendar, UserRoundPlus } from 'lucide-react';
 import DashboardCalendar from './DashboardCalendar'
+import GroupMembers from './GroupMembers';
 import {
   Dialog,
   DialogContent,
@@ -29,7 +30,7 @@ function Message({ name, message, time, avatar }) {
       <img
         src={avatar || 'https://via.placeholder.com/40'}
         alt=""
-        className="rounded-full w-10 h-10 object-cover me-4 flex-shrink-0"
+        className="rounded-full w-10 h-10 object-cover me-4 flex-shrink-0 cursor-pointer"
       />
       <div className="message-body">
         <h1 className="font-semibold text-sm me-auto">{name}</h1>
@@ -47,6 +48,7 @@ function Textarea({ placeholder, className, addMessage }) {
 
   const handleEmojiSelect = (emoji) => {
     setText(text + emoji.native);
+    setShowEmojiPicker(false)
   };
 
   useEffect(() => {
@@ -58,7 +60,7 @@ function Textarea({ placeholder, className, addMessage }) {
         setShowEmojiPicker(false);
       }
     }
-
+    
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -125,10 +127,7 @@ function Textarea({ placeholder, className, addMessage }) {
   );
 }
 
-
-
 function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
-              
       const addMessage = (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       };
@@ -139,7 +138,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
           <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3 grow flex flex-col">
             <div className="chatbox--header flex items-center">
                 <h1 className="font-semibold text-xl sm:text-2xl xl:text-3xl me-auto">
-                  {groupName}
+                  <GroupMembers groupName={groupName} />
                 </h1>
               <div className="icons flex gap-4 p-3">
                 <Phone size={24} className='cursor-pointer' />
@@ -149,7 +148,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
                     <Calendar size={24} className="xl:hidden cursor-pointer" />
                   </DialogTrigger>
                   <DialogContent className="w-fit p-12 max-h-[80vh] overflow-y-auto xl:hidden">
-                    <div className='block xl:hidden'><DashboardCalendar date={date} setDate={setDate} /></div>
+                    <div className='block xl:hidden'><DashboardCalendar groupName={groupName} date={date} setDate={setDate} /></div>
                   </DialogContent>
                 </Dialog>
               </div>
@@ -172,7 +171,6 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
             addMessage={addMessage}
           />
         </div>
-
     );
 }
 
