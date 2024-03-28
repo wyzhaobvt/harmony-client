@@ -137,7 +137,12 @@ export default function FileManagement() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <ImportFilePopup onFile={(file) => console.log("get file", file)} />
+        <ImportFilePopup onFile={(file) => {
+            fetchFileList().then(json => {
+              setFileData(json);
+            });
+            console.log("get file", file)
+          }} />
       </div>
       <div className="rounded-md border border-input">
         <Table>

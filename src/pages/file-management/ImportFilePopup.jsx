@@ -87,8 +87,8 @@ export default function ImportFilePopup({ onFile }) {
               <Button
                 type="submit"
                 onClick={() => {
-                  onFile && onFile(file);
                   fileUpload(file);
+                  onFile && onFile(file);
                   setFile(null);
                 }}
               >
