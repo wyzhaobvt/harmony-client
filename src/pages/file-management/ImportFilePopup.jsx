@@ -14,6 +14,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import formatFileSize from "../../utils/formatFileSIze";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { fileUpload } from "../../utils/fileManagement";
 
 /**
  * @callback FileCallback
@@ -87,6 +88,7 @@ export default function ImportFilePopup({ onFile }) {
                 type="submit"
                 onClick={() => {
                   onFile && onFile(file);
+                  fileUpload(file);
                   setFile(null);
                 }}
               >

@@ -32,7 +32,7 @@ import {
 import ImportFilePopup from "./ImportFilePopup";
 
 import columns from "./columns";
-import { fetchFileList } from "../../utils/fetchUploadedFiles";
+import { fetchFileList } from "../../utils/fileManagement";
 
 export default function FileManagement() {
   const [sorting, setSorting] = useState([]);
@@ -71,7 +71,7 @@ export default function FileManagement() {
       let emptyArray = [];
       for(let i in fileData.files){
         let type = fileData.files[i].name.split(".")[1] || 'folder'
-        console.log( type)
+        
         emptyArray.push({
           title: fileData.files[i].name,
           size: fileData.properties[i].size,
