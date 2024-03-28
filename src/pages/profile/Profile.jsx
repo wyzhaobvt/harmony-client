@@ -14,14 +14,12 @@ const Profile = () => {
   const [profilePicture, setProfilePicture] = useState("");
 
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: ""
   });
 
   const [errors, setErrors] = useState({
-    firstName: null,
-    lastName: null,
+    username: null,
     email: null
   });
 
@@ -46,8 +44,7 @@ const Profile = () => {
     
     setProfilePicture(user.profileURL);
     setUserData({
-      firstName: user.username.split(" ")[0],
-      lastName: user.username.split(" ").slice(1).join(" "),
+      username: user.username,
       email: user.email
     })
   }
@@ -72,8 +69,7 @@ const Profile = () => {
   };
 
   const finishSubmit = async () => {
-    const username = `${userData.firstName} ${userData.lastName}`
-    const data = await updateUser(username, userData.email);
+    const data = await updateUser(userData.username, userData.email);
 
     if (data.success === true) {
       toast({
@@ -118,36 +114,20 @@ const Profile = () => {
               />
             </div>
           </div>
-          {/* First Name */}
+          {/* Username */}
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="firstName">First Name</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="firstName"
-              name="firstName"
-              placeholder="First Name"
-              defaultValue={userData.firstName}
+              id="username"
+              name="username"
+              placeholder="Username"
+              defaultValue={userData.username}
               onInput={handleOnChange}
             />
-            {/* Error for First Name field */}
+            {/* Error for Username field */}
             <StatusMessage
-              error={errors.firstName}
-              message="First Name field is required"
-            />
-          </div>
-          {/* Last Name */}
-          <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              placeholder="Last Name"
-              defaultValue={userData.lastName}
-              onInput={handleOnChange}
-            />
-            {/* Error for Last Name field */}
-            <StatusMessage
-              error={errors.lastName}
-              message="Last Name field is required"
+              error={errors.username}
+              message="Username field is required"
             />
           </div>
           {/* Email */}
