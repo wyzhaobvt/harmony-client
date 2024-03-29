@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   ChevronDownIcon,
   ArrowLeftIcon,
@@ -61,9 +62,12 @@ export default function FileManagement() {
     },
   });
 
+  let {chatId} = useParams();
+
   useEffect(() => {
-      fetchFileList().then(json => {
+      fetchFileList(chatId).then(json => {
         setFileData(json);
+
       });
   }, []);
 
@@ -138,7 +142,7 @@ export default function FileManagement() {
           </DropdownMenuContent>
         </DropdownMenu>
         <ImportFilePopup onFile={(file) => {
-            fetchFileList().then(json => {
+            fetchFileList(chatId).then(json => {
               setFileData(json);
             });
             console.log("get file", file)
