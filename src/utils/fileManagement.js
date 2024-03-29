@@ -1,6 +1,6 @@
 export async function fetchFileList(chatId) {
     try {
-        const response = await fetch(`http://localhost:5000/files/list/${chatId}?`);
+        const response = await fetch(`http://localhost:5000/files/list/${chatId ? chatId : 'communityFiles'}?`);
         const data = await response.json();
         if(data.status === 404){
             console.log("error in backend, ", data.message)
@@ -30,7 +30,7 @@ export function fileUpload(data, chatId){
     formData.append('file', data);
     
     // Make a fetch POST request
-    fetch(`http://localhost:5000/files/upload/${chatId ? chatId : ''}`, {
+    fetch(`http://localhost:5000/files/upload/${chatId ? chatId : 'communityFiles'}`, {
       method: 'POST',
       body: formData
     })
