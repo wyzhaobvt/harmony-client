@@ -104,7 +104,14 @@ export default function FileManagement() {
         <span>/</span>
         <span className="underline px-1 cursor-pointer">src</span>
         <span>/</span>
-        <span className="underline px-1 cursor-pointer">{fileData.dirName}</span>
+        {
+          fileData.dirName && 
+          <>
+            <span className="underline px-1 cursor-pointer">{fileData.dirName[0]}</span>
+            <span>/</span>
+            <span className="underline px-1 cursor-pointer">{fileData.dirName[1]}</span>
+          </>
+        }
       </span>
       <div className="flex items-center py-4 gap-3">
         <Input
