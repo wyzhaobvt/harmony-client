@@ -47,14 +47,15 @@ export function login({ email, password }) {
     });
 }
 
-export function register({ email, password }) {
-  fetch(authUrl("registerUser"), {
+export function register({ username, email, password }) {
+  return fetch(authUrl("/registerUser"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
     body: JSON.stringify({
+      username,
       email,
       password,
     }),
