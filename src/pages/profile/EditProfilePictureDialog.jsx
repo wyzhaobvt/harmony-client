@@ -76,8 +76,8 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
           <Pencil2Icon className="text-black h-6 w-6" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[456px] dark:border-neutral-800">
-        <DialogHeader>
+      <DialogContent className="flex flex-col max-w-[330px] sm:max-w-[456px] dark:border-neutral-800 rounded-lg">
+        <DialogHeader className="text-left">
           <DialogTitle>Edit profile picture</DialogTitle>
           <DialogDescription>
             Select a jpg/jpeg or png image file to be your profile picture.
