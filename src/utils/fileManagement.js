@@ -1,10 +1,7 @@
 export async function fetchFileList(chatId) {
     try {
-        const response = await fetch(`http://localhost:5000/files/list/${chatId ? chatId : 'communityFiles'}?`);
+        const response = await fetch(`http://localhost:5000/files/list/${chatId === undefined ? 'communityFiles' : chatId}?`);
         const data = await response.json();
-        if(data.status === 404){
-            console.log("error in backend, ", data.message)
-        }
         return data;
     } catch (error) {
         console.error('Error fetching file list:', error);
