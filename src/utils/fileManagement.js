@@ -27,7 +27,7 @@ export function fileUpload(data, chatId){
     formData.append('file', data);
     
     // Make a fetch POST request
-    fetch(`http://localhost:5000/files/upload/${chatId ? chatId : 'communityFiles'}`, {
+    fetch(`http://localhost:5000/files/upload/${chatId === undefined ? 'communityFiles' : chatId}`, {
       method: 'POST',
       body: formData
     })
