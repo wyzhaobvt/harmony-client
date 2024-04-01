@@ -1,6 +1,6 @@
 export async function fetchFileList(chatId) {
     try {
-        const response = await fetch(`http://localhost:5000/files/list/${chatId === undefined ? 'communityFiles' : chatId}?`);
+        const response = await fetch(`http://localhost:5000/files/list/${chatId === undefined ? 'communityFiles' : chatId}`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -34,3 +34,15 @@ export function fileUpload(data, chatId){
     .catch((error) => console.error('Error:', error));
 }
 
+export function fileDownload(chatId, fileName){
+    
+    // Make a fetch GET request
+    fetch(`http://localhost:5000/files/download/${chatId}/${fileName}`)
+        .then(response => response.blob())
+        .then(fileBlob => {
+            //create link to download file
+            const link = createFileLink(fileId, fileBlob);
+            document.getElementById('fileList').appendChild(link);
+        })
+        .catch((error) => console.error('Error:', error));
+}
