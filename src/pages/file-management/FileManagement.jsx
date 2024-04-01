@@ -64,6 +64,7 @@ export default function FileManagement() {
 
   let {chatId} = useParams();
 
+  //obtain directory file
   useEffect(() => {
       fetchFileList(chatId).then(json => {
         setFileData(json);
@@ -71,6 +72,7 @@ export default function FileManagement() {
       });
   }, []);
 
+  //format fileData to be used as tableData 
   useEffect(() => {
       let emptyArray = [];
       for(let i in fileData.files){
