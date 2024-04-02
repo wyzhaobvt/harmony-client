@@ -1,5 +1,8 @@
 import globals, { peer } from "./globals";
 
+const url = import.meta.env.VITE_USER_AUTH_ORIGIN;
+
+// Move to uploadFile to another file
 /**
  * Sends provided file to server
  * @param {File} file file to send to server
@@ -9,7 +12,7 @@ export function uploadFile(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  fetch(serverUrl("/uploadFile"), {
+  fetch(import.meta.env.VITE_SERVER_ORIGIN + "/uploadFile", {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -17,7 +20,7 @@ export function uploadFile(file) {
 }
 
 export function login({ email, password }) {
-  return fetch(authUrl("/loginUser"), {
+  return fetch(url + "/loginUser", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +51,7 @@ export function login({ email, password }) {
 }
 
 export function register({ email, password }) {
-  fetch(authUrl("registerUser"), {
+  fetch(url + "/registerUser", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -79,7 +82,7 @@ export function register({ email, password }) {
 }
 
 export function logout() {
-  fetch(authUrl("/logoutUser"), {
+  fetch(url + "/logoutUser", {
     method: "POST",
     credentials: "include",
   })
@@ -102,7 +105,7 @@ export function logout() {
 }
 
 export function getPeerAuthToken(callback) {
-  return fetch(authUrl("/peer/authenticate"), {
+  return fetch(url + "/peer/authenticate", {
     credentials: "include",
   })
     .then((res) => {
@@ -119,31 +122,4 @@ export function getPeerAuthToken(callback) {
         message: "An error occurred: " + err,
       };
     });
-}
-
-export function addToTeam({ teamId, teamName, targetEmail }) {
-  return fetch(teamUrl("/addToTeam"), {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      targetEmail: targetEmail,
-      teamID: teamId,
-      teamName: teamName,
-    }),
-  }).then((data) => data.json());
-}
-
-function serverUrl(path) {
-  return new URL(path, import.meta.env.VITE_SERVER_ORIGIN).href;
-}
-
-function authUrl(path) {
-  return new URL(path, import.meta.env.VITE_USER_AUTH_ORIGIN).href;
-}
-
-function teamUrl(path) {
-  return new URL(path, import.meta.env.VITE_TEAM_SERVER_ORIGIN).href;
 }

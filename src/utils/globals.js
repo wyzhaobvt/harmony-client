@@ -1,9 +1,10 @@
 import Peer from "./Peer";
 import { io } from "socket.io-client";
-import { getPeerAuthToken } from "./db";
+import { getPeerAuthToken } from "./authHandler";
 
 const globals = {
   email: localStorage.getItem("harmony_email"),
+  teamsCache: {}
 };
 
 export default globals;
