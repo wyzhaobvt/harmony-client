@@ -76,7 +76,11 @@ const ChatCanvas = ({ setindividualChatOpen, chatListOpen, setChatListOpen }) =>
                                 </div>
                             </div>
                         ))}
+                       
                     </div>
+                     <div className="flex justify-center  mt-1">
+                    <button className="bg-primary text-primary-foreground p-2 mb-2 rounded-md w-11/12">Add Friend</button>
+                </div>
                 </div>
             }
         </div>
