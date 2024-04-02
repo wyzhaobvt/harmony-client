@@ -86,7 +86,6 @@ export function logout() {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log({ data });
       if (data.success) {
         globals.email = null;
         localStorage.removeItem("harmony_email");
