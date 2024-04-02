@@ -89,8 +89,7 @@ export default function FileManagement() {
 
       setTableData(emptyArray)
   }, [fileData])
-
-
+  
   return (
     <div className="w-full md:w-4/5 px-5 md:px-0">
       <div className="flex items-center gap-6">
@@ -150,11 +149,10 @@ export default function FileManagement() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <ImportFilePopup onFile={(file) => {
+        <ImportFilePopup onFile={() => {
             fetchFileList(chatId).then(json => {
               setFileData(json);
             });
-            console.log("get file", file)
           }} />
       </div>
       <div className="rounded-md border border-input">

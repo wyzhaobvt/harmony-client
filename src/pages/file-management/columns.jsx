@@ -17,8 +17,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
-import {fileDownload} from '../../utils/fileManagement'
-
+import { useParams } from "react-router-dom";
+import {fileDelete} from '../../utils/fileManagement'
 export default [
   {
     id: "select",
@@ -121,7 +121,8 @@ export default [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
-
+      let params = useParams();
+      let chatId = params.chatId === undefined ? 'communityFiles' : params.chatId
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -149,7 +150,10 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem className="text-red-500 focus:text-red-500">
               <TrashIcon />
-              <div className="ps-2">Delete</div>
+              <div className="ps-2" onClick={e => {
+                fileDelete(e, chatId, row.getValue("title"))
+                window.location.reload();
+                }}>Delete</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

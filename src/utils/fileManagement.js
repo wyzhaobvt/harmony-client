@@ -34,15 +34,9 @@ export function fileUpload(data, chatId){
     .catch((error) => console.error('Error:', error));
 }
 
-export function fileDownload(chatId, fileName){
-    
-    // Make a fetch GET request
-    fetch(`http://localhost:5000/files/download/${chatId}/${fileName}`)
-        .then(response => response.blob())
-        .then(fileBlob => {
-            //create link to download file
-            const link = createFileLink(fileId, fileBlob);
-            document.getElementById('fileList').appendChild(link);
-        })
-        .catch((error) => console.error('Error:', error));
+export function fileDelete(e, chatId, fileName){
+    fetch(`http://localhost:5000/files/${chatId}/${fileName}`, {
+        method: 'DELETE'
+    })
+    .catch((error) => console.error('Error:', error));
 }
