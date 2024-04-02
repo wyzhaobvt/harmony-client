@@ -38,5 +38,9 @@ export function fileDelete(e, chatId, fileName){
     fetch(`http://localhost:5000/files/${chatId}/${fileName}`, {
         method: 'DELETE'
     })
+    .then((res) => {
+        const data = res.json()
+        return data
+    })
     .catch((error) => console.error('Error:', error));
 }

@@ -153,7 +153,8 @@ export default [
               <div className="ps-2" onClick={e => {
                 fileDelete(e, chatId, row.getValue("title"))
                 window.location.reload();
-                }}>Delete</div>
+                }}>Delete
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
