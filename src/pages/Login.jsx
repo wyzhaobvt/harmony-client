@@ -26,7 +26,7 @@ const Login = () => {
     password: null,
   });
   
-  const [loginError, setLoginError] = useState(null);
+  const [serverResponse, setServerResponse] = useState(null);
   
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
 
@@ -52,13 +52,15 @@ const Login = () => {
       const value = inputData[field];
       setErrors((prev) => ({ ...prev, [field]: value ? false : true }));
     });
+
+    setServerResponse(null);
   };
 
   const finishSubmit = () => {
     login({ email: inputData.email, password: inputData.password }).then(
       (data) => {
+        setServerResponse({ error: !data.success, message: data.message });
         if (!data.success) {
-          setLoginError(data.message);
           return;
         }
         navigate("/")
@@ -136,7 +138,7 @@ const Login = () => {
                   error={errors.password}
                   message="Password field is required"
                 />
-                <StatusMessage error={loginError} message={loginError} />
+                <StatusMessage error={serverResponse?.error} message={serverResponse?.message} />
               </div>
               {/* Log in Button */}
               <div className="flex justify-end mt-3">
