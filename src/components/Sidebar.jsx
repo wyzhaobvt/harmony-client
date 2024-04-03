@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 import {
   Drawer,
   DrawerClose,
@@ -24,7 +22,7 @@ import {
   LogOutIcon,
   UsersIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../utils/db";
 
 const links = [
