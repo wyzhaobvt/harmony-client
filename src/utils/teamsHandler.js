@@ -1,3 +1,5 @@
+import exp from "constants";
+
 const url = import.meta.env.VITE_TEAM_SERVER_ORIGIN;
 
 export function createTeam({ teamName }) {
@@ -18,8 +20,8 @@ export function createTeam({ teamName }) {
     });
 }
 
-export function addToTeam({ teamId, teamName, targetEmail }) {
-  if (!teamName || !teamId || !targetEmail) throw new Error("Missing Property")
+export function addToTeam({ teamUid, teamName, targetEmail }) {
+  if (!teamName || !teamUid || !targetEmail) throw new Error("Missing Property")
   return fetch(url + "/addToTeam", {
     method: "POST",
     credentials: "include",
@@ -28,7 +30,7 @@ export function addToTeam({ teamId, teamName, targetEmail }) {
     },
     body: JSON.stringify({
       targetEmail: targetEmail,
-      teamID: teamId,
+      teamID: teamUid,
       teamName: teamName,
     }),
   })
@@ -111,6 +113,25 @@ export function updateTeamName({ teamUid, teamNameOld, teamNameNew }) {
 export function deleteTeam({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
   return fetch(url + "/deleteTeam", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      teamUID: teamUid,
+      teamName,
+    }),
+  })
+    .then((res) => res.json())
+    .catch((error) => {
+      return { success: false, message: error };
+    });
+}
+
+export function loadMembers({ teamUid, teamName }) {
+  if (!teamName || !teamUid) throw new Error("Missing Property")
+  return fetch(url + "/loadTeamMemberList", {
     method: "POST",
     credentials: "include",
     headers: {

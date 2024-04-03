@@ -33,6 +33,10 @@ export default createBrowserRouter([
           },
           {
             path: "/video",
+            element: <VideoCall />
+          },
+          {
+            path: "/video/:group/:uid",
             element: <VideoCall />,
           },
           {
@@ -44,7 +48,7 @@ export default createBrowserRouter([
             element: <Register />,
           },
           {
-            path: "/group/:group",
+            path: "/group/:group/:uid",
             element: <GroupDashboard />,
           },
           {

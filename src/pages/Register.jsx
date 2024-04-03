@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
-import { register } from "../utils/db";
+import { register } from "../utils/authHandler";
 
 const Register = () => {
   const [inputData, setInputData] = useState({

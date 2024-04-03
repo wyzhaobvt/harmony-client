@@ -9,26 +9,31 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
-const FriendRequestSentDialog = ({ dialogRef, toggleDropdown }) => {
+const FriendRequestSentDialog = ({ onClick, errorMessage }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" className="mb-2 md:mb-0">
-          Send Friend Request
+        <Button type="button" className="mb-2 md:mb-0" onClick={onClick}>
+          Send Team Invite
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[300px] md:max-w-[425px]" ref={dialogRef}>
+      <DialogContent className="max-w-[300px] md:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Friend Request Sent</DialogTitle>
+          <DialogTitle>
+            {errorMessage ? "Request Failed" : "Request Sent"}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="">
-            <h2>Your friend request has been sent to Charlie Brown.</h2>
+            <h2>
+              {errorMessage ||
+                "Your friend request has been sent to Charlie Brown."}
+            </h2>
           </div>
         </div>
         <DialogFooter className="sm:justify-between">
           <DialogClose asChild>
-            <Button type="submit" onClick={toggleDropdown} className="w-full">
+            <Button type="submit" className="w-full">
               Okay
             </Button>
           </DialogClose>
