@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useParams } from "react-router-dom";
-import {fileDelete} from '../../utils/fileManagement'
+import {fileDelete, fileDuplicate} from '../../utils/fileManagement'
 export default [
   {
     id: "select",
@@ -142,7 +142,10 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <CopyIcon />
-              <div className="ps-2">Duplicate</div>
+              <div className="ps-2" onClick={e => {
+                fileDuplicate(e, chatId, row.getValue("title"))
+                window.location.reload();
+                }}>Duplicate</div>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Share1Icon />
