@@ -44,7 +44,6 @@ export function fileDelete(e, chatId, fileName){
     })
     .then((res) => {
         const data = res.json()
-        console.log("deleting")
         return data
     })
     .catch((error) => console.error('Error:', error));
@@ -54,4 +53,9 @@ export function fileDuplicate(e, chatId, fileName){
     fetch(`http://localhost:5000/files/${chatId === undefined ? 'communityFiles' : chatId}/${fileName}`, {
         method: 'POST'
     })
+    .then((res) => {
+        const data = res.json()
+        return data
+    })
+    .catch((error) => console.error('Error:', error));
 }
