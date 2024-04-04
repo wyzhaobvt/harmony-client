@@ -18,6 +18,10 @@ function createFileLink(fileName, fileBlob) {
     const listItem = document.createElement('li');
     listItem.appendChild(link);
     return listItem;
+    /*
+    href must be fileBlob url
+    set href and download attr
+    */
 }
 
 export function fileUpload(data, chatId){
@@ -35,7 +39,7 @@ export function fileUpload(data, chatId){
 }
 
 export function fileDelete(e, chatId, fileName){
-    fetch(`http://localhost:5000/files/${chatId}/${fileName}`, {
+    fetch(`http://localhost:5000/files/${chatId === undefined ? 'communityFiles' : chatId}/${fileName}`, {
         method: 'DELETE'
     })
     .then((res) => {
@@ -43,4 +47,10 @@ export function fileDelete(e, chatId, fileName){
         return data
     })
     .catch((error) => console.error('Error:', error));
+}
+
+export function fileDuplicate(chatId, fileName){
+    fetch(`http://localhost:5000/files/${chatId === undefined ? 'communityFiles' : chatId}/${fileName}`, {
+        method: 'POST'
+    })
 }
