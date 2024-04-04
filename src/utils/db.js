@@ -1,5 +1,9 @@
 import globals, { peer } from "./globals";
 
+export function checkLoggedIn() {
+  return localStorage.getItem("harmony_email");
+}
+
 /**
  * Sends provided file to server
  * @param {File} file file to send to server
@@ -79,26 +83,28 @@ export function register({ username, email, password }) {
     });
 }
 
-export function logout() {
-  fetch(authUrl("/logoutUser"), {
-    method: "POST",
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.success) {
-        globals.email = null;
-        localStorage.removeItem("harmony_email");
-        peer.authToken = null
-      }
-      return data;
+export async function logout() {
+  try {
+    const response = await fetch(authUrl("/logoutUser"), {
+      method: "POST",
+      credentials: "include",
     })
-    .catch((err) => {
-      return {
-        success: false,
-        message: "An error occurred: " + err,
-      };
-    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      globals.email = null;
+      localStorage.removeItem("harmony_email");
+      peer.authToken = null
+    }
+
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error}`
+    };
+  }
 }
 
 export function getPeerAuthToken(callback) {

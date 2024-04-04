@@ -5,15 +5,18 @@ import Register from './pages/Register';
 import FileManagement from './pages/file-management/FileManagement';
 import GroupDashboard from './pages/group-dashboard/GroupDashboard';
 import { createBrowserRouter, redirect } from 'react-router-dom';
-
-const checkLoggedIn = () => {
-  return localStorage.getItem("harmony_email");
-}
+import { checkLoggedIn } from './utils/db';
 
 const redirectToLogin = () => {
   const isLoggedIn = checkLoggedIn();
-  if (isLoggedIn) return isLoggedIn;
+  if (isLoggedIn) return null;
   return redirect("/login");
+}
+
+const redirectToDashboard = () => {
+  const isLoggedIn = checkLoggedIn();
+  if (isLoggedIn) return redirect("/dashboard");
+  return null;
 }
 
 export default createBrowserRouter([
@@ -45,31 +48,27 @@ export default createBrowserRouter([
           {
             path: '/files',
             element: <FileManagement />,
-            loader: () => {
-              return redirectToLogin();
-            }
+            loader: redirectToLogin
           },
           {
             path: '/video',
             element: <VideoChat />,
-            loader: () => {
-              return redirectToLogin();
-            }
+            loader: redirectToLogin
           },
           {
             path: '/login',
             element: <Login />,
+            loader: redirectToDashboard
           },
           {
             path: '/register',
             element: <Register />,
+            loader: redirectToDashboard
           },
           {
             path: '/group/:group',
             element: <GroupDashboard />,
-            loader: () => {
-              return redirectToLogin();
-            }
+            loader: redirectToLogin
           },
         ],
       },

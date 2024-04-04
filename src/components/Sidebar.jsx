@@ -78,8 +78,13 @@ const links = [
 function Sidebar() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    const data = await logout();
+
+    if (!data.success) {
+      return;
+    }
+    
     navigate("/login");
   };
   
