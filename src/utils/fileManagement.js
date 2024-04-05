@@ -1,6 +1,7 @@
 export async function fetchFileList(chatId) {
+    let id = chatIdCheck(chatId)
     try {
-        const response = await fetch(`http://localhost:5000/files/list/${chatId === undefined ? 'communityFiles' : chatId}`);
+        const response = await fetch(`http://localhost:5000/files/list/${id}`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -9,37 +10,59 @@ export async function fetchFileList(chatId) {
     }
 }
 
-function createFileLink(fileName, fileBlob) {
-    const fileUrl = URL.createObjectURL(fileBlob);
-    const link = document.createElement('a');
-    link.textContent = fileName;
-    link.href = fileUrl;
-    link.download = fileName;
-    const listItem = document.createElement('li');
-    listItem.appendChild(link);
-    return listItem;
+export async function fileDownload(e, chatId, fileName){
+    e.preventDefault();
+    try{
+        const response = await fetch(`http://localhost:5000/files/download/${chatId}/${fileName}`);
+        const file = await response.blob();
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+    }catch(error){
+        console.error(`Error downloading ${fileName}`, error);
+    }
+}
+
+export async function fileDownloadTest(e, chatId, fileName){
+    console.log("downloading function")
+    const requestOptions = {
+    method: "GET"
+  };
+    fetch(`http://localhost:5000/files/download/${chatId}/${fileName}`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => console.log(result))
+    .catch((error) => console.error(error));
     /*
-    href must be fileBlob url
-    set href and download attr
+    fetch(fileRoute)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                setFileUrl(url);
+                <a href={fileUrl} download>Download File</a>
+            })
+            .catch(error => console.error(error));
     */
 }
 
-export function fileUpload(data, chatId){
+export async function fileUpload(data, chatId){
+    let id = chatIdCheck(chatId)
     //create formdata instance
     let formData = new FormData();
     // Append files to formData
     formData.append('file', data);
     
     // Make a fetch POST request
-    fetch(`http://localhost:5000/files/upload/${chatId === undefined ? 'communityFiles' : chatId}`, {
+    await fetch(`http://localhost:5000/files/upload/${id}`, {
       method: 'POST',
       body: formData
     })
     .catch((error) => console.error('Error:', error));
 }
 
-export function fileDelete(e, chatId, fileName){
-    fetch(`http://localhost:5000/files/${chatId === undefined ? 'communityFiles' : chatId}/${fileName}`, {
+export async function fileDelete(e, chatId, fileName){
+    let id = chatIdCheck(chatId)
+    await fetch(`http://localhost:5000/files/${id}/${fileName}`, {
         method: 'DELETE'
     })
     .then((res) => {
@@ -49,8 +72,9 @@ export function fileDelete(e, chatId, fileName){
     .catch((error) => console.error('Error:', error));
 }
 
-export function fileDuplicate(e, chatId, fileName){
-    fetch(`http://localhost:5000/files/${chatId === undefined ? 'communityFiles' : chatId}/${fileName}`, {
+export async function fileDuplicate(e, chatId, fileName){
+    let id = chatIdCheck(chatId)
+    await fetch(`http://localhost:5000/files/${id}/${fileName}`, {
         method: 'POST'
     })
     .then((res) => {
@@ -58,4 +82,8 @@ export function fileDuplicate(e, chatId, fileName){
         return data
     })
     .catch((error) => console.error('Error:', error));
+}
+
+function chatIdCheck(id){
+    return id === undefined ? 'communityFiles' : id
 }
