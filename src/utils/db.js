@@ -102,7 +102,7 @@ export async function logout() {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error}`
+      message: `An error occurred: ${error.message}`
     };
   }
 }
