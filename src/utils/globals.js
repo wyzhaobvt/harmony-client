@@ -8,9 +8,16 @@ const globals = {
 
 export default globals
 
-const socket = io(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
-  auth: {
-    token: "test"
+const socket = io(import.meta.env.VITE_SERVER_ORIGIN, {
+  withCredentials: true
+})
+
+socket.on("connect_error", (err)=>{
+  const {attempts} = socket.io.backoff
+
+  if (attempts >= 5) {
+    socket.close()
+    console.error("Could not connect to server. Socket closed, refresh to try again")
   }
 })
 
