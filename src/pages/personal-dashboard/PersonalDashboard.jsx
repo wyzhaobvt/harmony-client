@@ -3,7 +3,6 @@ import FriendInvites from "./FriendInvites";
 import Teams from "./Teams";
 import Event from "./Event";
 import { Calendar } from "lucide-react";
-import { Calendar } from "lucide-react";
 import { Calendar as CustomCalendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import "./PersonalDashboard.css";

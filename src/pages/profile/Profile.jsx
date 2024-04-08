@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { EditProfilePictureDialog } from "./EditProfilePictureDialog";
 import StatusMessage from "../../components/ui/status-message";
 import { ProfilePicture } from "../../components/ProfilePicture";
-import { getUser, updateUser } from "../../utils/db";
+import { getUser, updateUser } from "../../utils/authHandler";
 
 const Profile = () => {
   const [profilePicture, setProfilePicture] = useState("");
