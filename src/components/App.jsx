@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import CallRequestAlert from "./CallRequestAlert";
-import setTheme from "../utils/setTheme";
-import { peer } from "../utils/globals";
 import Navbar from "./Navbar";
+import setTheme from "../utils/setTheme";
+import { peer, socket } from "../utils/globals";
+import { useToast } from "@/components/ui/use-toast"
 
 function App() {
   const [callAlert, setCallAlert] = useState(null);
   const navigate = useNavigate();
   const audioRef = useRef(null);
+  const { toast } = useToast()
+  socket.on("update:test",(message)=>{
+    toast({
+      description: "Message: " + message
+    })
+  })
   setTheme();
   useEffect(() => {
     peer.addEventListener(
