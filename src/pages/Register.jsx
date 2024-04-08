@@ -20,16 +20,14 @@ import { register } from "../utils/db";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    firstName: null,
-    lastName: null,
+    username: null,
     email: null,
     password: null,
     confirmPassword: null,
@@ -115,40 +113,22 @@ const Register = () => {
         <CardContent className="pb-3">
           <form onSubmit={(event) => handleSubmit(event)}>
             <div className="grid w-full items-center gap-4">
-              {/* First name */}
+              {/* Username */}
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="firstName"
-                  name="firstName"
-                  placeholder="First Name"
+                  id="username"
+                  name="username"
+                  placeholder="Username"
                   onChange={handleOnChange}
                   className={
-                    errors.firstName && "border-red-500 dark:border-red-400"
+                    errors.username && "border-red-500 dark:border-red-400"
                   }
                 />
-                {/* Error for First Name field */}
+                {/* Error for Username field */}
                 <StatusMessage
-                  error={errors.firstName}
-                  message="First Name field is required"
-                />
-              </div>
-              {/* Last name */}
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Last Name"
-                  onChange={handleOnChange}
-                  className={
-                    errors.lastName && "border-red-500 dark:border-red-400"
-                  }
-                />
-                {/* Error for Last Name field */}
-                <StatusMessage
-                  error={errors.lastName}
-                  message="Last Name field is required"
+                  error={errors.username}
+                  message="Username field is required"
                 />
               </div>
               {/* Email */}
