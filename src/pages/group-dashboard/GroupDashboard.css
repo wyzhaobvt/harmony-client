@@ -1,0 +1,15 @@
+body ::-webkit-scrollbar {
+  width: 10px;
+}
+
+body ::-webkit-scrollbar-track {
+  background: var(--danger);
+}
+
+body ::-webkit-scrollbar-thumb {
+  background: var(--primary);
+}
+
+body ::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
