@@ -5,16 +5,21 @@ import Navbar from "./Navbar";
 import setTheme from "../utils/setTheme";
 import { peer, socket } from "../utils/globals";
 import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   const [callAlert, setCallAlert] = useState(null);
   const navigate = useNavigate();
   const audioRef = useRef(null);
   const { toast } = useToast()
-  socket.on("update:test",(message)=>{
-    toast({
-      description: "Message: " + message
-    })
+  socket.onAny((name, {title, message})=>{
+    if (name.startsWith("update:")) { 
+      toast({
+        title,
+        description: message,
+        className: "py-2"
+      })
+    }
   })
   setTheme();
   useEffect(() => {
@@ -60,6 +65,7 @@ function App() {
         <Outlet />
         {callAlert}
       </main>
+      <Toaster />
       <audio ref={audioRef} autoPlay playsInline></audio>
     </>
   );
