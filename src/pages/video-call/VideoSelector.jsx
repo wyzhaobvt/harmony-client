@@ -161,7 +161,7 @@ export default function VideoSelector({ triggerButton, onStream }) {
             </Select>
             <Button
               disabled={
-                !hasPermission || selectedCamera === null || !peer.roomId
+                !peer.myStreams.has("camera") && (!hasPermission || selectedCamera === null || !peer.roomId)
               }
               className={`mt-5 ${streams.camera && "text-red-600"}`}
               onClick={handleSelectCameraClick}

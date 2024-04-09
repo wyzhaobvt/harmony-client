@@ -8,9 +8,11 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { peer } from "../../utils/globals";
+import { useNavigate } from "react-router-dom";
 
-export default function AvailableRooms({ members }) {
+export default function AvailableRooms({ members, teams }) {
   const { users, groups } = members;
+  const navigate = useNavigate()
   const usersLength = Object.keys(users).length;
   return (
     <Card className="border-input w-[calc(100%-2rem)] md:w-[60vw]">
@@ -31,9 +33,11 @@ export default function AvailableRooms({ members }) {
                   <div
                     className="cursor-pointer"
                     key={i}
-                    onClick={() => peer.joinRoom(key)}
+                    onClick={() => {
+                      navigate(`/video/${teams[key].toLowerCase().replaceAll(" ","-")}/${key}`,{replace: true})
+                    }}
                   >
-                    {key}
+                    {teams[key]}
                   </div>
                   <Separator className="my-1" key={"separator_" + i} />
                 </div>
