@@ -37,56 +37,56 @@ const ChatBox = ({ setindividualChatOpen }) => {
         <div className="mt-3 h-[75vh] scrollable-div ">
           <div className="flex flex-col chat-list h-4/5 overflow-auto">
             <div className="flex mb-2 ">
-              <p className="message from-them dark:from-them-dark">
+              <p className="chat-message from-them dark:from-them-dark">
                 Eating eggs on Thursday for choir practice was recommended.
               </p>
             </div>
             <div className="flex flex-row-reverse mb-2">
-              <p className="message from-me">
+              <p className="chat-message from-me">
                 Pantyhose and heels are an interesting choice of attire for the
                 beach.
               </p>
             </div>
             <div className="flex mb-2">
-              <p className="message from-them  ">
+              <p className="chat-message from-them  ">
                 Eating eggs on Thursday for choir practice was recommended.
               </p>
             </div>
             <div className="flex flex-row-reverse mb-2">
-              <p className="message from-me">
+              <p className="chat-message from-me">
                 Pantyhose and heels are an interesting choice of attire for the
                 beach.
               </p>
             </div>
             <div className="flex mb-2">
-              <p className="message from-them  ">
+              <p className="chat-message from-them  ">
                 Eating eggs on Thursday for choir practice was recommended.
               </p>
             </div>
             <div className="flex flex-row-reverse mb-2">
-              <p className="message from-me">
+              <p className="chat-message from-me">
                 Pantyhose and heels are an interesting choice of attire for the
                 beach.
               </p>
             </div>
             <div className="flex mb-2">
-              <p className="message from-them  ">
+              <p className="chat-message from-them  ">
                 Eating eggs on Thursday for choir practice was recommended.
               </p>
             </div>
             <div className="flex flex-row-reverse mb-2">
-              <p className="message from-me">
+              <p className="chat-message from-me">
                 Pantyhose and heels are an interesting choice of attire for the
                 beach.
               </p>
             </div>
             <div className="flex mb-2">
-              <p className="message from-them  ">
+              <p className="chat-message from-them  ">
                 Eating eggs on Thursday for choir practice was recommended.
               </p>
             </div>
             <div className="flex flex-row-reverse mb-2">
-              <p className="message from-me">
+              <p className="chat-message from-me">
                 Pantyhose and heels are an interesting choice of attire for the
                 beach.
               </p>
