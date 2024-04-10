@@ -1,6 +1,7 @@
 import Peer from "./Peer";
 import { io } from "socket.io-client";
 import { getPeerAuthToken } from "./authHandler";
+import { createContext } from "react";
 
 const globals = {
   email: localStorage.getItem("harmony_email"),
@@ -8,6 +9,8 @@ const globals = {
 };
 
 export default globals;
+
+export const AppContext = createContext({})
 
 export const socket = io(import.meta.env.VITE_SERVER_ORIGIN, {
   withCredentials: true
