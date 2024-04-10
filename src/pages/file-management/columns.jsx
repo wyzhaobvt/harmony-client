@@ -136,32 +136,34 @@ export default [
               <Pencil1Icon />
               <div className="ps-2">Rename</div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <DownloadIcon />
-              <div className="ps-2" onClick={e => {
+            <DropdownMenuItem 
+              onClick={e => {
                 fileDownload(e, chatId, row.getValue("title"))
-                }}>Save
+                }}>
+              <DownloadIcon />
+              <div className="ps-2">Save
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CopyIcon />
-              <div className="ps-2" onClick={e => {
+            <DropdownMenuItem 
+              onClick={e => {
                 fileDuplicate(e, chatId, row.getValue("title"))
                 window.location.reload();
-                }}>Duplicate
+                }}>
+              <CopyIcon />
+              <div className="ps-2" >Duplicate
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Share1Icon />
               <div className="ps-2">Share</div>
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500 focus:text-red-500">
-              <TrashIcon />
-              <div className="ps-2" onClick={e => {
+            <DropdownMenuItem className="text-red-500 focus:text-red-500" 
+              onClick={e => {
                 fileDelete(e, chatId, row.getValue("title"))
                 window.location.reload();
-                }}>Delete
-              </div>
+                }}>
+              <TrashIcon />
+              <div className="ps-2">Delete</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
