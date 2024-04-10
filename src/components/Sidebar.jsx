@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../utils/db";
+import { checkLoggedIn } from "../utils/db";
 
 const links = [
   {
@@ -91,9 +92,11 @@ function Sidebar() {
   return (
     <>
       <Drawer direction="left">
-        <DrawerTrigger className="">
-          <HamburgerMenuIcon className="h-7 w-7" />
-        </DrawerTrigger>
+        {checkLoggedIn() && (
+          <DrawerTrigger className="">
+            <HamburgerMenuIcon className="h-7 w-7" />
+          </DrawerTrigger>
+        )}
         <DrawerContent className="top-0 left-0 mt-0 w-[250px] rounded-none border-none shadow shadow-primary">
           <DrawerHeader>
             <DrawerTitle className="mb-4 h-12 flex items-center shadow-md dark:shadow-black">
@@ -122,10 +125,7 @@ function Sidebar() {
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button
-                className="w-full"
-                onClick={handleLogout}
-              >
+              <Button className="w-full" onClick={handleLogout}>
                 <LogOutIcon className="mr-2 h-6 w-6" />
                 Logout
               </Button>
