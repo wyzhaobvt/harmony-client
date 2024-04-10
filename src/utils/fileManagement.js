@@ -15,7 +15,6 @@ export function fileDownload(e, chatId, fileName){
     let id = chatIdCheck(chatId)
     fetch(`http://localhost:5000/files/download/${id}/${fileName}`,)
     .then(res => {
-        console.log(res)
         return res.blob()
     })
     .then(blob => {
