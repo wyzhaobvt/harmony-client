@@ -5,17 +5,15 @@ export async function fetchFileList(chatId) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching file list:', error);
+        console.error('Server Error:', error);
         throw error;
     }
 }
 
-export async function fileDownload(e, chatId, fileName){
+export function fileDownload(e, chatId, fileName){
     e.preventDefault();
     let id = chatIdCheck(chatId)
-    await fetch(`http://localhost:5000/files/download/${id}/${fileName}`,{
-        method: 'GET'
-    })
+    fetch(`http://localhost:5000/files/download/${id}/${fileName}`,)
     .then(res => {
         console.log(res)
         return res.blob()
@@ -27,10 +25,8 @@ export async function fileDownload(e, chatId, fileName){
         link.setAttribute("download", fileName);
         document.body.append(link);
         link.click();
-        document.body.removeChild(link);    
-        URL.revokeObjectURL(url);
     })
-    .catch(err => console.log("Didn't download", err))
+    .catch(err => console.error("Server Error", err))
     
 }
 
@@ -46,7 +42,7 @@ export async function fileUpload(data, chatId){
       method: 'POST',
       body: formData
     })
-    .catch((error) => console.error('Error:', error));
+    .catch((error) => console.error('Server Error:', error));
 }
 
 export async function fileDelete(e, chatId, fileName){
@@ -58,7 +54,7 @@ export async function fileDelete(e, chatId, fileName){
         const data = res.json()
         return data
     })
-    .catch((error) => console.error('Error:', error));
+    .catch((error) => console.error('Server Error:', error));
 }
 
 export async function fileDuplicate(e, chatId, fileName){
@@ -70,7 +66,7 @@ export async function fileDuplicate(e, chatId, fileName){
         const data = res.json()
         return data
     })
-    .catch((error) => console.error('Error:', error));
+    .catch((error) => console.error('Server Error:', error));
 }
 
 function chatIdCheck(id){

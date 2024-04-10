@@ -122,7 +122,7 @@ export default [
     cell: ({ row }) => {
       const payment = row.original;
       let params = useParams();
-      let chatId = params.chatId === undefined ? 'communityFiles' : params.chatId
+      let chatId = params.chatId;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
