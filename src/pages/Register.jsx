@@ -74,16 +74,15 @@ const Register = () => {
     setServerResponse(null);
   };
 
-  const finishSubmit = () => {
-    register({ username: inputData.username, email: inputData.email, password: inputData.password }).then(
-      (data) => {
-        setServerResponse({ error: !data.success, message: data.message });
-        if (!data.success) {
-          return;
-        }
-        navigate("/");
-      }
-    );
+  const finishSubmit = async () => {
+    const data = await register(inputData.username, inputData.email, inputData.password);
+    setServerResponse({ error: !data.success, message: data.message });
+
+    if (!data.success) {
+      return;
+    }
+
+    navigate("/");
   };
 
   useEffect(() => {

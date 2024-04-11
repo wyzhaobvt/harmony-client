@@ -20,67 +20,69 @@ export function uploadFile(file) {
   });
 }
 
-export function login({ email, password }) {
-  return fetch(authUrl("/loginUser"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.success) {
-        globals.email = email;
-        localStorage.setItem("harmony_email", email);
-        getPeerAuthToken().then((token) => {
-          peer.authToken = token;
-        });
-      }
-      return data;
-    })
-    .catch((err) => {
-      return {
-        success: false,
-        message: "An error occurred: " + err,
-      };
+export async function login(email, password) {
+  try {
+    const response = await fetch(authUrl("/loginUser"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     });
+
+    const result = await response.json();
+
+    if (result.success) {
+      globals.email = email;
+      localStorage.setItem("harmony_email", email);
+      const token = await getPeerAuthToken();
+      peer.authToken = token;
+    }
+
+    return result;    
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    };
+  }
 }
 
-export function register({ username, email, password }) {
-  return fetch(authUrl("/registerUser"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      username,
-      email,
-      password,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.success) {
-        globals.email = email;
-        localStorage.setItem("harmony_email", email);
-        getPeerAuthToken().then((token) => {
-          peer.authToken = token;
-        });
-      }
-      return data;
-    })
-    .catch((err) => {
-      return {
-        success: false,
-        message: "An error occurred: " + err,
-      };
+export async function register(username, email, password) {
+  try {
+    const response = await fetch(authUrl("/registerUser"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
     });
+
+    const result = await response.json();
+
+    if (result.success) {
+      globals.email = email;
+      localStorage.setItem("harmony_email", email);
+      const token = await getPeerAuthToken();
+      peer.authToken= token;
+    }
+
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    };
+  }
 }
 
 export async function logout() {
@@ -187,24 +189,27 @@ export const deleteAvatar = async (avatarLink) => {
   }
 }
 
-export function getPeerAuthToken(callback) {
-  return fetch(authUrl("/peer/authenticate"), {
-    credentials: "include",
-  })
-    .then((res) => {
-      if (res.status !== 200) throw res.statusText;
-      res.json().then((data) => {
-        if (!data.success) return data.data;
-        localStorage.setItem("harmony_peer_token", data.data);
-        if (typeof callback === "function") callback(data.data);
-      });
-    })
-    .catch((err) => {
-      return {
-        success: false,
-        message: "An error occurred: " + err,
-      };
+export async function getPeerAuthToken(callback) {
+  try {
+    const response = await fetch(authUrl("/peer/authenticate"), {
+      credentials: "include",
     });
+
+    if (response.status !== 200) throw response.statusText;
+
+    const result = await response.json();
+
+    if (!result.success) return result.data;
+    localStorage.setItem("harmony_peer_token", result.data);
+    if (typeof callback === "function") callback(result.data);
+
+    return result.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: `An error occurred: ${error.message}`
+    }
+  }
 }
 
 export function addToTeam({ teamId, teamName, targetEmail }) {

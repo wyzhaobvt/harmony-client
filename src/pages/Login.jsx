@@ -56,16 +56,15 @@ const Login = () => {
     setServerResponse(null);
   };
 
-  const finishSubmit = () => {
-    login({ email: inputData.email, password: inputData.password }).then(
-      (data) => {
-        setServerResponse({ error: !data.success, message: data.message });
-        if (!data.success) {
-          return;
-        }
-        navigate("/")
-      }
-    );
+  const finishSubmit = async () => {
+    const data = await login(inputData.email, inputData.password);
+    setServerResponse({ error: !data.success, message: data.message });
+
+    if (!data.success) {
+      return;
+    }
+
+    navigate("/");
   };
 
   useEffect(() => {
