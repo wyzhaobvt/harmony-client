@@ -2,18 +2,15 @@ import { createContext, useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import CallRequestAlert from "./CallRequestAlert";
 import Navbar from "./Navbar";
-import { Toaster } from "@/components/ui/toaster";
-import setTheme from "../utils/setTheme";
-import { peer, socket } from "../utils/globals";
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster";
 import setTheme from "../utils/setTheme";
 import { peer, socket, AppContext } from "../utils/globals";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   const [callAlert, setCallAlert] = useState(null);
   const [teamNotifications, setTeamNotifications] = useState({});
+  const [teamUpdated, setTeamUpdated] = useState({})
   const navigate = useNavigate();
   const location = useLocation();
   const audioRef = useRef(null);
@@ -26,7 +23,8 @@ function App() {
     if (group === "group" && teamNotifications[uid]) {
       setTeamNotifications(prev=>{
         const obj = {...prev}
-        obj[uid] = null
+        const val = obj[uid]
+        obj[uid] = val === null ? -1 : val > 0 ? null : val - 1
         return obj
       })
     }
@@ -40,6 +38,24 @@ function App() {
         obj[team]++;
         return obj;
       });
+      setTeamUpdated(prev=>{
+        const obj = {[team]: (prev[team] || 0) + 1}
+        return obj
+      })
+    }
+    
+    function onEditedMessage({team}) {
+      setTeamUpdated(prev=>{
+        const obj = {[team]: (prev[team] || 0) + 1}
+        return obj
+      })
+    }
+
+    function onDeletedMessage({team}) {
+      setTeamUpdated(prev=>{
+        const obj = {[team]: (prev[team] || 0) + 1}
+        return obj
+      })
     }
 
     function onCallInvite({ socketId, username }, accept, decline) {
@@ -78,15 +94,19 @@ function App() {
     peer.addEventListener("callInvite", onCallInvite);
     peer.addEventListener("receivingChanged", onReceivingChanged);
     socket.on("update:new_message", onNewMessage);
-
+    socket.on("update:edited_message", onEditedMessage)
+    socket.on("update:deleted_message", onDeletedMessage)
+    
     return () => {
       peer.removeEventListener("callInvite", onCallInvite);
       peer.removeEventListener("receivingChanged", onReceivingChanged);
       socket.off("update:new_message", onNewMessage);
+      socket.off("update:edited_message", onEditedMessage)
+      socket.off("update:deleted_message", onDeletedMessage)
     };
   }, []);
   return (
-    <AppContext.Provider value={{ teamNotifications, setTeamNotifications }}>
+    <AppContext.Provider value={{ teamNotifications, setTeamNotifications, teamUpdated }}>
       <Navbar />
       <main>
         <Outlet />

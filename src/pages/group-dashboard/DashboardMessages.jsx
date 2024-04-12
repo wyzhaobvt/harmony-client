@@ -201,7 +201,7 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
   );
 }
 
-function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
+function DashboardMessages({date, setDate, messages, setMessages, groupName, messagesContainer, onMessagesScroll}) {
       const {group, uid} = useParams()
       const navigate = useNavigate()
       const addMessage = (newMessage) => {
@@ -252,7 +252,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
             <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar grow">
               {messages.length ? messages.map((message, index) => (
                 <Message
-                  key={message.uid}
+                  key={message.uid+Date.now()}
                   teamUid={uid}
                   updateMessages={updateMessages}
                   chatUid={message.uid}
