@@ -1,7 +1,6 @@
 import React, { createContext } from "react";
 import Peer from "./Peer";
 import { io } from "socket.io-client";
-import { getPeerAuthToken } from "./authHandler";
 
 const globals = {
   email: localStorage.getItem("harmony_email"),
@@ -28,9 +27,7 @@ socket.on("connect_error", (err)=>{
 
 export const peer = new Peer({ socket });
 
-peer.addEventListener("connectionError", (cb) => {
-  getPeerAuthToken(cb);
-});
+
 
 peer.addEventListener("usersChanged", () => {
   if (
