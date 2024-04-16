@@ -6,7 +6,21 @@ import FileManagementPage from "./pages/file-management/FileManagementPage";
 import Profile from "./pages/profile/Profile";
 import GroupDashboard from "./pages/group-dashboard/GroupDashboard";
 import PersonalDashboard from "./pages/personal-dashboard/PersonalDashboard";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
+import { checkLoggedIn } from './utils/db';
+
+const redirectToLogin = () => {
+  const isLoggedIn = checkLoggedIn();
+  if (isLoggedIn) return null;
+  return redirect("/login");
+}
+
+const redirectToDashboard = () => {
+  const isLoggedIn = checkLoggedIn();
+  if (isLoggedIn) return redirect("/personalDashboard");
+  return null;
+}
+
 export default createBrowserRouter([
   {
     path: "/",
@@ -26,11 +40,17 @@ export default createBrowserRouter([
         children: [
           {
             index: true,
+            loader: () => {
+              const isLoggedIn = checkLoggedIn();
+              if (isLoggedIn) return redirect("/personalDashboard");
+              return redirect("/login");
+            },
             element: <div>Welcome to Harmony!</div>,
           },
           {
-            path: "/files",
+            path: "/files/:chatId?",
             element: <FileManagementPage />,
+            loader: redirectToLogin
           },
           {
             path: "/video",
@@ -39,26 +59,32 @@ export default createBrowserRouter([
           {
             path: "/video/:group/:uid",
             element: <VideoCall />,
+            loader: redirectToLogin
           },
           {
             path: "/login",
             element: <Login />,
+            loader: redirectToDashboard
           },
           {
             path: "/register",
             element: <Register />,
+            loader: redirectToDashboard
           },
           {
             path: "/profile",
-            element: <Profile />
+            element: <Profile />,
+            loader: redirectToLogin
           },
           {
             path: "/group/:group/:uid",
             element: <GroupDashboard />,
+            loader: redirectToLogin
           },
           {
             path: "/personalDashboard",
             element: <PersonalDashboard />,
+            loader: redirectToLogin
           },
         ],
       },

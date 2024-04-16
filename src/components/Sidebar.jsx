@@ -22,8 +22,8 @@ import {
   LogOutIcon,
   UsersIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { logout } from "../utils/authHandler";
+import { Link, useNavigate } from "react-router-dom";
+import { logout, checkLoggedIn } from "../utils/authHandler";
 
 const links = [
   {
@@ -76,12 +76,26 @@ const links = [
 ];
 
 function Sidebar() {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const data = await logout();
+
+    if (!data.success) {
+      return;
+    }
+    
+    navigate("/login");
+  };
+  
   return (
     <>
       <Drawer direction="left">
-        <DrawerTrigger className="">
-          <HamburgerMenuIcon className="h-7 w-7" />
-        </DrawerTrigger>
+        {checkLoggedIn() && (
+          <DrawerTrigger className="">
+            <HamburgerMenuIcon className="h-7 w-7" />
+          </DrawerTrigger>
+        )}
         <DrawerContent className="top-0 left-0 mt-0 w-[250px] rounded-none border-none shadow shadow-primary">
           <DrawerHeader>
             <DrawerTitle className="mb-4 h-12 flex items-center shadow-md dark:shadow-black">
@@ -110,12 +124,7 @@ function Sidebar() {
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button
-                className="w-full"
-                onClick={() => {
-                  logout();
-                }}
-              >
+              <Button className="w-full" onClick={handleLogout}>
                 <LogOutIcon className="mr-2 h-6 w-6" />
                 Logout
               </Button>
