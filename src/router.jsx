@@ -29,8 +29,8 @@ export default createBrowserRouter([
             element: <div>Welcome to Harmony!</div>,
           },
           {
-            path: "/files",
-            element: <FileManagementPage />,
+            path: "/files/:chatId?",
+            element: <FileManagementPage />
           },
           {
             path: "/video",
