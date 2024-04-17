@@ -52,7 +52,7 @@ export async function fileUpload(data, chatId){
 
 export async function fileDelete(e, chatId, fileName){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/${id}/${fileName}`, {
+    await fetch(`${url}/files/delete/${id}/${fileName}`, {
         method: 'DELETE',
         credentials: "include"
     })
@@ -65,7 +65,7 @@ export async function fileDelete(e, chatId, fileName){
 
 export async function fileDuplicate(e, chatId, fileName){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/${id}/${fileName}`, {
+    await fetch(`${url}/files/duplicate/${id}/${fileName}`, {
         method: 'POST',
         credentials: "include"
     })
