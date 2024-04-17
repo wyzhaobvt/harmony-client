@@ -6,6 +6,7 @@ const ChatCanvas = ({
   setindividualChatOpen,
   chatListOpen,
   setChatListOpen,
+  setSelectedFriend
 }) => {
   const chatListHandler = () => {
     setChatListOpen((prevState) => !prevState);
@@ -82,7 +83,10 @@ const ChatCanvas = ({
               friends.map((friend, index) => (
                 <div
                   className="chat-button border border-input rounded-md flex p-3 mb-2 flex-col relative ms-5 dark:bg-black text-primary"
-                  onClick={individualChatClickHandler}
+                  onClick={() => {
+                    individualChatClickHandler();
+                    setSelectedFriend(friend);
+                  }}
                   key={index}
                 >
                   <div className="flex w-full items-center">
@@ -92,7 +96,7 @@ const ChatCanvas = ({
                     </div>
                     {/* Username */}
                     <div>
-                      <h1 className="font-semibold text-md md:text-xl me-auto">
+                      <h1 className="font-semibold text-md md:text-xl me-auto break-all">
                         {friend.username}
                       </h1>
                     </div>
