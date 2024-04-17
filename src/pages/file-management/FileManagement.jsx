@@ -34,6 +34,7 @@ import ImportFilePopup from "./ImportFilePopup";
 
 import columns from "./columns";
 import { fetchFileList } from "../../utils/fileManagement";
+import globals from "../../utils/globals";
 
 export default function FileManagement() {
   const [sorting, setSorting] = useState([]);
@@ -93,7 +94,7 @@ export default function FileManagement() {
   return (
     <div className="w-full h-full flex flex-col grow overflow-auto">
       <div className="flex items-center gap-6">
-        <div className="text-3xl font-semibold">bun-bunnies</div>
+        <div className="text-3xl font-semibold">{globals.teamsCache[chatId]?.name || "Loading..."}</div>
         <div className="inline [&>svg]:inline [&>svg]:me-2 [&>svg]:h-6 [&>svg]:w-6">
           <ArrowLeftIcon />
           <ArrowRightIcon />
@@ -102,17 +103,15 @@ export default function FileManagement() {
       <span className="ms-3">
         <span>/</span>
         <span className="underline px-1 cursor-pointer">main</span>
-        <span>/</span>
-        <span className="underline px-1 cursor-pointer">src</span>
-        <span>/</span>
-        {
+        {/* {
           fileData.dirName && 
           <>
+            <span>/</span>
             <span className="underline px-1 cursor-pointer">{fileData.dirName[0]}</span>
             <span>/</span>
             <span className="underline px-1 cursor-pointer">{fileData.dirName[1]}</span>
           </>
-        }
+        } */}
       </span>
       <div className="flex items-center py-4 gap-3">
         <Input
