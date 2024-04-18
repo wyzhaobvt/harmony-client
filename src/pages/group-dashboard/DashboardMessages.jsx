@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, Calendar, UserRoundPlus, MoreHorizontal, X } from 'lucide-react';
+import { Phone, Calendar, UserRoundPlus, MoreHorizontal, X, FolderIcon } from 'lucide-react';
 import DashboardCalendar from './DashboardCalendar'
 import GroupMembers from './GroupMembers';
 import {
@@ -237,6 +237,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName}) {
                   <GroupMembers groupName={groupName} groupUid={uid}/>
                 </h1>
               <div className="icons flex gap-4 p-3">
+                <FolderIcon size={24} className="cursor-pointer" onClick={()=>navigate("/files/"+uid)}/>
                 <Phone size={24} className='cursor-pointer' onClick={()=>navigate(`/video/${group}/${uid}`)}/>
                 <UserRoundPlus className='cursor-pointer' size={24} />
                 <Dialog>
