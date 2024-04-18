@@ -2,7 +2,9 @@ const url = import.meta.env.VITE_SERVER_ORIGIN
 export async function fetchFileList(chatId) {
     let id = chatIdCheck(chatId)
     try {
-        const response = await fetch(`${url}/files/list/${id}`);
+        const response = await fetch(`${url}/files/list/${id}`, {
+          credentials: "include"
+        });
         const data = await response.json();
         return data;
     } catch (error) {
@@ -14,7 +16,9 @@ export async function fetchFileList(chatId) {
 export function fileDownload(e, chatId, fileName){
     e.preventDefault();
     let id = chatIdCheck(chatId)
-    fetch(`${url}/files/download/${id}/${fileName}`,)
+    fetch(`${url}/files/download/${id}/${fileName}`,{
+      credentials: "include"
+    })
     .then(res => {
         return res.blob()
     })
@@ -40,6 +44,7 @@ export async function fileUpload(data, chatId){
     // Make a fetch POST request
     await fetch(`${url}/files/upload/${id}`, {
       method: 'POST',
+      credentials: "include",
       body: formData
     })
     .catch((error) => console.error('Server Error:', error));
@@ -47,8 +52,9 @@ export async function fileUpload(data, chatId){
 
 export async function fileDelete(e, chatId, fileName){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/${id}/${fileName}`, {
-        method: 'DELETE'
+    await fetch(`${url}/files/delete/${id}/${fileName}`, {
+        method: 'DELETE',
+        credentials: "include"
     })
     .then((res) => {
         const data = res.json()
@@ -59,8 +65,9 @@ export async function fileDelete(e, chatId, fileName){
 
 export async function fileDuplicate(e, chatId, fileName){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/${id}/${fileName}`, {
-        method: 'POST'
+    await fetch(`${url}/files/duplicate/${id}/${fileName}`, {
+        method: 'POST',
+        credentials: "include"
     })
     .then((res) => {
         const data = res.json()
