@@ -1,4 +1,5 @@
 const url = import.meta.env.VITE_SERVER_ORIGIN
+
 export async function fetchFileList(chatId) {
     let id = chatIdCheck(chatId)
     try {
@@ -85,6 +86,7 @@ export async function fileRename(e, chatId, fileName){
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: "include",
                 body: JSON.stringify({
                     newFileName
                 })
