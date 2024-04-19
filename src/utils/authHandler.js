@@ -7,22 +7,6 @@ export function checkLoggedIn() {
   return localStorage.getItem("harmony_email");
 }
 
-/**
- * Sends provided file to server
- * @param {File} file file to send to server
- */
-export function uploadFile(file) {
-  if (!file) throw new Error("No file was provided");
-  const formData = new FormData();
-  formData.append("file", file);
-
-  fetch(import.meta.env.VITE_SERVER_ORIGIN + "/uploadFile", {
-    method: "POST",
-    body: formData,
-    credentials: "include",
-  });
-}
-
 export async function login(email, password) {
   try {
     const response = await fetch(url + "/loginUser", {
@@ -44,11 +28,11 @@ export async function login(email, password) {
       localStorage.setItem("harmony_email", email);
     }
 
-    return result;    
+    return result;
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
+      message: `An error occurred: ${error.message}`,
     };
   }
 }
@@ -79,7 +63,7 @@ export async function register(username, email, password) {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
+      message: `An error occurred: ${error.message}`,
     };
   }
 }
@@ -96,14 +80,14 @@ export async function logout() {
     if (result.success) {
       globals.email = null;
       localStorage.removeItem("harmony_email");
-      peer.authToken = null
+      peer.authToken = null;
     }
 
     return result;
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
+      message: `An error occurred: ${error.message}`,
     };
   }
 }
@@ -120,20 +104,20 @@ export const getUser = async () => {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
-    }
+      message: `An error occurred: ${error.message}`,
+    };
   }
-}
+};
 
 export const updateUser = async (username, email) => {
   try {
     const response = await fetch(url + "/updateUser", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ username, email })
+      body: JSON.stringify({ username, email }),
     });
 
     const result = await response.json();
@@ -141,10 +125,10 @@ export const updateUser = async (username, email) => {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
-    }
+      message: `An error occurred: ${error.message}`,
+    };
   }
-}
+};
 
 export const uploadAvatar = async (image, avatarLink) => {
   try {
@@ -162,20 +146,20 @@ export const uploadAvatar = async (image, avatarLink) => {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
-    }
+      message: `An error occurred: ${error.message}`,
+    };
   }
-}
+};
 
 export const deleteAvatar = async (avatarLink) => {
   try {
-    const response = await fetch("http://localhost:5002/deleteAvatar", {
+    const response = await fetch(url + "/deleteAvatar", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ avatarLink })
+      body: JSON.stringify({ avatarLink }),
     });
 
     const result = await response.json();
@@ -183,7 +167,7 @@ export const deleteAvatar = async (avatarLink) => {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred: ${error.message}`
-    }
+      message: `An error occurred: ${error.message}`,
+    };
   }
 }

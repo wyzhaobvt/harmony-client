@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 const globals = {
   email: localStorage.getItem("harmony_email"),
-  teamsCache: {}
+  teamsCache: {},
 };
 
 export default globals;
@@ -16,18 +16,23 @@ export const socket = io(import.meta.env.VITE_SERVER_ORIGIN, {
   withCredentials: true
 })
 
-socket.on("connect_error", (err)=>{
-  const {attempts} = socket.io.backoff
 
-  if (attempts >= 5) {
-    socket.disconnect()
-    console.error("Could not connect to server. Socket closed, refresh to try again")
-  }
-})
+/**
+ * Used to set the value of `globals.teamsCache` using the response from `loadTeams()` in `teamsHandler.js`
+ * @typedef {{uid: string, name: string, owned: boolean, teamCallLink: string}} TeamData
+ * @param {TeamData[]} teams
+ * @returns {{[teamUid: string]: TeamData}}
+ */
+export function cacheTeams(teams) {
+  const obj = teams.reduce((prev, curr) => {
+    prev[curr.uid] = curr;
+    return prev;
+  }, {});
+  globals.teamsCache = obj;
+  return obj;
+}
 
 export const peer = new Peer({ socket });
-
-
 
 peer.addEventListener("usersChanged", () => {
   if (
