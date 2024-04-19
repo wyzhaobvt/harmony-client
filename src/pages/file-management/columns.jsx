@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useParams } from "react-router-dom";
-import {fileDelete, fileDuplicate, fileDownload} from '../../utils/fileManagement'
+import {fileDelete, fileDuplicate, fileDownload, fileRename} from '../../utils/fileManagement'
 export default [
   {
     id: "select",
@@ -132,7 +132,11 @@ export default [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem
+            onClick={e => {
+                fileRename(e, chatId, row.getValue("title"))
+                 window.location.reload();
+                }}>
               <Pencil1Icon />
               <div className="ps-2">Rename</div>
             </DropdownMenuItem>
