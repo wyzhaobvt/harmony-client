@@ -249,7 +249,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
                 </Dialog>
               </div>
             </div>
-            <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar grow">
+            <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar grow" ref={messagesContainer} onScroll={onMessagesScroll}>
               {messages.length ? messages.map((message, index) => (
                 <Message
                   key={message.uid+Date.now()}

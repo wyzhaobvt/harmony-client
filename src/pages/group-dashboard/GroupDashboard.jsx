@@ -55,18 +55,20 @@ function GroupDashboard() {
       el.scrollTo(0,el.scrollHeight)
       setAtBottom(true)
     } else if (el && atBottom) {
-      el.scrollTo({behavior: "smooth", top: el.scrollHeight})
+      setTimeout(()=>{
+        el.scrollTo({behavior: "smooth", top: el.scrollHeight})
+      },100)
     }
   }, [messages])
 
   useEffect(() => {
     function updateMessages() {
-    if (!groupName) return
-    return loadChat({ teamName: groupName, teamUid: uid }).then((data) => {
-      if (!data.success) return;
-      setMessages(data.data);
-    });
-  }
+      if (!groupName) return
+      return loadChat({ teamName: groupName, teamUid: uid }).then((data) => {
+        if (!data.success) return;
+        setMessages(data.data);
+      });
+    }
   
     async function getData() {
       await updateMessages()
