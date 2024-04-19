@@ -1,4 +1,5 @@
 const url = import.meta.env.VITE_SERVER_ORIGIN
+
 export async function fetchFileList(chatId) {
     let id = chatIdCheck(chatId)
     try {
@@ -31,7 +32,6 @@ export function fileDownload(e, chatId, fileName){
         link.click();
     })
     .catch(err => console.error("Server Error", err))
-    
 }
 
 export async function fileUpload(data, chatId){
@@ -63,6 +63,8 @@ export async function fileDelete(e, chatId, fileName){
     .catch((error) => console.error('Server Error:', error));
 }
 
+
+
 export async function fileDuplicate(e, chatId, fileName){
     let id = chatIdCheck(chatId)
     await fetch(`${url}/files/duplicate/${id}/${fileName}`, {
@@ -74,6 +76,26 @@ export async function fileDuplicate(e, chatId, fileName){
         return data
     })
     .catch((error) => console.error('Server Error:', error));
+}
+
+export async function fileRename(e, chatId, fileName){
+    let id = chatIdCheck(chatId)
+    const newFileName = prompt("Enter new file name");
+    await fetch(`${url}/files/rename/${id}/${fileName}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    newFileName
+                })
+            })
+            .then((res) => {
+                const data = res.json()
+                return data
+            })
+            .catch((error) => console.error('Server Error:', error));
 }
 
 function chatIdCheck(id){
