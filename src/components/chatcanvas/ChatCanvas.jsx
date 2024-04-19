@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { loadFriendsList, deleteFriend } from "../../utils/userToUserHandler";
 import { ProfilePicture } from "../ProfilePicture";
+import VerticalMenu from "./VerticalMenu";
 
 const ChatCanvas = ({
   setindividualChatOpen,
@@ -56,7 +57,7 @@ const ChatCanvas = ({
         </button>
       )}
       {chatListOpen && (
-        <div className="flex flex-col chat-canvas  w-[75vw] md:w-[288px] dark:bg-black text-primary">
+        <div className="flex flex-col chat-canvas cursor-default w-[75vw] md:w-[288px] dark:bg-black text-primary">
           <button
             className="border-b md:p-2 flex items-center justify-center md:justify-start"
             onClick={chatListHandler}
@@ -95,11 +96,13 @@ const ChatCanvas = ({
                       <ProfilePicture image={friend.profileURL} />
                     </div>
                     {/* Username */}
-                    <div>
-                      <h1 className="font-semibold text-md md:text-xl me-auto break-all">
+                    <div className="flex-grow">
+                      <h1 className="font-semibold text-md md:text-xl pe-4 break-all">
                         {friend.username}
                       </h1>
                     </div>
+                    {/* Vertical dot menu */}
+                    <VerticalMenu />
                   </div>
                 </div>
               ))
