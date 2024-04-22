@@ -1,6 +1,6 @@
 import globals, { peer } from "./globals";
 
-const url = import.meta.env.VITE_CHAT_SERVER_ORIGIN;
+const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export function checkLoggedIn() {
   return localStorage.getItem("harmony_email");
