@@ -1,8 +1,8 @@
-const url = import.meta.env.VITE_USER_TO_USER_SERVER_ORIGIN;
+const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export async function loadFriendsList() {
   try {
-    const response = await fetch(`${url}/loadFriendsList`, {
+    const response = await fetch(`${url}/api/database/loadFriendsList`, {
       method: "GET",
       credentials: "include"
     });
@@ -19,7 +19,7 @@ export async function loadFriendsList() {
 
 export async function deleteFriend(email) {
   try {
-    const response = await fetch(`${url}/removeFriend`, {
+    const response = await fetch(`${url}/api/database/removeFriend`, {
       method: "POST",
       credentials: "include",
       headers: {
