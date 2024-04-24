@@ -2,7 +2,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -10,12 +9,12 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import {
-  HomeIcon,
   ChatBubbleIcon,
   CalendarIcon,
   HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
 import {
+  Camera,
   CircleUserRoundIcon,
   FilesIcon,
   LayoutDashboardIcon,
@@ -34,6 +33,11 @@ const links = [
     path: "/",
   },
   {
+    icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
+    name: "Groups",
+    path: "/group",
+  },
+  {
     icon: (
       <ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
     ),
@@ -41,14 +45,14 @@ const links = [
     path: "/chat",
   },
   {
-    icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
-    name: "Groups",
-    path: "/group",
-  },
-  {
     icon: <FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "File Management",
     path: "/files",
+  },
+  {
+    icon: <Camera className="mr-2 h-6 w-6 text-black dark:text-white" />,
+    name: "Video Chat",
+    path: "/video",
   },
   {
     icon: <CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
@@ -62,17 +66,6 @@ const links = [
     name: "Profile",
     path: "/profile",
   },
-  {
-    name: "Video Chat",
-    path: "/video",
-  },
-  {
-    icon: (
-      <LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
-    ),
-    name: "Personal Dashboard",
-    path: "/personalDashboard",
-  },
 ];
 
 function Sidebar() {
@@ -84,10 +77,10 @@ function Sidebar() {
     if (!data.success) {
       return;
     }
-    
+
     navigate("/login");
   };
-  
+
   return (
     <>
       <Drawer direction="left">
