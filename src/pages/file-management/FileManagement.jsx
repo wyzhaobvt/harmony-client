@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ChevronDownIcon,
   ArrowLeftIcon,
@@ -34,6 +34,8 @@ import ImportFilePopup from "./ImportFilePopup";
 
 import columns from "./columns";
 import { fetchFileList } from "../../utils/fileManagement";
+import globals from "../../utils/globals";
+import { GalleryThumbnails } from "lucide-react";
 
 export default function FileManagement() {
   const [sorting, setSorting] = useState([]);
@@ -64,6 +66,9 @@ export default function FileManagement() {
 
   let {chatId} = useParams();
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
   //obtain directory file
   useEffect(() => {
       fetchFileList(chatId).then(json => {
@@ -93,26 +98,20 @@ export default function FileManagement() {
   return (
     <div className="w-full h-full flex flex-col grow overflow-auto">
       <div className="flex items-center gap-6">
-        <div className="text-3xl font-semibold">bun-bunnies</div>
-        <div className="inline [&>svg]:inline [&>svg]:me-2 [&>svg]:h-6 [&>svg]:w-6">
-          <ArrowLeftIcon />
-          <ArrowRightIcon />
+        <div className="text-3xl font-semibold">{globals.teamsCache[chatId]?.name || "Loading..."}</div>
+        <div className="">
+          <Button variant="ghost" className="p-0 w-auto me-2" disabled={!location.state?.files} onClick={()=>navigate(-1)}>
+            <ArrowLeftIcon className="inline h-6 w-6"/>
+          </Button>
+          <Button variant="ghost" className="p-0 w-auto" onClick={()=>navigate(1)}>
+            <ArrowRightIcon  className="inline h-6 w-6"/>
+          </Button>
         </div>
       </div>
-      <span className="ms-3">
+      <span className="ms-1">
+        <Link  to="/files" state={{files: true}} className="underline px-1 cursor-pointer">teams</Link>
         <span>/</span>
-        <span className="underline px-1 cursor-pointer">main</span>
-        <span>/</span>
-        <span className="underline px-1 cursor-pointer">src</span>
-        <span>/</span>
-        {
-          fileData.dirName && 
-          <>
-            <span className="underline px-1 cursor-pointer">{fileData.dirName[0]}</span>
-            <span>/</span>
-            <span className="underline px-1 cursor-pointer">{fileData.dirName[1]}</span>
-          </>
-        }
+        <Link to={"/files/"+chatId} state={{files: true}} className="underline px-1 cursor-pointer">{globals.teamsCache[chatId]?.name.toLowerCase().replaceAll(" ", "-") || ""}</Link>
       </span>
       <div className="flex items-center py-4 gap-3">
         <Input

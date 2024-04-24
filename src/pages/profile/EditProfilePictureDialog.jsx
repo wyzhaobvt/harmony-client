@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import { ProfilePicture } from "../../components/ProfilePicture";
-import { uploadAvatar, deleteAvatar } from "../../utils/db";
+import { uploadAvatar, deleteAvatar } from "../../utils/authHandler";
 
 export function EditProfilePictureDialog({ profilePicture, handleSetProfilePicture, className }) {
   const [image, setImage] = useState(profilePicture);

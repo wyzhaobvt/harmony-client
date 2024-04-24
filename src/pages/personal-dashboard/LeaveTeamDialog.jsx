@@ -9,7 +9,12 @@ import {
   DialogClose,
 } from "@/components/ui/dialog"
 
-const LeaveTeamDialog = ({dialogRef,toggleDropdown }) => {
+const LeaveTeamDialog = ({dialogRef,toggleDropdown, leaveTeam }) => {
+
+  function handleLeaveClick(event) {
+    leaveTeam()
+    toggleDropdown(event)
+  }
     return ( 
         <Dialog >
         <DialogTrigger asChild >
@@ -31,7 +36,7 @@ const LeaveTeamDialog = ({dialogRef,toggleDropdown }) => {
           <DialogClose asChild>
           <Button type="button" variant="secondary" className="w-[130px] bg-white text-black border border-primary" onClick={toggleDropdown}>Cancel</Button>
           </DialogClose>
-            <Button type="submit" onClick={toggleDropdown}>Leave Team</Button>
+            <Button type="submit" onClick={handleLeaveClick}>Leave Team</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

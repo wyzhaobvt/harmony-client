@@ -8,7 +8,12 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog"
-const DeleteTeamDialog = ({dialogRef,toggleDropdown }) => {
+const DeleteTeamDialog = ({dialogRef,toggleDropdown, deleteTeam }) => {
+
+  function handleDeleteClick(event) {
+    deleteTeam()
+    toggleDropdown(event)
+  }
     return ( 
         <Dialog >
         <DialogTrigger asChild >
@@ -17,7 +22,6 @@ const DeleteTeamDialog = ({dialogRef,toggleDropdown }) => {
         <DialogContent className="max-w-[300px] md:max-w-[425px] rounded-md" ref={dialogRef}>
           <DialogHeader>
             <DialogTitle>Delete Team</DialogTitle>
-            
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="">
@@ -27,10 +31,10 @@ const DeleteTeamDialog = ({dialogRef,toggleDropdown }) => {
            
           </div>
           <DialogFooter className="sm:justify-between">
-          <DialogClose asChild>
-          <Button type="button" variant="secondary" className="bg-white text-black border border-primary" onClick={toggleDropdown}>Cancel</Button>
-          </DialogClose>
-            <Button type="submit" onClick={toggleDropdown} className="mb-2 md:mb-0">Delete Team</Button>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary" className="bg-white text-black border border-primary" onClick={toggleDropdown}>Cancel</Button>
+            </DialogClose>
+            <Button type="submit" onClick={handleDeleteClick} className="mb-2 md:mb-0">Delete Team</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

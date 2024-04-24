@@ -13,14 +13,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
-import { login } from "../utils/db";
+import { login } from "../utils/authHandler";
 
 const Login = () => {
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
   });
-  
+
   const [errors, setErrors] = useState({
     email: null,
     password: null,
@@ -30,7 +30,7 @@ const Login = () => {
   
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handlePasswordVisibility = () => {
     setIsHiddenPassword((prev) => !prev);

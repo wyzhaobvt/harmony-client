@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FriendInvites from "./FriendInvites";
 import Teams from "./Teams";
 import Event from "./Event";
@@ -10,6 +10,8 @@ import TeamInvites from "./TeamInvites";
 import CreateTeamDialog from "./CreateTeamDialog";
 import ChatCanvas from "../../components/chatcanvas/ChatCanvas";
 import ChatBox from "../../components/chatcanvas/ChatBox";
+import { loadTeams } from "../../utils/teamsHandler";
+import globals from "../../utils/globals";
 
 function PersonalDashboard() {
   const [date, setDate] = React.useState(new Date());
@@ -63,17 +65,7 @@ function PersonalDashboard() {
     },
   ]);
 
-  const [teams, setTeams] = useState([
-    {
-      name: "Bob Johnson",
-    },
-    {
-      name: "Alice Smith",
-    },
-    {
-      name: "Charlie Brown",
-    },
-  ]);
+  const [teams, setTeams] = useState(Object.values(globals.teamsCache));
 
   const events = [
     {
@@ -81,7 +73,7 @@ function PersonalDashboard() {
       time: "10:00 AM",
     },
     {
-      name: "Bob’s Reminder",
+      name: "Bob's Reminder",
       time: "11:30 AM",
     },
     {
@@ -93,15 +85,28 @@ function PersonalDashboard() {
       time: "2:30 PM",
     },
     {
-      name: "Charlie’s DIY Dentistry Workshop",
+      name: "Charlie's DIY Dentistry Workshop",
       time: "5:30 PM",
     },
   ];
 
+  useEffect(() => {
+    updateTeams();
+  }, []);
+
+  function updateTeams() {
+    loadTeams().then((data) => {
+      data.data.forEach((team) => {
+        globals.teamsCache[team.uid] = team;
+      });
+      setTeams(data.data);
+    });
+  }
+
   return (
     <>
       <div className="flex justify-center h-screen md:w-5/6 xl:w-10/12">
-        <div className="w-screen flex justify-center px-2 lg:mr-32">
+        <div className="w-screen flex justify-center px-2">
           <div className="content-body flex w-full">
             <div className="chat xl:me-3 w-full h-5/6 flex flex-col">
               <div className="chatbox border border-input rounded-lg px-4 xl:px-8 py-6 gap-4 mb-3 overflow-y-auto">
@@ -110,7 +115,7 @@ function PersonalDashboard() {
                     My Teams
                   </h1>
                   <div className="icons flex gap-4 ">
-                    <CreateTeamDialog />
+                    <CreateTeamDialog setTeams={setTeams} />
 
                     <Dialog>
                       <DialogTrigger>
@@ -132,14 +137,14 @@ function PersonalDashboard() {
                           </div>
                           <div className="events">
                             <Event name="Meeting" time="10:00 AM" />
-                            <Event name="Bob’s Reminder" time="11:30 AM" />
+                            <Event name="Bob's Reminder" time="11:30 AM" />
                             <Event name="Lunch Break" time="1:00 PM" />
                             <Event
                               name="Brainstorming Session"
                               time="2:30 PM"
                             />
                             <Event
-                              name="Charlie’s DIY Dentistry Workshop"
+                              name="Charlie's DIY Dentistry Workshop"
                               time="5:30 PM"
                             />
                           </div>
@@ -149,9 +154,18 @@ function PersonalDashboard() {
                   </div>
                 </div>
                 <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar">
-                  {teams.map((team, index) => (
-                    <Teams key={index} name={team.name} />
-                  ))}
+                  {teams.length
+                    ? teams.map((team, index) => (
+                        <Teams
+                          key={index}
+                          name={team.name}
+                          owned={team.owned}
+                          link={team.teamCallLink}
+                          uid={team.uid}
+                          updateTeams={updateTeams}
+                        />
+                      ))
+                    : "No Teams"}
                 </div>
               </div>
 
