@@ -1,15 +1,14 @@
 import globals, { peer } from "./globals";
 
-const url = import.meta.env.VITE_USER_AUTH_ORIGIN;
+const url = import.meta.env.VITE_SERVER_ORIGIN;
 
-// Move to uploadFile to another file
 export function checkLoggedIn() {
   return localStorage.getItem("harmony_email");
 }
 
 export async function login(email, password) {
   try {
-    const response = await fetch(url + "/loginUser", {
+    const response = await fetch(url + "/api/users/loginUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +38,7 @@ export async function login(email, password) {
 
 export async function register(username, email, password) {
   try {
-    const response = await fetch(url + "/registerUser", {
+    const response = await fetch(url + "/api/users/registerUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +69,7 @@ export async function register(username, email, password) {
 
 export async function logout() {
   try {
-    const response = await fetch(url + "/logoutUser", {
+    const response = await fetch(url + "/api/users/logoutUser", {
       method: "POST",
       credentials: "include",
     })
@@ -94,7 +93,7 @@ export async function logout() {
 
 export const getUser = async () => {
   try {
-    const response = await fetch(url + "/getUser", {
+    const response = await fetch(url + "/api/database/getUser", {
       method: "GET",
       credentials: "include",
     });
@@ -111,7 +110,7 @@ export const getUser = async () => {
 
 export const updateUser = async (username, email) => {
   try {
-    const response = await fetch(url + "/updateUser", {
+    const response = await fetch(url + "/api/database/updateUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -132,7 +131,7 @@ export const updateUser = async (username, email) => {
 
 export const uploadAvatar = async (image, avatarLink) => {
   try {
-    const response = await fetch(url + "/uploadAvatar", {
+    const response = await fetch(url + "/api/database/uploadAvatar", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +152,7 @@ export const uploadAvatar = async (image, avatarLink) => {
 
 export const deleteAvatar = async (avatarLink) => {
   try {
-    const response = await fetch(url + "/deleteAvatar", {
+    const response = await fetch(url + "/api/database/deleteAvatar", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -170,4 +169,19 @@ export const deleteAvatar = async (avatarLink) => {
       message: `An error occurred: ${error.message}`,
     };
   }
+}
+
+export function addToTeam({ teamId, teamName, targetEmail }) {
+  return fetch(url + "/api/database/addToTeam", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      targetEmail: targetEmail,
+      teamID: teamId,
+      teamName: teamName,
+    }),
+  }).then((data) => data.json());
 }
