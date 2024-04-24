@@ -32,6 +32,18 @@ const ChatCanvas = ({
     loadFriends();
   }, []);
 
+  const handleRemoveFriend = async (email) => {
+    const data = await deleteFriend(email);
+
+    if (!data.success) {
+      return;
+    }
+
+    // Update friends list
+    const updatedFriends = friends.filter((friend) => friend.email !== email);
+    setFriends(updatedFriends);
+  }
+
   return (
     <div className="flex flex-col chat-button w-[80px] md:w-[288px] dark:bg-black text-primary">
       {!chatListOpen && (
@@ -102,7 +114,11 @@ const ChatCanvas = ({
                       </h1>
                     </div>
                     {/* Vertical dot menu */}
-                    <VerticalMenu />
+                    <VerticalMenu
+                      handleRemoveFriend={() =>
+                        handleRemoveFriend(friend.email)
+                      }
+                    />
                   </div>
                 </div>
               ))
