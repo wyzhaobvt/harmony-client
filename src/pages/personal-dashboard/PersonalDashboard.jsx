@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FriendInvites from "./FriendInvites";
 import Teams from "./Teams";
 import Event from "./Event";
@@ -10,11 +10,13 @@ import TeamInvites from "./TeamInvites";
 import CreateTeamDialog from "./CreateTeamDialog";
 import ChatCanvas from "../../components/chatcanvas/ChatCanvas";
 import ChatBox from "../../components/chatcanvas/ChatBox";
+import axios from "axios";
 
 function PersonalDashboard() {
   const [date, setDate] = React.useState(new Date());
   const [individualChatOpen, setindividualChatOpen] = useState(false);
   const [chatListOpen, setChatListOpen] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
   const [friendInvites, setFriendInvites] = useState([
     {
       name: "Bob Johnson",
@@ -97,6 +99,22 @@ function PersonalDashboard() {
     },
   ];
 
+//  useEffect(()=>{
+//   const fetchdata = async ()=>{
+//     const response = await axios.get(
+//       'http://localhost:5000/api/peerchat/load',
+//       {
+//         params: {
+//           username: 'testuser1@email.com',
+//           peerUsername: 'testuser2@email.com'
+//         },
+//         withCredentials: true // Send cookies with the request
+//       }
+//     );
+//     console.log(response.data);
+//   }
+//   fetchdata()
+//   },[] )
   return (
     <>
       <div className="flex justify-center h-screen md:w-5/6 xl:w-10/12">
@@ -207,12 +225,14 @@ function PersonalDashboard() {
         </div>
       </div>
       {individualChatOpen ? (
-        <ChatBox setindividualChatOpen={setindividualChatOpen} />
+        <ChatBox setindividualChatOpen={setindividualChatOpen} selectedFriend={selectedFriend}/>
       ) : (
         <ChatCanvas
           setindividualChatOpen={setindividualChatOpen}
           chatListOpen={chatListOpen}
           setChatListOpen={setChatListOpen}
+          setSelectedFriend={setSelectedFriend}
+          selectedFriend={selectedFriend}
         />
       )}
     </>

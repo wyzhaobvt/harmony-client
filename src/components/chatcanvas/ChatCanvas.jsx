@@ -1,45 +1,27 @@
-import {useState } from "react";
+import {useEffect, useState } from "react";
 
-const ChatCanvas = ({ setindividualChatOpen, chatListOpen, setChatListOpen }) => {
+const ChatCanvas = ({ setindividualChatOpen, chatListOpen, setChatListOpen,setSelectedFriend,selectedFriend}) => {
     const chatListHandler = () => {
         setChatListOpen(prevState => !prevState);
     }
-    const individualChatClickHandler = () => {
+    const handleFriendClick = (peerUsername) => {
+        setSelectedFriend(peerUsername);
         setindividualChatOpen(true);
-    }
+      };
+      
+      useEffect(() => {
+        console.log(selectedFriend);
+      }, [selectedFriend]);
     const [friends, setFriends] = useState([
         {
-            name: "Bob Johnson",
+            name: "testuser1@email.com",
             avatar: "assets\\img\\pexels-justin-shaifer-1222271.jpg",
         },
         {
-            name: "Alice Smith",
+            name: "testuser2@email.com",
             avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
         },
-        {
-            name: "Charlie Brown",
-            avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
-        },
-        {
-            name: "Bob Johnson",
-            avatar: "assets\\img\\pexels-justin-shaifer-1222271.jpg",
-        },
-        {
-            name: "Alice Smith",
-            avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
-        },
-        {
-            name: "Charlie Brown",
-            avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
-        },
-        {
-            name: "Alice Smith",
-            avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
-        },
-        {
-            name: "Charlie Brown",
-            avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
-        },
+     
     ]);
 
 
@@ -61,7 +43,7 @@ const ChatCanvas = ({ setindividualChatOpen, chatListOpen, setChatListOpen }) =>
                     </button>
                     <div className="mt-3 h-[75vh] scrollable-div ">
                         {friends.map((friend, index) => (
-                            <div className="chat-button border border-input rounded-md flex p-3 mb-2 flex-col relative ms-5 dark:bg-black text-primary" onClick={individualChatClickHandler} key={index}>
+                            <div className="chat-button border border-input rounded-md flex p-3 mb-2 flex-col relative ms-5 dark:bg-black text-primary" onClick={()=>handleFriendClick(friend.name)} key={index}>
                                 <div className="flex  w-full items-center">
                                     <div className="me-5">
                                         <img

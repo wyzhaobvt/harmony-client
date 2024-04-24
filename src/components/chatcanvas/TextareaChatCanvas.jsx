@@ -3,7 +3,7 @@ import { Send, SmilePlus, Paperclip } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
-function Textarea({ placeholder, className, addMessage }) {
+function Textarea({ placeholder, className, addMessage,sendMessage,peerUsername,username}) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, setText] = useState("");
   const emojiPickerRef = useRef(null);
@@ -27,47 +27,55 @@ function Textarea({ placeholder, className, addMessage }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [emojiPickerRef]);
+  
 
-  const sendMessage = async () => {
-    if (!text) return;
-    const response = await fetch("https://randomuser.me/api/");
-    const data = await response.json();
-    const user = data.results[0];
+  // const sendMessage = async () => {
+  //   if (!text) return;
+  //   const response = await fetch("https://randomuser.me/api/");
+  //   const data = await response.json();
+  //   const user = data.results[0];
 
-    const currentTime = new Date();
-    let hours = currentTime.getHours();
-    let minutes = currentTime.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
+  //   const currentTime = new Date();
+  //   let hours = currentTime.getHours();
+  //   let minutes = currentTime.getMinutes();
+  //   const ampm = hours >= 12 ? "PM" : "AM";
 
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
+  //   hours = hours % 12;
+  //   hours = hours ? hours : 12;
+  //   minutes = minutes < 10 ? "0" + minutes : minutes;
 
-    const formattedTime = `${hours}:${minutes} ${ampm}`;
+  //   const formattedTime = `${hours}:${minutes} ${ampm}`;
 
-    addMessage({
-      name: `${user.name.first} ${user.name.last}`,
-      message: text,
-      time: formattedTime,
-      avatar: user.picture.large,
-    });
-    setText("");
-  };
-
+  //   addMessage({
+  //     name: `${user.name.first} ${user.name.last}`,
+  //     message: text,
+  //     time: formattedTime,
+  //     avatar: user.picture.large,
+  //   });
+  //   setText("");
+  // };
+useEffect(()=>{
+  console.log(text)
+},[text])
   return (
     <div className="relative  flex flex-col chat-input-container border dark:border-white mx-3">
       <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-          }
-        }}
-        placeholder={placeholder}
-        className={`${className} w-full md:min-h-32 p-2 mb-10 bg-background  rounded-lg resize-none focus:outline-none pr-20`}
-      />
+  value={text}
+  onChange={(e) => setText(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(username, peerUsername, text);
+      setText("");
+    } else if (e.key === "Enter" && e.shiftKey) {
+      e.preventDefault();
+      const newText = text.substring(0, e.target.selectionStart) + "\n" + text.substring(e.target.selectionEnd);
+      setText(newText);
+    }
+  }}
+  placeholder={placeholder}
+  className={`${className} w-full md:min-h-32 p-2 mb-10 bg-background rounded-lg resize-none focus:outline-none pr-20`}
+/>
       
       <div className="icons">
         <div className="absolute left-3 bottom-3 transform space-x-2 flex items-center">
@@ -77,7 +85,10 @@ function Textarea({ placeholder, className, addMessage }) {
           <Paperclip size={24} />
         </div>
         <div className="absolute right-3 bottom-3 transform space-x-2 flex items-center">
-          <Send size={24} onClick={sendMessage} />
+          <Send size={24}   onClick={() => {
+    sendMessage(username, peerUsername, text);
+    setText(""); // Clear the text input
+  }} />
         </div>
       </div>
       {showEmojiPicker && (
