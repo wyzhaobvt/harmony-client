@@ -12,12 +12,15 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoSelector from "./VideoSelector";
 import VideoStream from "../../components/VideoStream";
-import { peer } from "../../utils/globals";
+import globals, { peer } from "../../utils/globals";
 import stringToHexColor from "../../utils/stringToHexColor";
 import MicrophoneButton from "./MicrophoneButton";
 import DashboardMessages from "../group-dashboard/DashboardMessages";
 import FileManagement from "../file-management/FileManagement";
 import "./VideoCall.css";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { loadTeams } from "../../utils/teamsHandler";
+import { loadChat } from "../../utils/chatHandler";
 
 export default function VideoCall() {
   const [members, setMembers] = useState(peer.members);
@@ -31,6 +34,9 @@ export default function VideoCall() {
   const [groupName, setGroupName] = useState("test-group");
   const [date, setDate] = useState(new Date().toISOString());
   const [messages, setMessages] = useState([]);
+  
+  const {group, uid} = useParams()
+  const navigate = useNavigate()
 
   const chatSwitchWidth = 639;
 
@@ -58,7 +64,31 @@ export default function VideoCall() {
     peer.addEventListener("receivingChanged", () => {
       setStreams(getStreams());
     });
+
+    if (uid) setTeams()
   }, []);
+
+  function setTeams() {
+    loadTeams()
+    .then((data) => {
+      data.data.forEach(team=>globals.teamsCache[team.uid] = team)
+      return data.data.find((team) => team.uid === uid)
+    })
+    .then((team) => {
+      if (team.name.toLowerCase().replaceAll(" ", "-") !== group) {
+        navigate("/video")
+        return
+      }
+      setGroupName(team.name);
+      loadChat({ teamName: team.name, teamUid: uid }).then(data=>{
+        if (!data.success) return
+        setMessages(data.data)
+      });
+    }).catch((error)=>{
+      console.error("error occurred while loading team chat", error)
+      // navigate("/personalDashboard")
+    });
+  }
 
   function getStreams() {
     const streams = Object.entries(peer.streams).reduce(
@@ -268,6 +298,7 @@ export default function VideoCall() {
                 className="h-7 bg-primary-foreground text-primary hover:bg-zinc-300 dark:bg-primary dark:text-primary-foreground dark:hover:bg-zinc-300"
                 onClick={() => {
                   peer.leaveRoom();
+                  navigate("/video", {replace: true})
                 }}
               >
                 Leave

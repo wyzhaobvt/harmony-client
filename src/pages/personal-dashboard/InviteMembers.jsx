@@ -10,7 +10,22 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import FriendRequestSentDialog from "./FriendRequestSentDialog";
-const InviteMembers = ({ dialogRef, toggleDropdown }) => {
+import { useState } from "react";
+const InviteMembers = ({inviteMember}) => {
+  const [email, setEmail] = useState("")
+  const [error, setError] = useState("")
+
+  function handleInputChange(event) {
+    setEmail(event.target.value)
+  }
+
+  function handleSendInvite() {
+    if (!email) return
+    inviteMember(email).then(data=>{
+      if (!data.success) setError("Failed to add user to team")
+    })
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -20,14 +35,13 @@ const InviteMembers = ({ dialogRef, toggleDropdown }) => {
       </DialogTrigger>
       <DialogContent
         className="max-w-[300px] md:max-w-[425px] rounded-md"
-        ref={dialogRef}
       >
         <DialogHeader>
-          <DialogTitle>Add Friend</DialogTitle>
+          <DialogTitle>Add User</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="">
-            <Input id="name" value="?" className="col-span-3" />
+            <Input id="name" placeholder={"Enter Users Email"} value={email} onChange={handleInputChange} className="col-span-3" />
           </div>
         </div>
         <DialogFooter className="sm:justify-between">
@@ -36,12 +50,11 @@ const InviteMembers = ({ dialogRef, toggleDropdown }) => {
               type="button"
               variant="secondary"
               className="md:w-[130px] bg-white text-black border border-primary"
-              onClick={toggleDropdown}
             >
               Cancel
             </Button>
           </DialogClose>
-          <FriendRequestSentDialog toggleDropdown={toggleDropdown} />
+          <FriendRequestSentDialog onClick={handleSendInvite} errorMessage={error}/>
         </DialogFooter>
       </DialogContent>
     </Dialog>
