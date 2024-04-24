@@ -8,7 +8,7 @@ const globals = {
 
 export default globals;
 
-const socket = io(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
+const socket = io(import.meta.env.MODE === "production" ? import.meta.env.VITE_SERVER_ORIGIN : import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
   auth: {
     token: localStorage.getItem("harmony_peer_token"),
   },
