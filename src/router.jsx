@@ -7,7 +7,7 @@ import Profile from "./pages/profile/Profile";
 import GroupDashboard from "./pages/group-dashboard/GroupDashboard";
 import PersonalDashboard from "./pages/personal-dashboard/PersonalDashboard";
 import { createBrowserRouter, redirect } from "react-router-dom";
-import { checkLoggedIn } from './utils/db';
+import { checkLoggedIn } from './utils/authHandler';
 
 const redirectToLogin = () => {
   const isLoggedIn = checkLoggedIn();
@@ -48,12 +48,16 @@ export default createBrowserRouter([
             element: <div>Welcome to Harmony!</div>,
           },
           {
-            path: "/files/:chatId?",
+            path: "/files/:chatId?/*",
             element: <FileManagementPage />,
             loader: redirectToLogin
           },
           {
             path: "/video",
+            element: <VideoCall />
+          },
+          {
+            path: "/video/:group/:uid",
             element: <VideoCall />,
             loader: redirectToLogin
           },
@@ -73,7 +77,7 @@ export default createBrowserRouter([
             loader: redirectToLogin
           },
           {
-            path: "/group/:group",
+            path: "/group/:group/:uid",
             element: <GroupDashboard />,
             loader: redirectToLogin
           },

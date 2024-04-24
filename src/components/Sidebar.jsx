@@ -23,8 +23,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../utils/db";
-import { checkLoggedIn } from "../utils/db";
+import { logout, checkLoggedIn } from "../utils/authHandler";
 
 const links = [
   {
@@ -32,47 +31,47 @@ const links = [
       <LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
     ),
     name: "Dashboard",
-    path: "/"
+    path: "/",
   },
   {
     icon: (
       <ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
     ),
     name: "Chat",
-    path: "/chat"
+    path: "/chat",
   },
   {
     icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "Groups",
-    path: "/group"
+    path: "/group",
   },
   {
     icon: <FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "File Management",
-    path: "/files"
+    path: "/files",
   },
   {
     icon: <CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "Calendar",
-    path: "/calendar"
+    path: "/calendar",
   },
   {
     icon: (
       <CircleUserRoundIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
     ),
     name: "Profile",
-    path: "/profile"
+    path: "/profile",
   },
   {
     name: "Video Chat",
-    path: "/video"
+    path: "/video",
   },
   {
     icon: (
       <LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
     ),
     name: "Personal Dashboard",
-    path: "/personalDashboard"
+    path: "/personalDashboard",
   },
 ];
 

@@ -44,8 +44,8 @@ export async function fileUpload(data, chatId){
     // Make a fetch POST request
     await fetch(`${url}/files/upload/${id}`, {
       method: 'POST',
-      credentials: "include",
-      body: formData
+      body: formData,
+      credentials: "include"
     })
     .catch((error) => console.error('Server Error:', error));
 }
