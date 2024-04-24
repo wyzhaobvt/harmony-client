@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -17,9 +17,11 @@ import {
   loadMembers,
   removeTeamLink,
 } from "../../utils/teamsHandler";
+import { AppContext } from "../../utils/globals";
+
 function Teams({ name, owned, link, uid, updateTeams }) {
   const navigate = useNavigate();
-
+  const { teamNotifications } = useContext(AppContext);
   function getMembers() {
     return loadMembers({ teamName: name, teamUid: uid }).then((data) => {
       if (!data.success) return [];
@@ -65,6 +67,11 @@ function Teams({ name, owned, link, uid, updateTeams }) {
 
   return (
     <div className="border border-input rounded-md flex p-3 mb-2 flex-col relative">
+      {teamNotifications[uid] && (
+        <div className="h-4 absolute bg-red-500 top-0 left-0 rounded-[0.32rem] text-xs text-center font-mono text-white px-1">
+          {teamNotifications[uid]}
+        </div>
+      )}
       <div className="team-body flex justify-between w-full">
         <div>
           <h1 className="font-semibold text-xl me-auto">{name}</h1>
