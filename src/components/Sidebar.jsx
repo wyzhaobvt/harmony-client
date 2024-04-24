@@ -102,15 +102,16 @@ function Sidebar() {
             {links.map(({ icon, name, path }, i) => {
               return (
                 <DrawerClose key={i} asChild>
-                  <Link to={path}>
-                    <Button
-                      className="text-lg w-full justify-start px-5 h-10"
-                      variant="ghost"
-                    >
+                  <Button
+                    asChild
+                    className="text-lg w-full justify-start px-5 h-10"
+                    variant="ghost"
+                  >
+                    <Link to={path}>
                       {icon}
                       {name}
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </DrawerClose>
               );
             })}
