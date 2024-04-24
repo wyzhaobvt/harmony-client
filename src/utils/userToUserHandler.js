@@ -17,7 +17,7 @@ export async function loadFriendsList() {
   }
 }
 
-export async function deleteFriend(email) {
+export async function deleteFriend(targetEmail) {
   try {
     const response = await fetch(`${url}/api/database/removeFriend`, {
       method: "POST",
@@ -25,7 +25,7 @@ export async function deleteFriend(email) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: { email }
+      body: JSON.stringify({ targetEmail })
     });
 
     const result = await response.json();
