@@ -1,6 +1,6 @@
+import React, { createContext } from "react";
 import Peer from "./Peer";
 import { io } from "socket.io-client";
-import { getPeerAuthToken } from "./authHandler";
 
 const globals = {
   email: localStorage.getItem("harmony_email"),
@@ -8,6 +8,14 @@ const globals = {
 };
 
 export default globals;
+
+/** @type {{teamNotifications: {}, setTeamNotifications: React.Dispatch<React.SetStateAction<{}>>}} */
+export const AppContext = createContext({})
+
+export const socket = io(import.meta.env.VITE_SERVER_ORIGIN, {
+  withCredentials: true
+})
+
 
 /**
  * Used to set the value of `globals.teamsCache` using the response from `loadTeams()` in `teamsHandler.js`
@@ -24,17 +32,7 @@ export function cacheTeams(teams) {
   return obj;
 }
 
-const socket = io(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
-  auth: {
-    token: localStorage.getItem("harmony_peer_token"),
-  },
-});
-
 export const peer = new Peer({ socket });
-
-peer.addEventListener("connectionError", (cb) => {
-  getPeerAuthToken(cb);
-});
 
 peer.addEventListener("usersChanged", () => {
   if (
