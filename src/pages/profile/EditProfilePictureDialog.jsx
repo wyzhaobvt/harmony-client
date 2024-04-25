@@ -51,8 +51,8 @@ export function EditProfilePictureDialog({ profilePicture, handleSetProfilePictu
 
   const handleFileDelete = async () => {
     handleSetProfilePicture(image);
-    const data = deleteAvatar(profilePicture);
-
+    const data = await deleteAvatar(profilePicture);
+    
     if (!data.success) {
       console.log(data.message);
       return;
