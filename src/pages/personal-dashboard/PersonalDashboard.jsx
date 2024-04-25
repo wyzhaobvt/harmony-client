@@ -104,7 +104,7 @@ function PersonalDashboard() {
 
   return (
     <>
-      <div className="flex justify-center h-screen md:w-5/6 xl:w-10/12">
+      <div className="flex justify-center h-screen w-full md:w-5/6 xl:w-10/12">
         <div className="w-screen flex justify-center px-2">
           <div className="content-body flex w-full">
             <div className="chat xl:me-3 w-full h-5/6 flex flex-col">
