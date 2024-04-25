@@ -15,7 +15,7 @@ const handleClick = (event) => {
   event.stopPropagation();
 };
 
-const VerticalMenu = ({ handleRemoveFriend }) => {
+const VerticalMenu = ({ handleRemoveFriend, username }) => {
   return (
     <Dialog>
       <DropdownMenu>
@@ -35,6 +35,7 @@ const VerticalMenu = ({ handleRemoveFriend }) => {
       <RemoveFriendDialog
         handleRemoveFriend={handleRemoveFriend}
         handleClick={handleClick}
+        username={username}
       />
     </Dialog>
   );

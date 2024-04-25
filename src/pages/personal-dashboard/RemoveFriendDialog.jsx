@@ -9,7 +9,7 @@ import {
   DialogClose
 } from "@/components/ui/dialog";
 
-export default function RemoveFriendDialog({ handleRemoveFriend, handleClick }) {
+export default function RemoveFriendDialog({ handleRemoveFriend, handleClick, username }) {
   const dialogRef = useRef(null);
 
   useEffect(() => {
@@ -35,10 +35,10 @@ export default function RemoveFriendDialog({ handleRemoveFriend, handleClick }) 
       ref={dialogRef}
       onClick={handleClick}
     >
-      <DialogHeader className="text-left">
-        <DialogTitle>Remove friend</DialogTitle>
+      <DialogHeader className="text-left mb-4">
+        <DialogTitle className="mb-4">Remove Friend</DialogTitle>
         <DialogDescription>
-          Select a jpg/jpeg or png image file to be your profile picture.
+          Are you sure you want to remove {username} as your friend?
         </DialogDescription>
       </DialogHeader>
       <DialogFooter>

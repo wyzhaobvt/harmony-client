@@ -118,6 +118,7 @@ const ChatCanvas = ({
                       handleRemoveFriend={() =>
                         handleRemoveFriend(friend.email)
                       }
+                      username={friend.username}
                     />
                   </div>
                 </div>
