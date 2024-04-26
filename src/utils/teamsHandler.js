@@ -1,5 +1,3 @@
-import exp from "constants";
-
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export function createTeam({ teamName }) {
@@ -19,7 +17,15 @@ export function createTeam({ teamName }) {
       return { success: false, message: error };
     });
 }
-
+/**
+ * Adds a user to a team. Does not send a request.
+ * 
+ * **use createTeamRequest instead**
+ * 
+ * @param {*} param0 
+ * @returns 
+ * @deprecated
+ */
 export function addToTeam({ teamUid, teamName, targetEmail }) {
   if (!teamName || !teamUid || !targetEmail) throw new Error("Missing Property")
   return fetch(url + "/api/database/addToTeam", {

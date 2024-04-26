@@ -2,10 +2,10 @@ const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 /**
  * Creates a new team request
- * @param {{targetEmail: string, teamName: string, teamId: string}} param0
+ * @param {{targetEmail: string, teamName: string, teamUid: string}} param0
  * @returns {Promise<{success: boolean, message: string}>}
  */
-export async function createTeamRequest({targetEmail, teamName, teamId}) {
+export async function createTeamRequest({targetEmail, teamName, teamUid}) {
   try {
     const response = await fetch(`${url}/api/database/createTeamRequest`, {
       method: "POST",
@@ -16,7 +16,7 @@ export async function createTeamRequest({targetEmail, teamName, teamId}) {
       body: JSON.stringify({
         targetEmail,
         teamName,
-        teamID: teamId
+        teamUID: teamUid
       })
     });
 
