@@ -54,28 +54,22 @@ function Textarea({ placeholder, className, addMessage,sendMessage,peerUsername,
   //   });
   //   setText("");
   // };
-useEffect(()=>{
-  console.log(text)
-},[text])
+
   return (
     <div className="relative  flex flex-col chat-input-container border dark:border-white mx-3">
       <textarea
-  value={text}
-  onChange={(e) => setText(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage(username, peerUsername, text);
-      setText("");
-    } else if (e.key === "Enter" && e.shiftKey) {
-      e.preventDefault();
-      const newText = text.substring(0, e.target.selectionStart) + "\n" + text.substring(e.target.selectionEnd);
-      setText(newText);
-    }
-  }}
-  placeholder={placeholder}
-  className={`${className} w-full md:min-h-32 p-2 mb-10 bg-background rounded-lg resize-none focus:outline-none pr-20`}
-/>
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(username, peerUsername, text)
+            setText("")
+          }
+        }}
+        placeholder={placeholder}
+        className={`${className} w-full md:min-h-32 p-2 mb-10 bg-background  rounded-lg resize-none focus:outline-none pr-20`}
+      />
       
       <div className="icons">
         <div className="absolute left-3 bottom-3 transform space-x-2 flex items-center">
