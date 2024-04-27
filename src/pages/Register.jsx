@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
-import { register } from "../utils/db";
+import { register } from "../utils/authHandler";
 
 const Register = () => {
   const [inputData, setInputData] = useState({
@@ -40,14 +40,12 @@ const Register = () => {
 
   const [isPasswordMatch, setIsPasswordMatch] = useState(null);
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
-  const [isHiddenConfirmPassword, setIsHiddenConfirmPassword] = useState(true);
+  const [serverResponse, setServerResponse] = useState(null);
+
+  const navigate = useNavigate();
 
   const handlePasswordVisibility = () => {
     setIsHiddenPassword((prev) => !prev);
-  };
-
-  const handleConfirmPasswordVisibility = () => {
-    setIsHiddenConfirmPassword((prev) => !prev);
   };
 
   const handleOnChange = (event) => {
@@ -55,10 +53,6 @@ const Register = () => {
       ...prev,
       [event.target.name]: event.target.value,
     }));
-  };
-
-  const handlePasswordOnChange = (event) => {
-    setCheckedPassword(checkValidPassword(event.target.value));
   };
 
   const handleSubmit = (event) => {
@@ -71,21 +65,24 @@ const Register = () => {
       setErrors((prev) => ({ ...prev, [field]: value ? false : true }));
     });
 
+    setCheckedPassword(checkValidPassword(inputData.password));
+
     inputData.password !== inputData.confirmPassword
       ? setIsPasswordMatch(false)
       : setIsPasswordMatch(true);
+
+    setServerResponse(null);
   };
 
-  const finishSubmit = () => {
-    register({ email: inputData.email, password: inputData.password }).then(
-      (data) => {
-        if (!data.success) {
-          setLoginError(data.message);
-          return;
-        }
-        navigate("/");
-      }
-    );
+  const finishSubmit = async () => {
+    const data = await register(inputData.username, inputData.email, inputData.password);
+    setServerResponse({ error: !data.success, message: data.message });
+
+    if (!data.success) {
+      return;
+    }
+
+    navigate("/");
   };
 
   useEffect(() => {
@@ -141,7 +138,7 @@ const Register = () => {
                   placeholder="Email"
                   onChange={handleOnChange}
                   className={
-                    errors.email && "border-red-500 dark:border-red-400"
+                    (errors.email || serverResponse?.error) && "border-red-500 dark:border-red-400"
                   }
                 />
                 {/* Error for Email field */}
@@ -149,6 +146,7 @@ const Register = () => {
                   error={errors.email}
                   message="Email field is required"
                 />
+                <StatusMessage error={serverResponse?.error} message={serverResponse?.message} />
               </div>
               {/* Password */}
               <div className="flex flex-col space-y-1.5">
@@ -159,12 +157,9 @@ const Register = () => {
                     id="password"
                     name="password"
                     placeholder="Password"
-                    onChange={(event) => {
-                      handleOnChange(event);
-                      handlePasswordOnChange(event);
-                    }}
+                    onChange={handleOnChange}
                     className={
-                      errors.password || isPasswordMatch === false
+                      (errors.password || isPasswordMatch === false || checkedPassword.error)
                         ? "border-red-500 dark:border-red-400 pr-10"
                         : "pr-10"
                     }
@@ -185,7 +180,7 @@ const Register = () => {
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <div className="relative">
                   <Input
-                    type={isHiddenConfirmPassword ? "password" : "text"}
+                    type={isHiddenPassword ? "password" : "text"}
                     id="confirmPassword"
                     name="confirmPassword"
                     placeholder="Confirm Password"
@@ -197,8 +192,8 @@ const Register = () => {
                     }
                   />
                   <PasswordVisibilityToggle
-                    isHidden={isHiddenConfirmPassword}
-                    handleToggle={handleConfirmPasswordVisibility}
+                    isHidden={isHiddenPassword}
+                    handleToggle={handlePasswordVisibility}
                   />
                 </div>
                 {/* Error for Confirm Password field */}

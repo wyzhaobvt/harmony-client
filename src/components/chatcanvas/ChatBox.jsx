@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Textarea from "./TextareaChatCanvas";
 import axios from "axios";
-import { getUser } from "../../utils/db";
+import { getUser } from "../../utils/authHandler";
 import { io } from "socket.io-client";
-import { peer } from "../../utils/globals";
 
 const socket = io(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
-  auth: {
-    token: localStorage.getItem("harmony_peer_token"),
-  },
+    withCredentials: true
 });
-console.log(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN);
 socket.on("connect", () => {
   console.log("Client - Socket connection established:", socket.connected);
 });
@@ -49,7 +45,6 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
           }
         );
         // Update state with chat messages
-        console.log(response);
         const messages = response.data.data[0];
         setChatMessage(messages);
         setIsEditing(Array(messages.length).fill(false));
@@ -133,7 +128,6 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
         console.log(chatMessage);
       }
     });
-
     // Clean up the event listener when the component unmounts
     return () => {
       socket.off("delete message");

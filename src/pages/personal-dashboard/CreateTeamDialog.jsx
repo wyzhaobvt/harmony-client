@@ -10,9 +10,42 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-const CreateTeamDialog = () => {
+import { useState } from "react";
+import { createTeam, loadTeams } from "../../utils/teamsHandler";
+import globals from "../../utils/globals";
+const CreateTeamDialog = ({ setTeams }) => {
+  const [open, setOpen] = useState(false);
+  const [teamName, setTeamName] = useState("");
+  const [error, setError] = useState("");
+
+  function handleInputChange(event) {
+    setTeamName(event.target.value);
+  }
+
+  function handleSubmitClick(event) {
+    if (!teamName) {
+      setError("Invalid Team Name");
+      return;
+    }
+
+    createTeam({ teamName }).then((data) => {
+      if (!data.success) {
+        event.preventDefault();
+        setError(data.message);
+        return;
+      }
+      loadTeams().then((data) => {
+        data.data.forEach((team) => {
+          globals.teamsCache[team.uid] = team;
+        });
+        setTeams(data.data);
+        setOpen(false);
+      });
+    });
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button>
           <svg
@@ -37,7 +70,16 @@ const CreateTeamDialog = () => {
             <Label htmlFor="name" className="text-right">
               Team Name
             </Label>
-            <Input id="name" value="?" className="col-span-3" />
+            <Input
+              id="name"
+              placeholder="Enter Team Name"
+              defaultValue={teamName}
+              className="col-span-3"
+              onChange={handleInputChange}
+            />
+            {error && (
+              <small className="ml-1 text-red-500 font-semibold">{error}</small>
+            )}
           </div>
         </div>
         <DialogFooter className="sm:justify-between">
@@ -50,7 +92,11 @@ const CreateTeamDialog = () => {
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit" className="md:w-[130px] mb-2 md:mb-0">
+          <Button
+            type="submit"
+            className="md:w-[130px] mb-2 md:mb-0"
+            onClick={handleSubmitClick}
+          >
             Create
           </Button>
         </DialogFooter>

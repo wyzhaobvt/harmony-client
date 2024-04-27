@@ -13,24 +13,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import StatusMessage from "../components/ui/status-message";
 import PasswordVisibilityToggle from "../components/ui/password-visibility-toggle";
-import { login } from "../utils/db";
+import { login } from "../utils/authHandler";
 
 const Login = () => {
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
   });
-  
+
   const [errors, setErrors] = useState({
     email: null,
     password: null,
   });
   
-  const [loginError, setLoginError] = useState(null);
+  const [serverResponse, setServerResponse] = useState(null);
   
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handlePasswordVisibility = () => {
     setIsHiddenPassword((prev) => !prev);
@@ -52,18 +52,19 @@ const Login = () => {
       const value = inputData[field];
       setErrors((prev) => ({ ...prev, [field]: value ? false : true }));
     });
+
+    setServerResponse(null);
   };
 
-  const finishSubmit = () => {
-    login({ email: inputData.email, password: inputData.password }).then(
-      (data) => {
-        if (!data.success) {
-          setLoginError(data.message);
-          return;
-        }
-        navigate("/")
-      }
-    );
+  const finishSubmit = async () => {
+    const data = await login(inputData.email, inputData.password);
+    setServerResponse({ error: !data.success, message: data.message });
+
+    if (!data.success) {
+      return;
+    }
+
+    navigate("/");
   };
 
   useEffect(() => {
@@ -136,7 +137,7 @@ const Login = () => {
                   error={errors.password}
                   message="Password field is required"
                 />
-                <StatusMessage error={loginError} message={loginError} />
+                <StatusMessage error={serverResponse?.error} message={serverResponse?.message} />
               </div>
               {/* Log in Button */}
               <div className="flex justify-end mt-3">
