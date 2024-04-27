@@ -9,9 +9,7 @@ const ChatCanvas = ({ setindividualChatOpen, chatListOpen, setChatListOpen,setSe
         setindividualChatOpen(true);
       };
       
-      useEffect(() => {
-        console.log(selectedFriend);
-      }, [selectedFriend]);
+ 
     const [friends, setFriends] = useState([
         {
             name: "testuser1@email.com",

@@ -117,7 +117,6 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
       // Find the index of the deleted message in the chatMessage state array
       const messageIndex = chatMessage.findIndex((msg) => msg.id === messageId);
       console.log(chatMessage);
-      console.log(messageIndex);
       if (messageIndex !== -1) {
         // Create a copy of the chatMessage state array
         const updatedChatMessage = [...chatMessage];
