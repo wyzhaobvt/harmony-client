@@ -3,7 +3,7 @@ import Textarea from "./TextareaChatCanvas";
 import axios from "axios";
 import { getUser } from "../../utils/authHandler";
 import { io } from "socket.io-client";
-
+import { ProfilePicture } from "../ProfilePicture"; 
 const socket = io(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
     withCredentials: true
 });
@@ -13,6 +13,7 @@ socket.on("connect", () => {
 socket.on("error", (error) => {
   console.error("Client - Socket connection error:", error);
 });
+
 
 const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
   const individualChatClickHandler = () => {
@@ -273,12 +274,10 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
       <div className="flex flex-col chat-canvas  w-[75vw] md:w-[350px] dark:bg-black text-primary pb-2">
         <div className=" border-b p-1 md:p-3 flex items-center justify-between">
           <div className="flex items-center ">
-            <img
-              src="assets\\img\\pexels-andrea-piacquadio-774909.jpg"
-              className="rounded-full w-10 h-10 object-cover flex-shrink-0 "
-            ></img>
-
-            <h1 className="text-xl ml-3">{selectedFriend}</h1>
+            {/* User avatar */}
+            <ProfilePicture image={selectedFriend.profileURL} />
+            {/* Username */}
+            <h1 className="text-xl ml-3 break-all">{selectedFriend.username}</h1>
           </div>
           <button className="me-3" onClick={individualChatClickHandler}>
             <svg

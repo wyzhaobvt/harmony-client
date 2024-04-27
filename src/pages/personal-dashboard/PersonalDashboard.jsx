@@ -18,7 +18,7 @@ function PersonalDashboard() {
   const [date, setDate] = React.useState(new Date());
   const [individualChatOpen, setindividualChatOpen] = useState(false);
   const [chatListOpen, setChatListOpen] = useState(false);
-  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [selectedFriend, setSelectedFriend] = useState({});
   const [friendInvites, setFriendInvites] = useState([
     {
       name: "Bob Johnson",
@@ -239,7 +239,10 @@ function PersonalDashboard() {
         </div>
       </div>
       {individualChatOpen ? (
-        <ChatBox setindividualChatOpen={setindividualChatOpen} selectedFriend={selectedFriend}/>
+        <ChatBox
+          setindividualChatOpen={setindividualChatOpen}
+          selectedFriend={selectedFriend}
+        />
       ) : (
         <ChatCanvas
           setindividualChatOpen={setindividualChatOpen}
