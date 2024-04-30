@@ -48,8 +48,6 @@ function Teams({ name, owned, link, uid, updateTeams }) {
   function handleInviteMember(targetEmail) {
     return createTeamRequest({ teamName: name, teamUid: uid, targetEmail }).then(
       (data) => {
-        if (!data.success)
-          console.error("Failed to invite member:", data.message);
         return data;
       }
     );
@@ -58,8 +56,6 @@ function Teams({ name, owned, link, uid, updateTeams }) {
   function handleRemoveMember(targetEmail) {
     return removeTeamLink({ teamName: name, teamUid: uid, targetEmail }).then(
       (data) => {
-        if (!data.success)
-          console.error("Failed to remove member:", data.message);
         return data;
       }
     );

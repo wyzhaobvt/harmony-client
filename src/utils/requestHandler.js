@@ -21,6 +21,10 @@ export async function createTeamRequest({targetEmail, teamName, teamUid}) {
     });
 
     const result = await response.json();
+
+    if (!result.success) {
+      return result;
+    }
     
     return {
       success: result.success,

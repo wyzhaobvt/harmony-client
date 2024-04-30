@@ -22,7 +22,7 @@ const InviteMembers = ({inviteMember}) => {
   function handleSendInvite() {
     if (!email) return
     inviteMember(email).then(data=>{
-      if (!data.success) setError("Failed to add user to team")
+      if (!data.success) setError(data.message)
     })
   }
 
