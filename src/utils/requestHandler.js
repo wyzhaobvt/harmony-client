@@ -111,7 +111,7 @@ export async function resolveTeamRequest({accepted, requestUid}) {
 
 /**
  * Creates a new friend request
- * @param {{targetEmail: string, teamName: string, teamId: string}} param0
+ * @param {{targetEmail: string}} param0
  * @returns {Promise<{success: boolean, message: string}>}
  */
 export async function createFriendRequest({ targetEmail }) {
@@ -128,6 +128,10 @@ export async function createFriendRequest({ targetEmail }) {
     });
 
     const result = await response.json();
+
+    if (!result.success) {
+      return result;
+    }
     
     return {
       success: result.success,
