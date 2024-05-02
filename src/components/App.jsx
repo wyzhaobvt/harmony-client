@@ -67,6 +67,14 @@ function App() {
       });
     }
 
+    function onTeamRequestReceived({ team }) {
+      toast({
+        title: "Team Request Received",
+        description: `'${team}' has invited you to join`,
+        className: "px-3 py-1",
+      });
+    }
+
     function onCallInvite({ socketId, username }, accept, decline) {
       setCallAlert(
         <CallRequestAlert
@@ -130,7 +138,8 @@ function App() {
     socket.on("update:file_added", onFileAdded);
     socket.on("update:file_removed", onFileRemoved);
     socket.on("update:new_friend_request", onFriendRequestReceived);
-
+    socket.on("update:new_team_request", onTeamRequestReceived);
+    
     return () => {
       peer.removeEventListener("callInvite", onCallInvite);
       peer.removeEventListener("receivingChanged", onReceivingChanged);
@@ -140,6 +149,7 @@ function App() {
       socket.off("update:file_added", onFileAdded);
       socket.off("update:file_removed", onFileRemoved);
       socket.off("update:new_friend_request", onFriendRequestReceived);
+      socket.off("update:new_team_request", onTeamRequestReceived);
     };
   }, [location]);
   return (

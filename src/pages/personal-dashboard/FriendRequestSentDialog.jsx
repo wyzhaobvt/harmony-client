@@ -9,7 +9,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
-const FriendRequestSentDialog = ({ onClick, errorMessage }) => {
+const FriendRequestSentDialog = ({ onClick, errorMessage, inviteMember }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -26,8 +26,7 @@ const FriendRequestSentDialog = ({ onClick, errorMessage }) => {
         <div className="grid gap-4 py-4">
           <div className="">
             <h2>
-              {errorMessage ||
-                "Your friend request has been sent to Charlie Brown."}
+              {errorMessage ? `Failed to send request to ${inviteMember}` : `Request sent to ${inviteMember}`}
             </h2>
           </div>
         </div>

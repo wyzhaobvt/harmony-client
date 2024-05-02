@@ -11,19 +11,23 @@ import {
 import { Input } from "@/components/ui/input";
 import FriendRequestSentDialog from "./FriendRequestSentDialog";
 import { useState } from "react";
-const InviteMembers = ({inviteMember}) => {
-  const [email, setEmail] = useState("")
-  const [error, setError] = useState("")
+const InviteMembers = ({ inviteMember }) => {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
   function handleInputChange(event) {
-    setEmail(event.target.value)
+    setEmail(event.target.value);
   }
 
   function handleSendInvite() {
-    if (!email) return
-    inviteMember(email).then(data=>{
-      if (!data.success) setError(data.message)
-    })
+    if (!email) return;
+    inviteMember(email).then((data) => {
+      if (!data.success) {
+        setError(data.message);
+        return
+      }
+      setError("");
+    });
   }
 
   return (
@@ -33,15 +37,19 @@ const InviteMembers = ({inviteMember}) => {
           Invite Members
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="max-w-[300px] md:max-w-[425px] rounded-md"
-      >
+      <DialogContent className="max-w-[300px] md:max-w-[425px] rounded-md">
         <DialogHeader>
           <DialogTitle>Add User</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="">
-            <Input id="name" placeholder={"Enter Users Email"} value={email} onChange={handleInputChange} className="col-span-3" />
+            <Input
+              id="name"
+              placeholder={"Enter Users Email"}
+              value={email}
+              onChange={handleInputChange}
+              className="col-span-3"
+            />
           </div>
         </div>
         <DialogFooter className="sm:justify-between">
@@ -54,7 +62,11 @@ const InviteMembers = ({inviteMember}) => {
               Cancel
             </Button>
           </DialogClose>
-          <FriendRequestSentDialog onClick={handleSendInvite} errorMessage={error}/>
+          <FriendRequestSentDialog
+            onClick={handleSendInvite}
+            errorMessage={error}
+            inviteMember={email}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

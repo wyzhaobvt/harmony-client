@@ -69,11 +69,13 @@ function PersonalDashboard() {
     socket.on("update:new_friend_request", updateFriendRequests);
     socket.on("update:accept_friend_request", updateFriendRequests);
     socket.on("update:reject_friend_request", updateFriendRequests);
+    socket.on("update:new_team_request", updateTeamInvites);
 
     return () => {
       socket.off("update:new_friend_request", updateFriendRequests);
       socket.off("update:accept_friend_request", updateFriendRequests);
       socket.off("update:reject_friend_request", updateFriendRequests);
+      socket.off("update:new_team_request", updateTeamInvites);
     };
   });
 
@@ -107,6 +109,7 @@ function PersonalDashboard() {
   function handleTeamRequestResolve(accepted, uid) {
     resolveTeamRequest({ accepted, requestUid: uid }).then(() => {
       updateTeamInvites();
+      updateTeams();
     });
   }
 
