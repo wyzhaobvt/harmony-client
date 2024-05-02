@@ -3,7 +3,7 @@ import { Send, SmilePlus, Paperclip } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
-function Textarea({ placeholder, className, addMessage,sendMessage,peerUsername,username}) {
+function Textarea({ placeholder, className, addMessage,handleSendMessage,peerUsername,username}) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, setText] = useState("");
   const emojiPickerRef = useRef(null);
@@ -63,7 +63,7 @@ function Textarea({ placeholder, className, addMessage,sendMessage,peerUsername,
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            sendMessage(username, peerUsername, text)
+            handleSendMessage(text)
             setText("")
           }
         }}
@@ -80,7 +80,7 @@ function Textarea({ placeholder, className, addMessage,sendMessage,peerUsername,
         </div>
         <div className="absolute right-3 bottom-3 transform space-x-2 flex items-center">
           <Send size={24}   onClick={() => {
-    sendMessage(username, peerUsername, text);
+    handleSendMessage(text);
     setText(""); // Clear the text input
   }} />
         </div>

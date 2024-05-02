@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import Textarea from "./TextareaChatCanvas";
-import axios from "axios";
-import { getUser } from "../../utils/authHandler";
-import { io } from "socket.io-client";
-import { ProfilePicture } from "../ProfilePicture"; 
-const socket = io(import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
-    withCredentials: true
-});
-socket.on("connect", () => {
-  console.log("Client - Socket connection established:", socket.connected);
-});
-socket.on("error", (error) => {
-  console.error("Client - Socket connection error:", error);
-});
+import { ProfilePicture } from "../ProfilePicture";
+import {
+  deleteMessage,
+  editChatMessage,
+  editMessage,
+  fetchChatHistory,
+  handleSaveMessage,
+  listenForChatMessages,
+  sendMessage,
+  setupDeleteMessageListener,
+} from "../../utils/userToUserChatHandler";
 
 
 const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
@@ -21,117 +19,47 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
   };
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
-  // const [peerUsername, setPeerUsername] = useState("testuser2@email.com");
   const [chatMessage, setChatMessage] = useState([]);
   const chatListRef = useRef(null); // Ref for the chat list
-  useEffect(() => {
-    const fetchChatHistory = async () => {
-      let fetchusername = await getUser();
-      console.log(fetchusername);
-      localStorage.setItem("username", fetchusername.data[0].username);
-      const username = localStorage.getItem("username");
-      setUsername(username);
-      setUserId(fetchusername.data[0].id);
-      socket.emit("set username", username);
-      try {
-        // Make API call to fetch chat history
-        const response = await axios.get(
-          "http://localhost:5000/api/peerchat/load",
-          {
-            params: {
-              username: username,
-              peerUsername: selectedFriend,
-            },
-            withCredentials: true, // Send cookies with the request if needed
-          }
-        );
-        // Update state with chat messages
-        const messages = response.data.data[0];
-        setChatMessage(messages);
-        setIsEditing(Array(messages.length).fill(false));
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-      }
-    };
+  const [isEditing, setIsEditing] = useState(
+    Array(chatMessage.length).fill(false)
+  );
+  const [editedMessage, setEditMessage] = useState("");
 
-    fetchChatHistory();
+  useEffect(() => {
+    fetchChatHistory(
+      selectedFriend,
+      setUsername,
+      setUserId,
+      setChatMessage,
+      setIsEditing
+    );
   }, [selectedFriend]);
 
   useEffect(() => {
-    socket.on("chat message", async (message) => {
-      console.log("received message:", message);
-      try {
-        // Fetch the latest message from the server
-        const chatHistoryLatestResponse = await axios.get(
-          "http://localhost:5000/api/peerchat/loadlatest",
-          {
-            params: {
-              username: username,
-              peerUsername: selectedFriend,
-            },
-            withCredentials: true,
-          }
-        );
-        const latestMessage = chatHistoryLatestResponse.data.data[0][0];
-        console.log("Latest message:", latestMessage);
-
-        // Update the chat messages state with the latest message
-        setChatMessage((prevChatMessage) => [
-          ...prevChatMessage,
-          latestMessage,
-        ]);
-      } catch (error) {
-        console.log("Error updating message:", error);
-      }
-    });
+    const cleanup = listenForChatMessages(
+      username,
+      selectedFriend,
+      setChatMessage,
+      setIsEditing
+    );
 
     // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("chat message");
-    };
-  }, [username, selectedFriend]); // Added dependencies to useEffect
+    return cleanup;
+  }, [username, selectedFriend, setChatMessage]);
+ 
 
   useEffect(() => {
-    // Socket listener for edit message event
-    socket.on("edit message", ({ messageId, message }) => {
-      // Find the index of the message in the chatMessage state array
-      const messageIndex = chatMessage.findIndex((msg) => msg.id === messageId);
-      if (messageIndex !== -1) {
-        // Create a copy of the chatMessage state array
-        const updatedChatMessage = [...chatMessage];
-        // Update the message content at the found index
-        updatedChatMessage[messageIndex].message = message;
-        // Update the chatMessage state with the updated array
-        setChatMessage(updatedChatMessage);
-      }
-    });
+    editChatMessage(chatMessage, setChatMessage);
+  }, [chatMessage]);
 
-    // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("edit message");
-    };
-  }, [chatMessage]); // Add chatMessage as a dependency to the useEffect hook
-
-  // Add this useEffect hook to listen for delete message events
   useEffect(() => {
-    socket.on("delete message", ({ messageId }) => {
-      // Find the index of the deleted message in the chatMessage state array
-      const messageIndex = chatMessage.findIndex((msg) => msg.id === messageId);
-      console.log(chatMessage);
-      if (messageIndex !== -1) {
-        // Create a copy of the chatMessage state array
-        const updatedChatMessage = [...chatMessage];
-        // Remove the deleted message from the array
-        updatedChatMessage.splice(messageIndex, 1);
-        // Update the chatMessage state with the updated array
-        setChatMessage(updatedChatMessage);
-        console.log(chatMessage);
-      }
-    });
-    // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("delete message");
-    };
+    const cleanupDeleteMessageListener = setupDeleteMessageListener(
+      chatMessage,
+      setChatMessage,
+      setIsEditing
+    );
+    return cleanupDeleteMessageListener;
   }, [chatMessage]);
 
   useEffect(() => {
@@ -141,10 +69,6 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
     }
   }, [chatMessage]);
 
-  const [isEditing, setIsEditing] = useState(
-    Array(chatMessage.length).fill(false)
-  );
-  const [editedMessage, setEditMessage] = useState("");
   const handleChangeMessage = (e) => {
     setEditMessage(e.target.value);
   };
@@ -153,122 +77,48 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
       prevState.map((value, i) => (i === index ? false : value))
     );
   };
-  const handleSave = async (index) => {
-    try {
-      await axios.put(
-        "http://localhost:5000/api/peerchat/edit",
-        {
-          userChatId: chatMessage[index].id,
-          message: editedMessage,
-          userSender: username,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      setChatMessage((prevChatMessage) => {
-        const updatedChatMessage = [...prevChatMessage];
-        updatedChatMessage[index].message = editedMessage;
-        return updatedChatMessage;
-      });
-      socket.emit("edit message", {
-        recipient: selectedFriend,
-        messageId: chatMessage[index].id,
-        message: editedMessage,
-      });
 
-      // Reset isEditing state
-      setIsEditing((prevState) =>
-        prevState.map((value, i) => (i === index ? false : value))
-      );
-    } catch (error) {
-      console.error("Error updating message:", error);
-    }
-    setEditMessage("");
+  const handleSave = async (index) => {
+    await handleSaveMessage(
+      index,
+      chatMessage,
+      editedMessage,
+      username,
+      selectedFriend,
+      setChatMessage,
+      setIsEditing,
+      setEditMessage
+    );
   };
-  useEffect(() => {
-    // Initialize isEditing state dynamically based on chatMessage length
-    setIsEditing(Array(chatMessage.length).fill(false));
-  }, [chatMessage]);
 
   const handleEdit = (index) => {
-    setIsEditing((prevState) =>
-      prevState.map((value, i) => (i === index ? true : false))
-    );
-    setEditMessage(chatMessage[index].message);
+    editMessage(index, chatMessage, setIsEditing, setEditMessage);
   };
-  const sendMessage = async (username, recipient, message) => {
-    // Emit the "chat message" event with the message data
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/peerchat/send",
-        {
-          userSender: username,
-          userReciever: recipient,
-          message: message,
-        },
-        {
-          withCredentials: true, // Send cookies with the request if needed
-        }
-      );
-      if (response.status === 200) {
-        console.log("Message sent successfully.");
-        // After sending the message, fetch the updated chat messages from the database
-        socket.emit("chat message", { recipient, message });
-        const chatHistoryLatestResponse = await axios.get(
-          "http://localhost:5000/api/peerchat/loadlatest",
-          {
-            params: {
-              // username: "testuser2@email.com",
-              // peerUsername: "testuser2@email.com",
-              username: username,
-              peerUsername: selectedFriend,
-            },
-            withCredentials: true, // Send cookies with the request if needed
-          }
-        );
-        const latestMessage = chatHistoryLatestResponse.data.data[0][0];
-        console.log(latestMessage);
-        // Update the chat messages state with the fetched messages
-        if (latestMessage) {
-          setChatMessage((prevChatMessage) => [
-            ...prevChatMessage,
-            latestMessage,
-          ]);
-        }
-      }
-      console.log(chatMessage);
-      // Log the message to the console
-      console.log(`Message sent to ${recipient}: ${message}`);
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
+  const handleSendMessage = async (message) => {
+    await sendMessage(
+      username,
+      selectedFriend,
+      message,
+      setChatMessage,
+      setIsEditing
+    );
   };
-  const handleDelete = async (index, recipient, messageId) => {
+
+  const handleDelete = async (index) => {
     try {
-      await axios.put(
-        "http://localhost:5000/api/peerchat/delete",
-        {
-          userChatId: chatMessage[index].id,
-          userSender: username,
-        },
-        {
-          withCredentials: true,
-        }
+      await deleteMessage(
+        index,
+        chatMessage,
+        setChatMessage,
+        username,
+        selectedFriend,
+        setIsEditing
       );
-      socket.emit("delete message", {
-        recipient: selectedFriend,
-        messageId: chatMessage[index].id,
-      });
-      const updatedChatMessage = [...chatMessage]; // Create a copy
-      updatedChatMessage.splice(index, 1); // Remove the element
-      setChatMessage(updatedChatMessage); // Update state
     } catch (error) {
       console.log("Delete message: " + error);
     }
   };
-
   return (
     <>
       <div className="flex flex-col chat-canvas  w-[75vw] md:w-[350px] dark:bg-black text-primary pb-2">
@@ -277,7 +127,9 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
             {/* User avatar */}
             <ProfilePicture image={selectedFriend.profileURL} />
             {/* Username */}
-            <h1 className="text-xl ml-3 break-all">{selectedFriend.username}</h1>
+            <h1 className="text-xl ml-3 break-all">
+              {selectedFriend.username}
+            </h1>
           </div>
           <button className="me-3" onClick={individualChatClickHandler}>
             <svg
@@ -369,7 +221,7 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
           </div>
 
           <Textarea
-            sendMessage={sendMessage}
+            handleSendMessage={handleSendMessage}
             peerUsername={selectedFriend}
             username={username}
           />
