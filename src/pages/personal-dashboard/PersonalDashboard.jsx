@@ -91,22 +91,7 @@ function PersonalDashboard() {
     },
   ];
 
-//  useEffect(()=>{
-//   const fetchdata = async ()=>{
-//     const response = await axios.get(
-//       'http://localhost:5000/api/peerchat/load',
-//       {
-//         params: {
-//           username: 'testuser1@email.com',
-//           peerUsername: 'testuser2@email.com'
-//         },
-//         withCredentials: true // Send cookies with the request
-//       }
-//     );
-//     console.log(response.data);
-//   }
-//   fetchdata()
-//   },[] )
+
   useEffect(() => {
     updateTeams();
   }, []);
