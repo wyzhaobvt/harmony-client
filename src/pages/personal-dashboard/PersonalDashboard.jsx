@@ -11,8 +11,13 @@ import CreateTeamDialog from "./CreateTeamDialog";
 import ChatCanvas from "../../components/chatcanvas/ChatCanvas";
 import ChatBox from "../../components/chatcanvas/ChatBox";
 import { loadTeams } from "../../utils/teamsHandler";
-import globals from "../../utils/globals";
-import { loadFriendRequests, loadTeamRequests, resolveFriendRequest, resolveTeamRequest } from "../../utils/requestHandler";
+import globals, { socket } from "../../utils/globals";
+import {
+  loadFriendRequests,
+  loadTeamRequests,
+  resolveFriendRequest,
+  resolveTeamRequest,
+} from "../../utils/requestHandler";
 
 function PersonalDashboard() {
   const [date, setDate] = React.useState(new Date());
@@ -60,6 +65,18 @@ function PersonalDashboard() {
     updateFriendRequests();
   }, []);
 
+  useEffect(() => {
+    socket.on("update:new_friend_request", updateFriendRequests);
+    socket.on("update:accept_friend_request", updateFriendRequests);
+    socket.on("update:reject_friend_request", updateFriendRequests);
+
+    return () => {
+      socket.off("update:new_friend_request", updateFriendRequests);
+      socket.off("update:accept_friend_request", updateFriendRequests);
+      socket.off("update:reject_friend_request", updateFriendRequests);
+    };
+  });
+
   function updateTeams() {
     loadTeams().then((data) => {
       data.data.forEach((team) => {
@@ -74,7 +91,7 @@ function PersonalDashboard() {
       setFriendInvites(data.data);
     });
   }
-  
+
   function updateTeamInvites() {
     loadTeamRequests().then((data) => {
       setTeamInvites(data.data);
@@ -92,7 +109,7 @@ function PersonalDashboard() {
       updateTeamInvites();
     });
   }
-      
+
   return (
     <>
       <div className="flex justify-center h-screen md:w-5/6 xl:w-10/12">
@@ -165,15 +182,19 @@ function PersonalDashboard() {
                     Friend Invites
                   </h1>
                   <div className="">
-                    {friendInvites.length ? friendInvites.map((invite) => (
-                      <FriendInvites
-                        key={invite.uid}
-                        uid={invite.uid}
-                        name={invite.username}
-                        avatar={invite.profileURL}
-                        resolve={(accepted) => handleFriendRequestResolve(accepted, invite.uid)}
-                      />
-                    )) : "No Invites"}
+                    {friendInvites.length
+                      ? friendInvites.map((invite) => (
+                          <FriendInvites
+                            key={invite.uid}
+                            uid={invite.uid}
+                            name={invite.username}
+                            avatar={invite.profileURL}
+                            resolve={(accepted) =>
+                              handleFriendRequestResolve(accepted, invite.uid)
+                            }
+                          />
+                        ))
+                      : "No Invites"}
                   </div>
                 </div>
                 <div className="team-invites rounded-md border border-input p-4 md:flex-1 overflow-y-auto h-1/2 md:h-full">
@@ -181,9 +202,18 @@ function PersonalDashboard() {
                     Team Invites
                   </h1>
                   <div className="">
-                    {teamInvites.length ? teamInvites.map((invite) => (
-                      <TeamInvites key={invite.uid} name={invite.team.name} uid={invite.uid} resolve={(accepted) => handleTeamRequestResolve(accepted, invite.uid)} />
-                    )) : "No Invites"}
+                    {teamInvites.length
+                      ? teamInvites.map((invite) => (
+                          <TeamInvites
+                            key={invite.uid}
+                            name={invite.team.name}
+                            uid={invite.uid}
+                            resolve={(accepted) =>
+                              handleTeamRequestResolve(accepted, invite.uid)
+                            }
+                          />
+                        ))
+                      : "No Invites"}
                   </div>
                 </div>
               </div>

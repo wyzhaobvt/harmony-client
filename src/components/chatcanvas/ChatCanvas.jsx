@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 import { loadFriendsList, deleteFriend } from "../../utils/userToUserHandler";
 import { ProfilePicture } from "../ProfilePicture";
 import VerticalMenu from "./VerticalMenu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import QuickDialog from "../QuickDialog";
+import { createFriendRequest } from "../../utils/requestHandler";
+import { socket } from "../../utils/globals";
 
 const ChatCanvas = ({
   setindividualChatOpen,
   chatListOpen,
   setChatListOpen,
-  setSelectedFriend
+  setSelectedFriend,
 }) => {
   const chatListHandler = () => {
     setChatListOpen((prevState) => !prevState);
@@ -15,6 +20,10 @@ const ChatCanvas = ({
   const individualChatClickHandler = () => {
     setindividualChatOpen(true);
   };
+
+  const [targetEmail, setTargetEmail] = useState("");
+
+  const [addFriendError, setAddFriendError] = useState("");
 
   const [friends, setFriends] = useState([]);
 
@@ -30,6 +39,12 @@ const ChatCanvas = ({
 
   useEffect(() => {
     loadFriends();
+
+    
+    socket.on("update:accept_friend_request", loadFriends);
+    return () => {
+      socket.off("update:accept_friend_request", loadFriends);
+    }
   }, []);
 
   const handleRemoveFriend = async (email) => {
@@ -42,6 +57,16 @@ const ChatCanvas = ({
     // Update friends list
     const updatedFriends = friends.filter((friend) => friend.email !== email);
     setFriends(updatedFriends);
+  };
+
+  async function handleSendFriendRequest() {
+    if (!targetEmail) {
+      return {
+        success: false,
+        message: "Please enter a valid email address"
+      };
+    }
+    return await createFriendRequest({targetEmail: targetEmail})
   }
 
   return (
@@ -130,10 +155,34 @@ const ChatCanvas = ({
             )}
           </div>
           <div className="flex justify-center mt-1">
-            {/* Add Friend button */}
-            <button className="bg-primary text-primary-foreground p-2 mb-2 rounded-md w-11/12">
-              Add Friend
-            </button>
+            <QuickDialog
+              title="Send Friend Request"
+              message={addFriendError}
+              body={
+                <Input type="email" placeholder="Enter email address" onChange={(e) => setTargetEmail(e.target.value)} />
+              }
+              onConfirm={async (event) => {
+                const data = await handleSendFriendRequest();
+                if (!data.success) {
+                  setAddFriendError(data.message);
+                  return;
+                }
+
+                setAddFriendError("Successfully sent friend request to " + targetEmail);
+                setTimeout(()=>{
+                  event.close();
+                }, 1000)
+              }}
+              onClose={()=>{
+                setTargetEmail("");
+                setAddFriendError("");
+              }}
+              trigger={
+                <Button className="p-2 mb-2 rounded-md w-11/12">
+                  Add Friend
+                </Button>
+              }
+            />
           </div>
         </div>
       )}

@@ -31,7 +31,7 @@ function App() {
   }, [location]);
 
   useEffect(() => {
-    const path = location.pathname.split("/").slice(1)
+    const path = location.pathname.split("/").slice(1);
     function onNewMessage({ team }) {
       setTeamNotifications((prev) => {
         const obj = { ...prev };
@@ -56,6 +56,14 @@ function App() {
       setTeamUpdated((prev) => {
         const obj = { [team]: (prev[team] || 0) + 1 };
         return obj;
+      });
+    }
+
+    function onFriendRequestReceived({ username }) {
+      toast({
+        title: "Friend Request Received",
+        description: `${username} has sent you a friend request`,
+        className: "px-3 py-1",
       });
     }
 
@@ -92,8 +100,8 @@ function App() {
       }
     }
 
-    function onFileAdded({ team, filename, user }) { 
-      if (path[0] === "files" && path[1] === team) return
+    function onFileAdded({ team, filename, user }) {
+      if (path[0] === "files" && path[1] === team) return;
       toast({
         title: "File Added",
         description: `${user} added '${filename}' to ${
@@ -104,7 +112,7 @@ function App() {
     }
 
     function onFileRemoved({ team, filename, user }) {
-      if (path[0] === "files" && path[1] === team) return
+      if (path[0] === "files" && path[1] === team) return;
       toast({
         title: "File Removed",
         description: `${user} removed '${filename}' from ${
@@ -121,6 +129,7 @@ function App() {
     socket.on("update:deleted_message", onDeletedMessage);
     socket.on("update:file_added", onFileAdded);
     socket.on("update:file_removed", onFileRemoved);
+    socket.on("update:new_friend_request", onFriendRequestReceived);
 
     return () => {
       peer.removeEventListener("callInvite", onCallInvite);
@@ -130,6 +139,7 @@ function App() {
       socket.off("update:deleted_message", onDeletedMessage);
       socket.off("update:file_added", onFileAdded);
       socket.off("update:file_removed", onFileRemoved);
+      socket.off("update:new_friend_request", onFriendRequestReceived);
     };
   }, [location]);
   return (
