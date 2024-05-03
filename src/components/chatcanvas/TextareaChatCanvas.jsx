@@ -3,7 +3,7 @@ import { Send, SmilePlus, Paperclip } from "lucide-react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
-function Textarea({ placeholder, className, addMessage,handleSendMessage,peerUsername,username}) {
+function Textarea({ placeholder, className, addMessage,handleSendMessage}) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, setText] = useState("");
   const emojiPickerRef = useRef(null);
