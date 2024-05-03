@@ -223,8 +223,6 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
 
           <Textarea
             handleSendMessage={handleSendMessage}
-            peerUsername={selectedFriend}
-            username={username}
           />
         </div>
       </div>
