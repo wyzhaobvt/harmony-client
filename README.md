@@ -50,3 +50,12 @@ Run `npm run build -- --outDir {your/server/directory}/dist`
   - file editing / viewing
 - Dropdown menu on "Dashboard" button in sidebar
   - Lists all teams with chat and call buttons next their team name
+- More customization options
+  - theme editor
+  - team background images
+- Team project boards (kanban)
+- Additions to profile page
+- Video Call background blur
+- Audio Call background noise cancellation
+- Adjust users' audio volume in calls
+- Calendar
