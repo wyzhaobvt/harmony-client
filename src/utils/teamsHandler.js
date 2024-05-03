@@ -1,10 +1,10 @@
 import exp from "constants";
 
-const url = import.meta.env.VITE_TEAM_SERVER_ORIGIN;
+const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 export function createTeam({ teamName }) {
   if (!teamName) throw new Error("Missing Property")
-  return fetch(url + "/createTeam", {
+  return fetch(url + "/api/database/createTeam", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -22,7 +22,7 @@ export function createTeam({ teamName }) {
 
 export function addToTeam({ teamUid, teamName, targetEmail }) {
   if (!teamName || !teamUid || !targetEmail) throw new Error("Missing Property")
-  return fetch(url + "/addToTeam", {
+  return fetch(url + "/api/database/addToTeam", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -41,7 +41,7 @@ export function addToTeam({ teamUid, teamName, targetEmail }) {
 }
 
 export function loadTeams() {
-  return fetch(url + "/loadJoinedTeams", {
+  return fetch(url + "/api/database/loadJoinedTeams", {
     method: "GET",
     credentials: "include",
   })
@@ -53,7 +53,7 @@ export function loadTeams() {
 
 export function removeTeamLink({ teamUid, teamName, targetEmail }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
-  return fetch(url + "/removeTeamLink", {
+  return fetch(url + "/api/database/removeTeamLink", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -73,7 +73,7 @@ export function removeTeamLink({ teamUid, teamName, targetEmail }) {
 
 export function leaveTeam({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
-  return fetch(url + "/leaveTeam", {
+  return fetch(url + "/api/database/leaveTeam", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -92,7 +92,7 @@ export function leaveTeam({ teamUid, teamName }) {
 
 export function updateTeamName({ teamUid, teamNameOld, teamNameNew }) {
   if (!teamUid || !teamNameOld || !teamNameNew ) throw new Error("Missing Property")
-  return fetch(url + "/updateTeamName", {
+  return fetch(url + "/api/database/updateTeamName", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -112,7 +112,7 @@ export function updateTeamName({ teamUid, teamNameOld, teamNameNew }) {
 
 export function deleteTeam({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
-  return fetch(url + "/deleteTeam", {
+  return fetch(url + "/api/database/deleteTeam", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -131,7 +131,7 @@ export function deleteTeam({ teamUid, teamName }) {
 
 export function loadMembers({ teamUid, teamName }) {
   if (!teamName || !teamUid) throw new Error("Missing Property")
-  return fetch(url + "/loadTeamMemberList", {
+  return fetch(url + "/api/database/loadTeamMemberList", {
     method: "POST",
     credentials: "include",
     headers: {

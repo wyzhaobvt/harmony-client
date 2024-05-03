@@ -80,7 +80,6 @@ function DashboardCalendar({date, setDate, groupName}) {
   };
 
   const [events, setEvents] = useState([])
-  console.log(events);
   
   const [eventForm, setEventForm] = useState({
     calendar: groupName,

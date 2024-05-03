@@ -25,8 +25,6 @@ export async function login(email, password) {
     if (result.success) {
       globals.email = email;
       localStorage.setItem("harmony_email", email);
-      const token = await getPeerAuthToken();
-      peer.authToken = token;
     }
 
     return result;
@@ -58,8 +56,6 @@ export async function register(username, email, password) {
     if (result.success) {
       globals.email = email;
       localStorage.setItem("harmony_email", email);
-      const token = await getPeerAuthToken();
-      peer.authToken = token;
     }
 
     return result;
@@ -76,7 +72,7 @@ export async function logout() {
     const response = await fetch(url + "/api/users/logoutUser", {
       method: "POST",
       credentials: "include",
-    });
+    })
 
     const result = await response.json();
 
@@ -167,29 +163,6 @@ export const deleteAvatar = async (avatarLink) => {
 
     const result = await response.json();
     return result;
-  } catch (error) {
-    return {
-      success: false,
-      message: `An error occurred: ${error.message}`,
-    };
-  }
-};
-
-export async function getPeerAuthToken(callback) {
-  try {
-    const response = await fetch(url + "/api/database/peer/authenticate", {
-      credentials: "include",
-    });
-
-    if (response.status !== 200) throw response.statusText;
-
-    const result = await response.json();
-
-    if (!result.success) return result.data;
-    localStorage.setItem("harmony_peer_token", result.data);
-    if (typeof callback === "function") callback(result.data);
-
-    return result.data;
   } catch (error) {
     return {
       success: false,
