@@ -27,8 +27,9 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
   const [editedMessage, setEditMessage] = useState("");
 
   useEffect(() => {
+    
     fetchChatHistory(
-      selectedFriend,
+      selectedFriend.username,
       setUsername,
       setUserId,
       setChatMessage,
@@ -39,7 +40,7 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
   useEffect(() => {
     const cleanup = listenForChatMessages(
       username,
-      selectedFriend,
+      selectedFriend.username,
       setChatMessage,
       setIsEditing
     );
@@ -84,7 +85,7 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
       chatMessage,
       editedMessage,
       username,
-      selectedFriend,
+      selectedFriend.username,
       setChatMessage,
       setIsEditing,
       setEditMessage
@@ -98,7 +99,7 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
   const handleSendMessage = async (message) => {
     await sendMessage(
       username,
-      selectedFriend,
+      selectedFriend.username,
       message,
       setChatMessage,
       setIsEditing
@@ -112,7 +113,7 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
         chatMessage,
         setChatMessage,
         username,
-        selectedFriend,
+        selectedFriend.username,
         setIsEditing
       );
     } catch (error) {

@@ -99,7 +99,7 @@ const ChatCanvas = ({
                   className="chat-button border border-input rounded-md flex p-3 mb-2 flex-col relative ms-5 dark:bg-black text-primary"
                   onClick={() => {
                     individualChatClickHandler();
-                    setSelectedFriend(friend.username);
+                    setSelectedFriend(friend);
                   }}
                   key={index}
                 >
