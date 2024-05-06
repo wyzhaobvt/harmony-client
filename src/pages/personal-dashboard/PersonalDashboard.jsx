@@ -10,6 +10,7 @@ import TeamInvites from "./TeamInvites";
 import CreateTeamDialog from "./CreateTeamDialog";
 import ChatCanvas from "../../components/chatcanvas/ChatCanvas";
 import ChatBox from "../../components/chatcanvas/ChatBox";
+import axios from "axios";
 import { loadTeams } from "../../utils/teamsHandler";
 import globals from "../../utils/globals";
 
@@ -89,6 +90,7 @@ function PersonalDashboard() {
       time: "5:30 PM",
     },
   ];
+
 
   useEffect(() => {
     updateTeams();
@@ -232,6 +234,7 @@ function PersonalDashboard() {
           chatListOpen={chatListOpen}
           setChatListOpen={setChatListOpen}
           setSelectedFriend={setSelectedFriend}
+          selectedFriend={selectedFriend}
         />
       )}
     </>
