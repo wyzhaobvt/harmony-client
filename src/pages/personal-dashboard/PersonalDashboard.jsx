@@ -12,59 +12,22 @@ import ChatCanvas from "../../components/chatcanvas/ChatCanvas";
 import ChatBox from "../../components/chatcanvas/ChatBox";
 import axios from "axios";
 import { loadTeams } from "../../utils/teamsHandler";
-import globals from "../../utils/globals";
+import globals, { socket } from "../../utils/globals";
+import {
+  loadFriendRequests,
+  loadTeamRequests,
+  resolveFriendRequest,
+  resolveTeamRequest,
+} from "../../utils/requestHandler";
 
 function PersonalDashboard() {
   const [date, setDate] = React.useState(new Date());
   const [individualChatOpen, setindividualChatOpen] = useState(false);
   const [chatListOpen, setChatListOpen] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState({});
-  const [friendInvites, setFriendInvites] = useState([
-    {
-      name: "Bob Johnson",
-      avatar: "assets\\img\\pexels-justin-shaifer-1222271.jpg",
-    },
-    {
-      name: "Alice Smith",
-      avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
-    },
-    {
-      name: "Charlie Brown",
-      avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
-    },
-    {
-      name: "Bob Johnson",
-      avatar: "assets\\img\\pexels-justin-shaifer-1222271.jpg",
-    },
-    {
-      name: "Alice Smith",
-      avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
-    },
-    {
-      name: "Charlie Brown",
-      avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
-    },
-    {
-      name: "Alice Smith",
-      avatar: "assets\\img\\pexels-andrea-piacquadio-774909.jpg",
-    },
-    {
-      name: "Charlie Brown",
-      avatar: "assets\\img\\pexels-nitin-khajotia-1516680.jpg",
-    },
-  ]);
+  const [friendInvites, setFriendInvites] = useState([]);
 
-  const [teamInvites, setTeamInvites] = useState([
-    {
-      name: "DIY Facial Reconstruction",
-    },
-    {
-      name: "Risk-Averse Plastic Surgeons",
-    },
-    {
-      name: "Forgetful dentists",
-    },
-  ]);
+  const [teamInvites, setTeamInvites] = useState([]);
 
   const [teams, setTeams] = useState(Object.values(globals.teamsCache));
 
@@ -94,7 +57,29 @@ function PersonalDashboard() {
 
   useEffect(() => {
     updateTeams();
+  }, [teamInvites]);
+
+  useEffect(() => {
+    updateTeamInvites();
   }, []);
+
+  useEffect(() => {
+    updateFriendRequests();
+  }, []);
+
+  useEffect(() => {
+    socket.on("update:new_friend_request", updateFriendRequests);
+    socket.on("update:accept_friend_request", updateFriendRequests);
+    socket.on("update:reject_friend_request", updateFriendRequests);
+    socket.on("update:new_team_request", updateTeamInvites);
+
+    return () => {
+      socket.off("update:new_friend_request", updateFriendRequests);
+      socket.off("update:accept_friend_request", updateFriendRequests);
+      socket.off("update:reject_friend_request", updateFriendRequests);
+      socket.off("update:new_team_request", updateTeamInvites);
+    };
+  });
 
   function updateTeams() {
     loadTeams().then((data) => {
@@ -102,6 +87,31 @@ function PersonalDashboard() {
         globals.teamsCache[team.uid] = team;
       });
       setTeams(data.data);
+    });
+  }
+
+  function updateFriendRequests() {
+    loadFriendRequests().then((data) => {
+      setFriendInvites(data.data);
+    });
+  }
+
+  function updateTeamInvites() {
+    loadTeamRequests().then((data) => {
+      setTeamInvites(data.data);
+    });
+  }
+
+  function handleFriendRequestResolve(accepted, uid) {
+    resolveFriendRequest({ accepted, requestUid: uid }).then(() => {
+      updateFriendRequests();
+    });
+  }
+
+  function handleTeamRequestResolve(accepted, uid) {
+    resolveTeamRequest({ accepted, requestUid: uid }).then(() => {
+      updateTeamInvites();
+      updateTeams();
     });
   }
 
@@ -157,9 +167,9 @@ function PersonalDashboard() {
                 </div>
                 <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar">
                   {teams.length
-                    ? teams.map((team, index) => (
+                    ? teams.map((team) => (
                         <Teams
-                          key={index}
+                          key={team.uid}
                           name={team.name}
                           owned={team.owned}
                           link={team.teamCallLink}
@@ -177,13 +187,19 @@ function PersonalDashboard() {
                     Friend Invites
                   </h1>
                   <div className="">
-                    {friendInvites.map((invite, index) => (
-                      <FriendInvites
-                        key={index}
-                        name={invite.name}
-                        avatar={invite.avatar}
-                      />
-                    ))}
+                    {friendInvites.length
+                      ? friendInvites.map((invite) => (
+                          <FriendInvites
+                            key={invite.uid}
+                            uid={invite.uid}
+                            name={invite.username}
+                            avatar={invite.profileURL}
+                            resolve={(accepted) =>
+                              handleFriendRequestResolve(accepted, invite.uid)
+                            }
+                          />
+                        ))
+                      : "No Invites"}
                   </div>
                 </div>
                 <div className="team-invites rounded-md border border-input p-4 md:flex-1 overflow-y-auto h-1/2 md:h-full">
@@ -191,9 +207,18 @@ function PersonalDashboard() {
                     Team Invites
                   </h1>
                   <div className="">
-                    {teamInvites.map((invite, index) => (
-                      <TeamInvites key={index} name={invite.name} />
-                    ))}
+                    {teamInvites.length
+                      ? teamInvites.map((invite) => (
+                          <TeamInvites
+                            key={invite.uid}
+                            name={invite.team.name}
+                            uid={invite.uid}
+                            resolve={(accepted) =>
+                              handleTeamRequestResolve(accepted, invite.uid)
+                            }
+                          />
+                        ))
+                      : "No Invites"}
                   </div>
                 </div>
               </div>

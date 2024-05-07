@@ -15,12 +15,12 @@ const ManageMembersDialog = ({ removeMember, getMembers }) => {
 
   useEffect(() => {
     getMembers().then((data) => setMembers(data));
-  }, []);
+  }, [members]);
 
   function handleRemoveConfirm(email) {
     setMembers((prev) => {
       const obj = [...prev];
-      obj.find((e) => e.email === email).removed = true;
+      obj.filter((e) => e.email !== email);
       return obj;
     });
     removeMember(email);
@@ -74,7 +74,7 @@ const ManageMembersDialog = ({ removeMember, getMembers }) => {
                               <Trash2Icon className="text-red-500 w-5 h-5" />
                             </Button>
                           }
-                          onConfirm={handleRemoveConfirm}
+                          onConfirm={() => handleRemoveConfirm(member.email)}
                           destructive
                         />
                       </div>
