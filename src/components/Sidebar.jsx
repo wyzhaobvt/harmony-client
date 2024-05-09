@@ -32,18 +32,18 @@ const links = [
     name: "Dashboard",
     path: "/",
   },
-  {
-    icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
-    name: "Groups",
-    path: "/group",
-  },
-  {
-    icon: (
-      <ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
-    ),
-    name: "Chat",
-    path: "/chat",
-  },
+  // {
+  //   icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
+  //   name: "Groups",
+  //   path: "/group",
+  // },
+  // {
+  //   icon: (
+  //     <ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
+  //   ),
+  //   name: "Chat",
+  //   path: "/chat",
+  // },
   {
     icon: <FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "File Management",
@@ -54,11 +54,11 @@ const links = [
     name: "Video Chat",
     path: "/video",
   },
-  {
-    icon: <CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
-    name: "Calendar",
-    path: "/calendar",
-  },
+  // {
+  //   icon: <CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
+  //   name: "Calendar",
+  //   path: "/calendar",
+  // },
   {
     icon: (
       <CircleUserRoundIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
