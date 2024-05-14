@@ -84,19 +84,38 @@ body ::-webkit-scrollbar-thumb:hover {
 
 
 .from-me {
+  /* color: white;  */
+  align-self: flex-end;
+  margin-right:10px;
+  justify-content: flex-end;
+}
+.from-me-message {
   color: white; 
   background: #0B93F6;
   align-self: flex-end;
   margin-right:10px
 }
+.from-me-button{
+  justify-content: flex-end;
+}
 
 .from-them {
+  /* background: #E5E5EA; */
+  /* color: black; */
+  align-self: flex-start;
+  margin-left: 20px;
+  justify-content: flex-start;
+}
+
+.from-them-message {
   background: #E5E5EA;
   color: black;
   align-self: flex-start;
   margin-left: 20px;
 }
-
+.from-them-button{
+  justify-content: flex-start;
+}
 
 .scrollable-div {
   overflow: auto;

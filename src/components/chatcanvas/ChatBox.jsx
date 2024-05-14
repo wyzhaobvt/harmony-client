@@ -1,9 +1,124 @@
+import { useEffect, useRef, useState } from "react";
 import Textarea from "./TextareaChatCanvas";
-import { ProfilePicture } from "../ProfilePicture"; 
+import { ProfilePicture } from "../ProfilePicture";
+import {
+  deleteMessage,
+  editChatMessage,
+  editMessage,
+  fetchChatHistory,
+  handleSaveMessage,
+  listenForChatMessages,
+  sendMessage,
+  setupDeleteMessageListener,
+} from "../../utils/userToUserChatHandler";
+
 
 const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
   const individualChatClickHandler = () => {
     setindividualChatOpen(false);
+  };
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
+  const [chatMessage, setChatMessage] = useState([]);
+  const chatListRef = useRef(null); // Ref for the chat list
+  const [isEditing, setIsEditing] = useState(
+    Array(chatMessage.length).fill(false)
+  );
+  const [editedMessage, setEditMessage] = useState("");
+
+  useEffect(() => {
+    
+    fetchChatHistory(
+      selectedFriend.username,
+      setUsername,
+      setUserId,
+      setChatMessage,
+      setIsEditing
+    );
+  }, [selectedFriend]);
+
+  useEffect(() => {
+    const cleanup = listenForChatMessages(
+      username,
+      selectedFriend.username,
+      setChatMessage,
+      setIsEditing
+    );
+
+    // Clean up the event listener when the component unmounts
+    return cleanup;
+  }, [username, selectedFriend, setChatMessage]);
+ 
+
+  useEffect(() => {
+    editChatMessage(chatMessage, setChatMessage);
+  }, [chatMessage]);
+
+  useEffect(() => {
+    const cleanupDeleteMessageListener = setupDeleteMessageListener(
+      chatMessage,
+      setChatMessage,
+      setIsEditing
+    );
+    return cleanupDeleteMessageListener;
+  }, [chatMessage]);
+
+  useEffect(() => {
+    // Scroll to bottom when chatMessage state changes
+    if (chatListRef.current) {
+      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+    }
+  }, [chatMessage]);
+
+  const handleChangeMessage = (e) => {
+    setEditMessage(e.target.value);
+  };
+  const handleCancel = (index) => {
+    setIsEditing((prevState) =>
+      prevState.map((value, i) => (i === index ? false : value))
+    );
+  };
+
+  const handleSave = async (index) => {
+    await handleSaveMessage(
+      index,
+      chatMessage,
+      editedMessage,
+      username,
+      selectedFriend.username,
+      setChatMessage,
+      setIsEditing,
+      setEditMessage
+    );
+  };
+
+  const handleEdit = (index) => {
+    editMessage(index, chatMessage, setIsEditing, setEditMessage);
+  };
+
+  const handleSendMessage = async (message) => {
+    await sendMessage(
+      username,
+      selectedFriend.username,
+      message,
+      setChatMessage,
+      setIsEditing
+    );
+  };
+
+  const handleDelete = async (index) => {
+    try {
+      await deleteMessage(
+        index,
+        chatMessage,
+        setChatMessage,
+        username,
+        selectedFriend.username,
+        setIsEditing
+      );
+    } catch (error) {
+      console.log("Delete message: " + error);
+    }
   };
   return (
     <>
@@ -13,7 +128,9 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
             {/* User avatar */}
             <ProfilePicture image={selectedFriend.profileURL} />
             {/* Username */}
-            <h1 className="text-xl ml-3 break-all">{selectedFriend.username}</h1>
+            <h1 className="text-xl ml-3 break-all">
+              {selectedFriend.username}
+            </h1>
           </div>
           <button className="me-3" onClick={individualChatClickHandler}>
             <svg
@@ -34,65 +151,79 @@ const ChatBox = ({ setindividualChatOpen, selectedFriend }) => {
         </div>
 
         <div className="mt-3 h-[75vh] scrollable-div ">
-          <div className="flex flex-col chat-list h-4/5 overflow-auto">
-            <div className="flex mb-2 ">
-              <p className="chat-message from-them dark:from-them-dark">
-                Eating eggs on Thursday for choir practice was recommended.
-              </p>
-            </div>
-            <div className="flex flex-row-reverse mb-2">
-              <p className="chat-message from-me">
-                Pantyhose and heels are an interesting choice of attire for the
-                beach.
-              </p>
-            </div>
-            <div className="flex mb-2">
-              <p className="chat-message from-them  ">
-                Eating eggs on Thursday for choir practice was recommended.
-              </p>
-            </div>
-            <div className="flex flex-row-reverse mb-2">
-              <p className="chat-message from-me">
-                Pantyhose and heels are an interesting choice of attire for the
-                beach.
-              </p>
-            </div>
-            <div className="flex mb-2">
-              <p className="chat-message from-them  ">
-                Eating eggs on Thursday for choir practice was recommended.
-              </p>
-            </div>
-            <div className="flex flex-row-reverse mb-2">
-              <p className="chat-message from-me">
-                Pantyhose and heels are an interesting choice of attire for the
-                beach.
-              </p>
-            </div>
-            <div className="flex mb-2">
-              <p className="chat-message from-them  ">
-                Eating eggs on Thursday for choir practice was recommended.
-              </p>
-            </div>
-            <div className="flex flex-row-reverse mb-2">
-              <p className="chat-message from-me">
-                Pantyhose and heels are an interesting choice of attire for the
-                beach.
-              </p>
-            </div>
-            <div className="flex mb-2">
-              <p className="chat-message from-them  ">
-                Eating eggs on Thursday for choir practice was recommended.
-              </p>
-            </div>
-            <div className="flex flex-row-reverse mb-2">
-              <p className="chat-message from-me">
-                Pantyhose and heels are an interesting choice of attire for the
-                beach.
-              </p>
-            </div>
+          <div
+            className="flex flex-col chat-list h-4/5 overflow-auto "
+            ref={chatListRef}
+          >
+            {chatMessage.map((message, index) => (
+              <div
+                className={`flex mb-2  flex-col ${
+                  message.userSender === userId ? "from-me" : "from-them"
+                }`}
+                key={message.id}
+              >
+                {!isEditing[index] ? (
+                  <>
+                    <div
+                      className={`m-0 p-2 rounded-md ${
+                        message.userSender === userId
+                          ? "from-me-message"
+                          : "from-them-message"
+                      }`}
+                    >
+                      {message.message.split("\n").map((line, index) => (
+                        <p
+                          key={index}
+                          className={`p-0 message m-0 dark:from-them-dark`}
+                        >
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                    {message.userSender === userId ? (
+                      <div
+                        className={`flex text-sm ${
+                          message.userSender === userId
+                            ? "from-me-button"
+                            : "from-them-button"
+                        }`}
+                      >
+                        <button
+                          onClick={() => handleEdit(index)}
+                          className="mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(index)}>
+                          Delete
+                        </button>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <textarea
+                      className="border resize-none focus:outline-none dark:bg-black text-primary"
+                      value={editedMessage}
+                      onChange={handleChangeMessage}
+                    />
+                    <div className="flex justify-between text-sm ">
+                      <button onClick={() => handleSave(index)}>Save</button>
+                      <button onClick={() => handleCancel(index)}>
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
           </div>
 
-          <Textarea />
+          <Textarea
+            handleSendMessage={handleSendMessage}
+          />
         </div>
       </div>
     </>

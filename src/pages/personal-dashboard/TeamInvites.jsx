@@ -1,6 +1,6 @@
 import React from "react";
 
-function TeamInvites({ name }) {
+function TeamInvites({ name, resolve}) {
   return (
     <>
       <div className="border border-input rounded-md flex p-2 mb-2 justify-between items-center">
@@ -13,10 +13,10 @@ function TeamInvites({ name }) {
           <h1 className="font-semibold text-sm me-auto text-center">{name}</h1>
         </div>
         <div className="flex flex-col">
-          <button className="bg-primary hover:bg-primary/90 text-sm text-primary-foreground   px-2  mb-2 rounded-lg">
+          <button className="bg-primary hover:bg-primary/90 text-sm text-primary-foreground px-2 mb-2 rounded-lg" onClick={() => resolve(true)}>
             Accept
           </button>
-          <button className="bg-primary hover:bg-destructive text-sm text-primary-foreground  px-2  rounded-lg">
+          <button className="bg-primary hover:bg-destructive text-sm text-primary-foreground px-2 rounded-lg" onClick={() => resolve(false)}>
             Decline
           </button>
         </div>

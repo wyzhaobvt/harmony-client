@@ -2,19 +2,29 @@ import { useState, useEffect } from "react";
 import { loadFriendsList, deleteFriend } from "../../utils/userToUserHandler";
 import { ProfilePicture } from "../ProfilePicture";
 import VerticalMenu from "./VerticalMenu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import QuickDialog from "../QuickDialog";
+import { createFriendRequest } from "../../utils/requestHandler";
+import { socket } from "../../utils/globals";
 
 const ChatCanvas = ({
   setindividualChatOpen,
   chatListOpen,
   setChatListOpen,
-  setSelectedFriend
+  setSelectedFriend,
 }) => {
+    
   const chatListHandler = () => {
     setChatListOpen((prevState) => !prevState);
   };
   const individualChatClickHandler = () => {
     setindividualChatOpen(true);
   };
+
+  const [targetEmail, setTargetEmail] = useState("");
+
+  const [addFriendError, setAddFriendError] = useState("");
 
   const [friends, setFriends] = useState([]);
 
@@ -30,6 +40,12 @@ const ChatCanvas = ({
 
   useEffect(() => {
     loadFriends();
+
+    
+    socket.on("update:accept_friend_request", loadFriends);
+    return () => {
+      socket.off("update:accept_friend_request", loadFriends);
+    }
   }, []);
 
   const handleRemoveFriend = async (email) => {
@@ -42,6 +58,16 @@ const ChatCanvas = ({
     // Update friends list
     const updatedFriends = friends.filter((friend) => friend.email !== email);
     setFriends(updatedFriends);
+  };
+
+  async function handleSendFriendRequest() {
+    if (!targetEmail) {
+      return {
+        success: false,
+        message: "Please enter a valid email address"
+      };
+    }
+    return await createFriendRequest({targetEmail: targetEmail})
   }
 
   return (
@@ -61,8 +87,8 @@ const ChatCanvas = ({
             <path
               d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
               fill="currentColor"
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
             ></path>
           </svg>
           <h1 className="text-sm md:text-xl md:ms-5">Friends</h1>
@@ -84,8 +110,8 @@ const ChatCanvas = ({
               <path
                 d="M3.13523 8.84197C3.3241 9.04343 3.64052 9.05363 3.84197 8.86477L7.5 5.43536L11.158 8.86477C11.3595 9.05363 11.6759 9.04343 11.8648 8.84197C12.0536 8.64051 12.0434 8.32409 11.842 8.13523L7.84197 4.38523C7.64964 4.20492 7.35036 4.20492 7.15803 4.38523L3.15803 8.13523C2.95657 8.32409 2.94637 8.64051 3.13523 8.84197Z"
                 fill="currentColor"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
             <h1 className="text-sm md:text-xl md:ms-5">Friends</h1>
@@ -130,10 +156,34 @@ const ChatCanvas = ({
             )}
           </div>
           <div className="flex justify-center mt-1">
-            {/* Add Friend button */}
-            <button className="bg-primary text-primary-foreground p-2 mb-2 rounded-md w-11/12">
-              Add Friend
-            </button>
+            <QuickDialog
+              title="Send Friend Request"
+              message={addFriendError}
+              body={
+                <Input type="email" placeholder="Enter email address" onChange={(e) => setTargetEmail(e.target.value)} />
+              }
+              onConfirm={async (event) => {
+                const data = await handleSendFriendRequest();
+                if (!data.success) {
+                  setAddFriendError(data.message);
+                  return;
+                }
+
+                setAddFriendError("Successfully sent friend request to " + targetEmail);
+                setTimeout(()=>{
+                  event.close();
+                }, 1000)
+              }}
+              onClose={()=>{
+                setTargetEmail("");
+                setAddFriendError("");
+              }}
+              trigger={
+                <Button className="p-2 mb-2 rounded-md w-11/12">
+                  Add Friend
+                </Button>
+              }
+            />
           </div>
         </div>
       )}

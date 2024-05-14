@@ -1,5 +1,3 @@
-import exp from "constants";
-
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
 /**
