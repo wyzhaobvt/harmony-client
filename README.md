@@ -11,30 +11,36 @@ This is the client repo for the Harmony app built for Bay Valley Tech.
 - Calendar sync with Google Calendar
 
 
-## Setup
+## Installation
 
-Run `npm install`
+1. Clone the repo
+2. Run `npm install`
+3. Run `npm run dev` to start the development server
+4. Open http://localhost:5173
+5. Setup [server](https://github.com/Sillor/harmony-server)
 
 ### Environment Config
 
 - If maintaining this project, copy contents of `.env.local.example` to a new file named `.env.local`. Don't delete `.env.local.example`
 
-- If cloning this project, you can rename `.env.local.example` to `.env.local` or follow the previous option
+- Otherwise, you can rename `.env.local.example` to `.env.local` or follow the previous option
 
 `VITE_SIGNALING_SERVER_ORIGIN` is only used when `import.meta.env.MODE !== "production"`. Used for connecting to a server not hosted on your machine. It should be the same as `VITE_SERVER_ORIGIN`, unless you want to connect to an external server.
 
-```env
-VITE_SERVER_ORIGIN="http://localhost:5000"
-VITE_SIGNALING_SERVER_ORIGIN="http://localhost:5000"
+```py
+# Server origins
+# OK:  http://localhost:5000
+# BAD: http://localhost:5000/
+VITE_SERVER_ORIGIN=""
+
+# Only used when not in "production" mode
+VITE_SIGNALING_SERVER_ORIGIN=""
+
+# EXAMPLE
+# VITE_SERVER_ORIGIN="http://localhost:5000"
+# VITE_SIGNALING_SERVER_ORIGIN="https://example.com/signaling"
 ```
 
-### Server
-
-Setup [server](https://github.com/Sillor/harmony-server)
-
-## Running
-
-Run `npm run dev` and open http://localhost:5173
 
 ## Building
 
