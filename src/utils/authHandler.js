@@ -1,4 +1,4 @@
-import globals, { peer } from "./globals";
+import globals, { peer, socket } from "./globals";
 
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
@@ -31,6 +31,7 @@ export async function login(email, password) {
     if (result.success) {
       globals.email = email;
       localStorage.setItem("harmony_email", email);
+      socket.connect()
     }
 
     return result;

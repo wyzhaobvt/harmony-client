@@ -83,6 +83,7 @@ function PersonalDashboard() {
 
   function updateTeams() {
     loadTeams().then((data) => {
+      if (!data.success) return;
       data.data.forEach((team) => {
         globals.teamsCache[team.uid] = team;
       });
@@ -92,12 +93,14 @@ function PersonalDashboard() {
 
   function updateFriendRequests() {
     loadFriendRequests().then((data) => {
+      if (!data.success) return;
       setFriendInvites(data.data);
     });
   }
 
   function updateTeamInvites() {
     loadTeamRequests().then((data) => {
+      if (!data.success) return;
       setTeamInvites(data.data);
     });
   }
