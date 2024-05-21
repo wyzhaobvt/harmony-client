@@ -21,7 +21,7 @@ export function fileDownload(e, chatId, fileId, fileName){
         credentials: "include"
       })
       .then(res => res.json())
-      .then(body => {
+      .then(json => {
         
         fetch(`${url}/files/download/${id}/${fileId}`,{
             credentials: "include"
@@ -33,7 +33,7 @@ export function fileDownload(e, chatId, fileId, fileName){
               const link = document.createElement('a');
               const url = URL.createObjectURL(blob);
               link.href = url;
-              link.setAttribute("download", body.fileName);
+              link.setAttribute("download", json.fileName);
               document.body.append(link);
               link.click();
           })
