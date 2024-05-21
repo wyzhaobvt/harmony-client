@@ -14,10 +14,10 @@ export async function fetchFileList(chatId) {
     }
 }
 
-export function fileDownload(e, chatId, fileName){
+export function fileDownload(e, chatId, fileName, fileId, type){
     e.preventDefault();
     let id = chatIdCheck(chatId)
-    fetch(`${url}/files/download/${id}/${fileName}`,{
+    fetch(`${url}/files/download/${id}/${fileName}/${fileId}/${type}`,{
       credentials: "include"
     })
     .then(res => {
@@ -40,13 +40,16 @@ export async function fileUpload(data, chatId){
     let formData = new FormData();
     // Append files to formData
     formData.append('file', data);
-    
+    //formData.append('file-uid', )
+    //console.log("upload data", data)
+    //i need to grab the id here and send it to the html 5/20/24
     // Make a fetch POST request
     await fetch(`${url}/files/upload/${id}`, {
       method: 'POST',
       body: formData,
       credentials: "include"
     })
+    .then(data => console.log("upload data", (data)))
     .catch((error) => console.error('Server Error:', error));
 }
 
