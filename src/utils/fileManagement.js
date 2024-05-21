@@ -14,10 +14,12 @@ export async function fetchFileList(chatId) {
     }
 }
 
-export function fileDownload(e, chatId, fileName, fileId, type){
+export function fileDownload(e, chatId, fileId, fileName){
     e.preventDefault();
     let id = chatIdCheck(chatId)
-    fetch(`${url}/files/download/${id}/${fileName}/${fileId}/${type}`,{
+    //query SQL to get file name from file id
+
+    fetch(`${url}/files/download/${id}/${fileId}`,{
       credentials: "include"
     })
     .then(res => {
@@ -32,7 +34,7 @@ export function fileDownload(e, chatId, fileName, fileId, type){
         link.click();
     })
     .catch(err => console.error("Server Error", err))
-}
+} 
 
 export async function fileUpload(data, chatId){
     let id = chatIdCheck(chatId)
