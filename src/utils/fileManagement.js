@@ -14,7 +14,7 @@ export async function fetchFileList(chatId) {
     }
 }
 
-export function fileDownload(e, chatId, fileId, fileName){
+export function fileDownload(e, chatId, fileId){
     e.preventDefault();
     let id = chatIdCheck(chatId)
     fetch(`${url}/files/getFileInfo/${id}/${fileId}`,{
@@ -39,23 +39,6 @@ export function fileDownload(e, chatId, fileId, fileName){
           })
           .catch(err => console.error("Server Error", err))
       })
-      
-/* 
-    fetch(`${url}/files/download/${id}/${fileId}`,{
-      credentials: "include"
-    })
-    .then(res => {
-        return res.blob()
-    })
-    .then(blob => {
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.setAttribute("download", fileName);
-        document.body.append(link);
-        link.click();
-    })
-    .catch(err => console.error("Server Error", err)) */
 } 
 
 export async function fileUpload(data, chatId){
