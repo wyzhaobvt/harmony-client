@@ -47,9 +47,6 @@ VITE_SIGNALING_SERVER_ORIGIN=""
 Run `npm run build -- --outDir {your/server/directory}/dist`
 
 
-
-## Maintaining
-
 ## Future
 
 - Integrate Monaco Editor
