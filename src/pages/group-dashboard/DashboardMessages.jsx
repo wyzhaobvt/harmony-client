@@ -21,6 +21,8 @@ import Picker from '@emoji-mart/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteChat, editChat, loadChat, sendChat } from '../../utils/chatHandler';
 import globals from '../../utils/globals';
+import { fileUpload } from '../../utils/fileManagement';
+import { Input } from "@/components/ui/input";
 
 function MessageText({
   message,
@@ -81,6 +83,7 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
     );
 
   function handleMessageSend({oldMessage, newMessage}) {
+    console.log("handlemessage send",oldMessage, newMessage)
     if (oldMessage === newMessage) return
     editChat({chatUid, teamUid, message: newMessage, teamName: team.name}).then(()=>{
       updateMessages()
@@ -136,10 +139,12 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
   );
 }
 
-function Textarea({ value, placeholder, className, onMessageSend }) {
+function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, setText] = useState(value || "");
+  const [file, setFile] = useState(null);
   const emojiPickerRef = useRef(null);
+  let chatId = useParams().uid;
 
   const handleEmojiSelect = (emoji) => {
     setText(text + emoji.native);
@@ -162,9 +167,12 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
     };
   }, [emojiPickerRef]);
 
-  const sendMessage = async () => {
+  const sendMessage = async (file) => {
     if (typeof onMessageSend !== "function") return
-    onMessageSend({text, setText})
+    let uploadData = await file.uploadData
+    console.log("send message function: ", uploadData)
+    if(uploadData) isFileSet(1)
+    onMessageSend({text, setText}, uploadData)
   }
 
   return (
@@ -175,7 +183,7 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            sendMessage();
+            sendMessage("file");
           }
         }}
         placeholder={placeholder}
@@ -186,10 +194,38 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
           <div className='cursor-pointer' onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
             <SmilePlus size={24} />
           </div >
-          <Paperclip className='cursor-pointer' size={24} />
+          <div className='cursor-pointer relative w-min'>
+            <Input
+              id="importFilePopupElement"
+              type="file"
+              className="cursor-pointer absolute top-0 left-0 w-full h-full opacity-1"
+              onInput={(e) => {
+                const target = e.currentTarget;
+                const f = target.files[0];
+                if (!f) return;
+                setFile({data:f, uid: f.UID});
+                console.log("upload file", file)
+              }}
+            />
+            <Paperclip className='cursor-pointer' size={24} />
+          </div>
+          {file && file.data.name}
         </div>
         <div className="absolute right-3 bottom-3 transform space-x-2 flex items-center">
-          <Send size={24} className='cursor-pointer' onClick={sendMessage} />
+          <Send size={24} className='cursor-pointer' onClick={async () => {
+            console.log("sending message", file.data)
+            await fileUpload(file.data, chatId).then((fileData) => {
+              console.log("upload file////", fileData)
+              setFile((data) => ({...data, uploadData: fileData}))
+              return fileData
+            }).then((fileData) => {
+              console.log("AFTER UPLOAD FILE", fileData.UID)
+              //why isnt this uid going into the send message????
+              //5/22/24 
+              sendMessage('fileData')
+              setFile(null)
+            })
+            }} />
         </div>
       </div>
       {showEmojiPicker && (
@@ -202,10 +238,12 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
 }
 
 function DashboardMessages({date, setDate, messages, setMessages, groupName, messagesContainer, onMessagesScroll}) {
+      const [isFile, isFileSet] = useState(0)
       const {group, uid} = useParams()
       const navigate = useNavigate()
       const addMessage = (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setTimeout(console.log("add message fn", newMessage),2000)
       };
       const team = globals.teamsCache[uid]
 
@@ -213,15 +251,22 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
         loadChat({teamUid: uid, teamName: team.name}).then(data=>{setMessages(data.data)})
       }
 
-      const sendMessage = async ({text, setText}) => {
+      //sendChat is in chatHandler file
+      //add isfile here
+      const sendMessage = async ({text, setText}, file) => {
+        console.log("send message is file in dasshboard messages: ", file)
+        console.log("text send message", text)
         if (!text) return;
-        sendChat({teamUid: uid, teamName: team.name, message: text}).then(()=>{
+        sendChat({teamUid: uid, teamName: team.name, message: text, isFile}).then(()=>{
           updateMessages()
         })
-    
-        addMessage({
+        
+        //this adds to Object[]
+        if(file) addMessage({
           name: globals.email,
           message: text,
+          isFile,
+          fileID: file.UID,
           sentAt: new Date(new Date() + "-06:00").toISOString(),
           profileURL: "",
         });
@@ -256,7 +301,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
                   key={message.uid+Date.now()}
                   teamUid={uid}
                   updateMessages={updateMessages}
-                  chatUid={message.uid}
+                  chatUid={message.uid} 
                   name={message.sender}
                   message={message.message}
                   time={message.sentAt}
@@ -270,6 +315,7 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
             placeholder="Type your message here."
             className="resize-none"
             onMessageSend={sendMessage}
+            isFileSet={isFileSet}
           />
         </div>
     );

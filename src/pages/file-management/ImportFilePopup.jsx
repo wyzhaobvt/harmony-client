@@ -65,6 +65,7 @@ export default function ImportFilePopup({ onFile }) {
                 onInput={(e) => {
                   const target = e.currentTarget;
                   const f = target.files[0];
+                  console.log(f)
                   if (!f) return;
                   setFile(f);
                 }}

@@ -14,6 +14,20 @@ export async function fetchFileList(chatId) {
     }
 }
 
+export async function fileListSortedByLatest(chatId){
+    let id = chatIdCheck(chatId)
+    try {
+        const response = await fetch(`${url}/files/list/${id}`, {
+          credentials: "include"
+        });
+        const data = await response.json();
+        console.log("check files", data.files)
+    } catch (error) {
+        console.error('Server Error:', error);
+        throw error;
+    }
+}
+
 export function fileDownload(e, chatId, fileId){
     e.preventDefault();
     let id = chatIdCheck(chatId)
@@ -47,16 +61,17 @@ export async function fileUpload(data, chatId){
     let formData = new FormData();
     // Append files to formData
     formData.append('file', data);
+
     //formData.append('file-uid', )
-    //console.log("upload data", data)
     //i need to grab the id here and send it to the html 5/20/24
     // Make a fetch POST request
-    await fetch(`${url}/files/upload/${id}`, {
+     return await fetch(`${url}/files/upload/${id}`, {
       method: 'POST',
       body: formData,
       credentials: "include"
     })
-    .then(data => console.log("upload data", (data)))
+    .then(res => res.json())
+    .then(data => data)
     .catch((error) => console.error('Server Error:', error));
 }
 
