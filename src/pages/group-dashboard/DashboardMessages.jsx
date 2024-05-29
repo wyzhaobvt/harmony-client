@@ -67,7 +67,7 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
   const [editing, setEditing] = useState(false)
   const [messageText, setMessageText] = useState(message)
   const team = globals.teamsCache[teamUid]
-  //console.log("messages IN MESSAGE COMPOENNT", fileName, fileUID )
+  
   // Split the message by newline characters and map each line to a JSX element
   const messageLines = messageText.split('\n').map((line, index) => (
     <React.Fragment key={index}>
@@ -145,7 +145,7 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
   );
 }
 
-function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
+function Textarea({ value, placeholder, className, onMessageSend }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, setText] = useState(value || "");
   const [file, setFile] = useState(null);
@@ -207,7 +207,6 @@ function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
                 const f = target.files[0];
                 if (!f) return;
                 setFile({data:f, uid: f.UID});
-                isFileSet(() => 1)
               }}
             />
             <Paperclip className='cursor-pointer' size={24} />
@@ -226,7 +225,6 @@ function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
                 setFile(null)
               })
             } else {
-              isFileSet(0)
               sendMessage()
             }
             }} />
@@ -242,12 +240,10 @@ function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
 }
 
 function DashboardMessages({date, setDate, messages, setMessages, groupName, messagesContainer, onMessagesScroll}) {
-      const [isFile, isFileSet] = useState(0)
       const {group, uid} = useParams()
       const navigate = useNavigate()
       const addMessage = (newMessage) => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
-        setTimeout(console.log("add message fn", newMessage),2000)
       };
       const team = globals.teamsCache[uid]
 
@@ -255,39 +251,20 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
         loadChat({teamUid: uid, teamName: team.name}).then(data=>{setMessages(data.data)})
       }
 
-      //sendChat is in chatHandler file
-      //add isfile here
       const sendMessage = async ({text, setText}, file) => {
-        //5/23/24 Need to add fileuid here so it will be added to database
-        //on retrieval of messages, the backend will use fileuid to obtain the name and send it to front end
-        console.log("check file in sendMessage fn in DashboardMsg",file)
         if (!text) return;
         sendChat({teamUid: uid, teamName: team.name, message: text, fileName: file ? file.data.originalname : null, fileUID: file ? Number(file.UID) : null}).then(()=>{
           updateMessages()
         })
         
-        //this adds to Object[]
-        if(file){
-            let fileUID = Number(file.UID)
-            let fileName = file.data.originalname
-            addMessage({
-            name: globals.email,
-            message: text,
-            isFile,
-            fileUID: fileUID,
-            fileName: fileName,
-            sentAt: new Date(new Date() + "-06:00").toISOString(),
-            profileURL: "",
-          });
-        } else {
-          addMessage({
-            name: globals.email,
-            message: text,
-            isFile,
-            sentAt: new Date(new Date() + "-06:00").toISOString(),
-            profileURL: "",
-          });
-        }
+        addMessage({
+        name: globals.email,
+        message: text,
+        fileUID: file ? Number(file.UID) : null,
+        fileName: file ? file.data.originalname : null,
+        sentAt: new Date(new Date() + "-06:00").toISOString(),
+        profileURL: "",
+        });
         setText('');
       };
 
@@ -335,7 +312,6 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
             placeholder="Type your message here."
             className="resize-none"
             onMessageSend={sendMessage}
-            isFileSet={isFileSet}
           />
         </div>
     );
