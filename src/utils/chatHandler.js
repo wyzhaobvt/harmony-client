@@ -19,9 +19,8 @@ export function loadChat({ teamUid, teamName }) {
     });
 }
 
-export function sendChat({ teamUid, teamName, message, isFile, chatUID}) {
+export function sendChat({ teamUid, teamName, message, fileName, fileUID}) {
   if (!teamUid || !teamName || !message) throw new Error("Missing Property")
-  console.log("send Chat fn", message, isFile)
   return fetch(url + "/api/chat/create", {
     method: "POST",
     credentials: "include",
@@ -32,7 +31,8 @@ export function sendChat({ teamUid, teamName, message, isFile, chatUID}) {
       teamUID: teamUid,
       teamName,
       message,
-      isFile
+      fileName,
+      fileUID
     }),
   })
     .then((res) => res.json())

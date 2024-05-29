@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import './GroupDashboard.css';
-import { Send, SmilePlus, Paperclip } from 'lucide-react';
+import { Send, SmilePlus, Paperclip, ArrowDownToLine } from 'lucide-react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteChat, editChat, loadChat, sendChat } from '../../utils/chatHandler';
 import globals from '../../utils/globals';
-import { fileUpload } from '../../utils/fileManagement';
+import { fileUpload,fileDownload } from '../../utils/fileManagement';
 import { Input } from "@/components/ui/input";
 
 function MessageText({
@@ -63,10 +63,11 @@ function MessageText({
   );
 }
 
-function Message({ teamUid, chatUid, name, message, time, avatar, edited, updateMessages }) {
+function Message({ teamUid, chatUid, name, message, time, avatar, edited, updateMessages, fileName, fileUID }) {
   const [editing, setEditing] = useState(false)
   const [messageText, setMessageText] = useState(message)
   const team = globals.teamsCache[teamUid]
+  //console.log("messages IN MESSAGE COMPOENNT", fileName, fileUID )
   // Split the message by newline characters and map each line to a JSX element
   const messageLines = messageText.split('\n').map((line, index) => (
     <React.Fragment key={index}>
@@ -83,7 +84,6 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
     );
 
   function handleMessageSend({oldMessage, newMessage}) {
-    console.log("handlemessage send",oldMessage, newMessage)
     if (oldMessage === newMessage) return
     editChat({chatUid, teamUid, message: newMessage, teamName: team.name}).then(()=>{
       updateMessages()
@@ -119,7 +119,13 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
           {formattedDate}
           {!!edited && <span>&nbsp;&nbsp;(edited)</span>}
         </p>
-      </div>
+      </div>{
+        fileName &&
+      <span className='mr-2 cursor-pointer h-min'
+      onClick={(e) => fileDownload(e, teamUid, Number(fileUID))}>
+        {fileName}
+          <ArrowDownToLine className='inline-block'/>
+      </span>}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="ml-auto w-6 min-w-6 h-6 p-0" variant="outline">
@@ -169,10 +175,7 @@ function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
 
   const sendMessage = async (file) => {
     if (typeof onMessageSend !== "function") return
-    let uploadData = await file.uploadData
-    console.log("send message function: ", uploadData)
-    if(uploadData) isFileSet(1)
-    onMessageSend({text, setText}, uploadData)
+    onMessageSend({text, setText}, file)
   }
 
   return (
@@ -183,7 +186,7 @@ function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            sendMessage("file");
+            sendMessage();
           }
         }}
         placeholder={placeholder}
@@ -204,27 +207,28 @@ function Textarea({ value, placeholder, className, onMessageSend, isFileSet }) {
                 const f = target.files[0];
                 if (!f) return;
                 setFile({data:f, uid: f.UID});
-                console.log("upload file", file)
+                isFileSet(() => 1)
               }}
             />
             <Paperclip className='cursor-pointer' size={24} />
           </div>
-          {file && file.data.name}
+            {file && <span>{file.data.name}</span>}
         </div>
         <div className="absolute right-3 bottom-3 transform space-x-2 flex items-center">
-          <Send size={24} className='cursor-pointer' onClick={async () => {
-            console.log("sending message", file.data)
-            await fileUpload(file.data, chatId).then((fileData) => {
-              console.log("upload file////", fileData)
-              setFile((data) => ({...data, uploadData: fileData}))
-              return fileData
-            }).then((fileData) => {
-              console.log("AFTER UPLOAD FILE", fileData.UID)
-              //why isnt this uid going into the send message????
-              //5/22/24 
-              sendMessage('fileData')
-              setFile(null)
-            })
+          <Send size={24} className='cursor-pointer' 
+          onClick={async () => {
+            if(file){
+                await fileUpload(file.data, chatId).then((fileData) => {
+                setFile((data) => ({...data, uploadData: fileData}))
+                return fileData
+              }).then((fileData) => {
+                sendMessage(fileData)
+                setFile(null)
+              })
+            } else {
+              isFileSet(0)
+              sendMessage()
+            }
             }} />
         </div>
       </div>
@@ -254,22 +258,36 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
       //sendChat is in chatHandler file
       //add isfile here
       const sendMessage = async ({text, setText}, file) => {
-        console.log("send message is file in dasshboard messages: ", file)
-        console.log("text send message", text)
+        //5/23/24 Need to add fileuid here so it will be added to database
+        //on retrieval of messages, the backend will use fileuid to obtain the name and send it to front end
+        console.log("check file in sendMessage fn in DashboardMsg",file)
         if (!text) return;
-        sendChat({teamUid: uid, teamName: team.name, message: text, isFile}).then(()=>{
+        sendChat({teamUid: uid, teamName: team.name, message: text, fileName: file ? file.data.originalname : null, fileUID: file ? Number(file.UID) : null}).then(()=>{
           updateMessages()
         })
         
         //this adds to Object[]
-        if(file) addMessage({
-          name: globals.email,
-          message: text,
-          isFile,
-          fileID: file.UID,
-          sentAt: new Date(new Date() + "-06:00").toISOString(),
-          profileURL: "",
-        });
+        if(file){
+            let fileUID = Number(file.UID)
+            let fileName = file.data.originalname
+            addMessage({
+            name: globals.email,
+            message: text,
+            isFile,
+            fileUID: fileUID,
+            fileName: fileName,
+            sentAt: new Date(new Date() + "-06:00").toISOString(),
+            profileURL: "",
+          });
+        } else {
+          addMessage({
+            name: globals.email,
+            message: text,
+            isFile,
+            sentAt: new Date(new Date() + "-06:00").toISOString(),
+            profileURL: "",
+          });
+        }
         setText('');
       };
 
@@ -304,6 +322,8 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
                   chatUid={message.uid} 
                   name={message.sender}
                   message={message.message}
+                  fileName={message.fileName}
+                  fileUID={message.fileUID}
                   time={message.sentAt}
                   avatar={message.profileURL}
                   edited={message.edited}
