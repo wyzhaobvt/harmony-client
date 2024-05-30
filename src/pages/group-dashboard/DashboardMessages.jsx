@@ -121,10 +121,10 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
         </p>
       </div>{
         fileName &&
-      <span className='mr-2 cursor-pointer h-min'
+      <span className='mr-2 cursor-pointer h-min text-xs hover:text-lime-400 '
       onClick={(e) => fileDownload(e, teamUid, Number(fileUID))}>
-        {fileName}
-          <ArrowDownToLine className='inline-block'/>
+          <ArrowDownToLine className='inline-block size-4 '/>
+          {fileName}
       </span>}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
