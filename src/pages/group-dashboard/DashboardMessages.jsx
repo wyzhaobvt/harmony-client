@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import './GroupDashboard.css';
-import { Send, SmilePlus, Paperclip } from 'lucide-react';
+import { Send, SmilePlus, Paperclip, ArrowDownToLine } from 'lucide-react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteChat, editChat, loadChat, sendChat } from '../../utils/chatHandler';
 import globals from '../../utils/globals';
+import { fileUpload,fileDownload } from '../../utils/fileManagement';
+import { Input } from "@/components/ui/input";
 
 function MessageText({
   message,
@@ -61,10 +63,11 @@ function MessageText({
   );
 }
 
-function Message({ teamUid, chatUid, name, message, time, avatar, edited, updateMessages }) {
+function Message({ teamUid, chatUid, name, message, time, avatar, edited, updateMessages, fileName, fileUID }) {
   const [editing, setEditing] = useState(false)
   const [messageText, setMessageText] = useState(message)
   const team = globals.teamsCache[teamUid]
+  
   // Split the message by newline characters and map each line to a JSX element
   const messageLines = messageText.split('\n').map((line, index) => (
     <React.Fragment key={index}>
@@ -116,7 +119,13 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
           {formattedDate}
           {!!edited && <span>&nbsp;&nbsp;(edited)</span>}
         </p>
-      </div>
+      </div>{
+        fileName &&
+      <span className='mr-2 cursor-pointer h-min text-xs hover:text-lime-400 '
+      onClick={(e) => fileDownload(e, teamUid, Number(fileUID))}>
+          <ArrowDownToLine className='inline-block size-4 '/>
+          {fileName}
+      </span>}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="ml-auto w-6 min-w-6 h-6 p-0" variant="outline">
@@ -139,7 +148,9 @@ function Message({ teamUid, chatUid, name, message, time, avatar, edited, update
 function Textarea({ value, placeholder, className, onMessageSend }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, setText] = useState(value || "");
+  const [file, setFile] = useState(null);
   const emojiPickerRef = useRef(null);
+  let chatId = useParams().uid;
 
   const handleEmojiSelect = (emoji) => {
     setText(text + emoji.native);
@@ -162,9 +173,9 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
     };
   }, [emojiPickerRef]);
 
-  const sendMessage = async () => {
+  const sendMessage = async (file) => {
     if (typeof onMessageSend !== "function") return
-    onMessageSend({text, setText})
+    onMessageSend({text, setText}, file)
   }
 
   return (
@@ -186,10 +197,37 @@ function Textarea({ value, placeholder, className, onMessageSend }) {
           <div className='cursor-pointer' onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
             <SmilePlus size={24} />
           </div >
-          <Paperclip className='cursor-pointer' size={24} />
+          <div className='cursor-pointer relative w-min'>
+            <Input
+              id="importFilePopupElement"
+              type="file"
+              className="cursor-pointer absolute top-0 left-0 w-full h-full opacity-1"
+              onInput={(e) => {
+                const target = e.currentTarget;
+                const f = target.files[0];
+                if (!f) return;
+                setFile({data:f, uid: f.UID});
+              }}
+            />
+            <Paperclip className='cursor-pointer' size={24} />
+          </div>
+            {file && <span>{file.data.name}</span>}
         </div>
         <div className="absolute right-3 bottom-3 transform space-x-2 flex items-center">
-          <Send size={24} className='cursor-pointer' onClick={sendMessage} />
+          <Send size={24} className='cursor-pointer' 
+          onClick={async () => {
+            if(file){
+                await fileUpload(file.data, chatId).then((fileData) => {
+                setFile((data) => ({...data, uploadData: fileData}))
+                return fileData
+              }).then((fileData) => {
+                sendMessage(fileData)
+                setFile(null)
+              })
+            } else {
+              sendMessage()
+            }
+            }} />
         </div>
       </div>
       {showEmojiPicker && (
@@ -213,17 +251,19 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
         loadChat({teamUid: uid, teamName: team.name}).then(data=>{setMessages(data.data)})
       }
 
-      const sendMessage = async ({text, setText}) => {
+      const sendMessage = async ({text, setText}, file) => {
         if (!text) return;
-        sendChat({teamUid: uid, teamName: team.name, message: text}).then(()=>{
+        sendChat({teamUid: uid, teamName: team.name, message: text, fileName: file ? file.data.originalname : null, fileUID: file ? Number(file.UID) : null}).then(()=>{
           updateMessages()
         })
-    
+        
         addMessage({
-          name: globals.email,
-          message: text,
-          sentAt: new Date(new Date() + "-06:00").toISOString(),
-          profileURL: "",
+        name: globals.email,
+        message: text,
+        fileUID: file ? Number(file.UID) : null,
+        fileName: file ? file.data.originalname : null,
+        sentAt: new Date(new Date() + "-06:00").toISOString(),
+        profileURL: "",
         });
         setText('');
       };
@@ -256,9 +296,11 @@ function DashboardMessages({date, setDate, messages, setMessages, groupName, mes
                   key={message.uid+Date.now()}
                   teamUid={uid}
                   updateMessages={updateMessages}
-                  chatUid={message.uid}
+                  chatUid={message.uid} 
                   name={message.sender}
                   message={message.message}
+                  fileName={message.fileName}
+                  fileUID={message.fileUID}
                   time={message.sentAt}
                   avatar={message.profileURL}
                   edited={message.edited}

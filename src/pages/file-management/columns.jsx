@@ -142,7 +142,7 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem 
               onClick={e => {
-                fileDownload(e, chatId, row.getValue("title"))
+                fileDownload(e, chatId, row.original.fileId, row.getValue("title"))
                 }}>
               <DownloadIcon />
               <div className="ps-2">Save
