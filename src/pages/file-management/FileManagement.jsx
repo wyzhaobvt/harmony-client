@@ -81,14 +81,17 @@ export default function FileManagement() {
   useEffect(() => {
       let emptyArray = [];
       for(let i in fileData.files){
-        let type = fileData.files[i].name.split(".")[1] || 'folder'
-        
+        let fileNameSplit = fileData.files[i].name.split(/-id-(.*?)\./) 
+        let type = fileNameSplit[2] || 'folder'
+        let nameOnly = fileNameSplit[0]
+
         emptyArray.push({
-          title: fileData.files[i].name,
+          title: nameOnly,
           size: fileData.properties[i].size,
           date: fileData.properties[i].birthtimeMs,
           type: type,
-          key: `key${i}`
+          key: `key${i}`,
+          fileId: fileNameSplit[1]
         })
       }
 
@@ -187,7 +190,8 @@ export default function FileManagement() {
                     className="border-input"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id}
+                      id={cell.row.original.fileId}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
