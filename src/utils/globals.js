@@ -6,6 +6,7 @@ const globals = {
   email: localStorage.getItem("harmony_email"),
   teamsCache: {},
 };
+let connectionAttempts = 0;
 
 export default globals;
 
@@ -15,6 +16,17 @@ export const AppContext = createContext({})
 export const socket = io(import.meta.env.MODE === "production" ? import.meta.env.VITE_SERVER_ORIGIN : import.meta.env.VITE_SIGNALING_SERVER_ORIGIN, {
   withCredentials: true
 })
+
+socket.on("connect_error", (err) => {
+  if (err.message === "xhr poll error") {
+    if (connectionAttempts >= 5) {
+      connectionAttempts++;
+      socket.close();
+      console.error("Socket connection failed, socket closed. Refresh page to try again");
+    }
+    connectionAttempts++;
+  }
+});
 
 
 /**
