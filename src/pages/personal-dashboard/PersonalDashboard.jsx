@@ -83,6 +83,7 @@ function PersonalDashboard() {
 
   function updateTeams() {
     loadTeams().then((data) => {
+      if (!data.success) return;
       data.data.forEach((team) => {
         globals.teamsCache[team.uid] = team;
       });
@@ -92,12 +93,14 @@ function PersonalDashboard() {
 
   function updateFriendRequests() {
     loadFriendRequests().then((data) => {
+      if (!data.success) return;
       setFriendInvites(data.data);
     });
   }
 
   function updateTeamInvites() {
     loadTeamRequests().then((data) => {
+      if (!data.success) return;
       setTeamInvites(data.data);
     });
   }
@@ -117,7 +120,7 @@ function PersonalDashboard() {
 
   return (
     <>
-      <div className="flex justify-center h-screen md:w-5/6 xl:w-10/12">
+      <div className="flex justify-center h-screen w-full md:w-5/6 xl:w-10/12">
         <div className="w-screen flex justify-center px-2">
           <div className="content-body flex w-full">
             <div className="chat xl:me-3 w-full h-5/6 flex flex-col">

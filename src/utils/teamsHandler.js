@@ -1,5 +1,10 @@
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
+/**
+ * Used to create a new team
+ * @param {{teamName: string}} param0 
+ * @returns {Promise<{success: boolean; message?: string}>}
+ */
 export function createTeam({ teamName }) {
   if (!teamName) throw new Error("Missing Property")
   return fetch(url + "/api/database/createTeam", {
@@ -17,14 +22,12 @@ export function createTeam({ teamName }) {
       return { success: false, message: error };
     });
 }
+
 /**
- * Adds a user to a team. Does not send a request.
- * 
- * **use createTeamRequest instead**
- * 
- * @param {*} param0 
- * @returns 
- * @deprecated
+ * Used to add a user to a team, does not send a invite
+ * @deprecated use `createTeamRequest` instead
+ * @param {{teamUid: string, teamName: string, targetEmail: string}} param0 
+ * @returns {Promise<{success: boolean; message?: string}>}
  */
 export function addToTeam({ teamUid, teamName, targetEmail }) {
   if (!teamName || !teamUid || !targetEmail) throw new Error("Missing Property")
@@ -36,7 +39,7 @@ export function addToTeam({ teamUid, teamName, targetEmail }) {
     },
     body: JSON.stringify({
       targetEmail: targetEmail,
-      teamID: teamUid,
+      teamUID: teamUid,
       teamName: teamName,
     }),
   })
@@ -46,6 +49,10 @@ export function addToTeam({ teamUid, teamName, targetEmail }) {
     });
 }
 
+/**
+ * Loads all the teams a user is a member or owner of
+ * @returns {Promise<{success: boolean; message?: string}>}
+ */
 export function loadTeams() {
   return fetch(url + "/api/database/loadJoinedTeams", {
     method: "GET",

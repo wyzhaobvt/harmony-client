@@ -2,7 +2,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -10,12 +9,12 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import {
-  HomeIcon,
   ChatBubbleIcon,
   CalendarIcon,
   HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
 import {
+  Camera,
   CircleUserRoundIcon,
   FilesIcon,
   LayoutDashboardIcon,
@@ -33,45 +32,39 @@ const links = [
     name: "Dashboard",
     path: "/",
   },
-  {
-    icon: (
-      <ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
-    ),
-    name: "Chat",
-    path: "/chat",
-  },
-  {
-    icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
-    name: "Groups",
-    path: "/group",
-  },
+  // {
+  //   icon: <UsersIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
+  //   name: "Groups",
+  //   path: "/group",
+  // },
+  // {
+  //   icon: (
+  //     <ChatBubbleIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
+  //   ),
+  //   name: "Chat",
+  //   path: "/chat",
+  // },
   {
     icon: <FilesIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
     name: "File Management",
     path: "/files",
   },
   {
-    icon: <CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
-    name: "Calendar",
-    path: "/calendar",
+    icon: <Camera className="mr-2 h-6 w-6 text-black dark:text-white" />,
+    name: "Video Chat",
+    path: "/video",
   },
+  // {
+  //   icon: <CalendarIcon className="mr-2 h-6 w-6 text-black dark:text-white" />,
+  //   name: "Calendar",
+  //   path: "/calendar",
+  // },
   {
     icon: (
       <CircleUserRoundIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
     ),
     name: "Profile",
     path: "/profile",
-  },
-  {
-    name: "Video Chat",
-    path: "/video",
-  },
-  {
-    icon: (
-      <LayoutDashboardIcon className="mr-2 h-6 w-6 text-black dark:text-white" />
-    ),
-    name: "Personal Dashboard",
-    path: "/personalDashboard",
   },
 ];
 
@@ -84,10 +77,10 @@ function Sidebar() {
     if (!data.success) {
       return;
     }
-    
+
     navigate("/login");
   };
-  
+
   return (
     <>
       <Drawer direction="left">
@@ -109,15 +102,16 @@ function Sidebar() {
             {links.map(({ icon, name, path }, i) => {
               return (
                 <DrawerClose key={i} asChild>
-                  <Link to={path}>
-                    <Button
-                      className="text-lg w-full justify-start px-5 h-10"
-                      variant="ghost"
-                    >
+                  <Button
+                    asChild
+                    className="text-lg w-full justify-start px-5 h-10"
+                    variant="ghost"
+                  >
+                    <Link to={path}>
                       {icon}
                       {name}
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </DrawerClose>
               );
             })}

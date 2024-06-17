@@ -1,4 +1,4 @@
-import globals, { peer } from "./globals";
+import globals, { peer, socket } from "./globals";
 
 const url = import.meta.env.VITE_SERVER_ORIGIN;
 
@@ -6,6 +6,12 @@ export function checkLoggedIn() {
   return localStorage.getItem("harmony_email");
 }
 
+/**
+ * 
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
 export async function login(email, password) {
   try {
     const response = await fetch(url + "/api/users/loginUser", {
@@ -25,6 +31,7 @@ export async function login(email, password) {
     if (result.success) {
       globals.email = email;
       localStorage.setItem("harmony_email", email);
+      socket.connect()
     }
 
     return result;
@@ -36,6 +43,13 @@ export async function login(email, password) {
   }
 }
 
+/**
+ * 
+ * @param {string} username
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
 export async function register(username, email, password) {
   try {
     const response = await fetch(url + "/api/users/registerUser", {
@@ -67,6 +81,10 @@ export async function register(username, email, password) {
   }
 }
 
+/**
+ * 
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
 export async function logout() {
   try {
     const response = await fetch(url + "/api/users/logoutUser", {

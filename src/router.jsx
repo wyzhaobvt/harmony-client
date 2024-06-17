@@ -17,7 +17,7 @@ const redirectToLogin = () => {
 
 const redirectToDashboard = () => {
   const isLoggedIn = checkLoggedIn();
-  if (isLoggedIn) return redirect("/personalDashboard");
+  if (isLoggedIn) return redirect("/");
   return null;
 }
 
@@ -40,12 +40,8 @@ export default createBrowserRouter([
         children: [
           {
             index: true,
-            loader: () => {
-              const isLoggedIn = checkLoggedIn();
-              if (isLoggedIn) return redirect("/personalDashboard");
-              return redirect("/login");
-            },
-            element: <div>Welcome to Harmony!</div>,
+            loader: redirectToLogin,
+            element: <PersonalDashboard />,
           },
           {
             path: "/files/:chatId?/*",
@@ -80,12 +76,7 @@ export default createBrowserRouter([
             path: "/group/:group/:uid",
             element: <GroupDashboard />,
             loader: redirectToLogin
-          },
-          {
-            path: "/personalDashboard",
-            element: <PersonalDashboard />,
-            loader: redirectToLogin
-          },
+          }
         ],
       },
       {
