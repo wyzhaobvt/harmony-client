@@ -85,6 +85,7 @@ export default function FileManagement() {
         let type = fileNameSplit[2] || 'folder'
         let nameOnly = fileNameSplit[0]
 
+        console.log("adding file data to table", fileData.files[i], fileNameSplit)
         emptyArray.push({
           title: nameOnly,
           size: fileData.properties[i].size,

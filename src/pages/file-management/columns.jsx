@@ -163,7 +163,7 @@ export default [
             </DropdownMenuItem>
             <DropdownMenuItem className="text-red-500 focus:text-red-500" 
               onClick={e => {
-                fileDelete(e, chatId, row.getValue("title"), row.original.fileId)
+                fileDelete(e, chatId, row.getValue("title"), row.original.fileId, row.getValue("type"))
  //               window.location.reload();
                 }}>
               <TrashIcon />
