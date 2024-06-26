@@ -151,7 +151,7 @@ export default [
             <DropdownMenuItem 
               onClick={e => {
                 fileDuplicate(e, chatId, row.getValue("title"), row.original.fileId, row.getValue("type"))
-                //window.location.reload();
+                window.location.reload();
                 }}>
               <CopyIcon />
               <div className="ps-2" >Duplicate
@@ -164,7 +164,7 @@ export default [
             <DropdownMenuItem className="text-red-500 focus:text-red-500" 
               onClick={e => {
                 fileDelete(e, chatId, row.getValue("title"), row.original.fileId, row.getValue("type"))
- //               window.location.reload();
+                window.location.reload();
                 }}>
               <TrashIcon />
               <div className="ps-2">Delete</div>

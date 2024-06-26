@@ -76,7 +76,6 @@ export async function fileUpload(data, chatId){
 }
 
 export async function fileDelete(e, chatId, fileName, fileId, fileType){
-    console.log("deleting", fileId)
     let id = chatIdCheck(chatId)
     await fetch(`${url}/files/delete/${id}/${fileName}/${fileId}/${fileType}`, {
         method: 'DELETE',
