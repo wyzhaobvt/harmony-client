@@ -120,7 +120,7 @@ function PersonalDashboard() {
 
   return (
     <>
-      <div className="flex justify-center h-screen w-full md:w-5/6 xl:w-10/12">
+      <div className="flex justify-center h-[calc(100vh-80px)] w-full md:w-5/6 xl:w-10/12">
         <div className="w-screen flex justify-center px-2">
           <div className="content-body flex w-full">
             <div className="chat xl:me-3 w-full h-5/6 flex flex-col">
@@ -168,7 +168,7 @@ function PersonalDashboard() {
                     </Dialog>
                   </div>
                 </div>
-                <div className="chat-messages overflow-y-auto h-[50vh] custom-scrollbar">
+                <div className="chat-messages h-[calc(50vh-130px)] custom-scrollbar">
                   {teams.length
                     ? teams.map((team) => (
                         <Teams
@@ -185,7 +185,7 @@ function PersonalDashboard() {
               </div>
 
               <div className="friend-team-invites flex-1 flex flex-col md:flex-row h-1/3">
-                <div className="friend-invites rounded-md border border-input p-4 md:mr-2 md:flex-1 overflow-y-auto mb-3 h-1/2 md:h-full">
+                <div className="friend-invites rounded-md border border-input p-4 md:mr-2 md:flex-1 overflow-y-auto mb-3 h-full">
                   <h1 className="font-semibold text-xl sm:text-2xl xl:text-2xl me-auto">
                     Friend Invites
                   </h1>
@@ -205,7 +205,7 @@ function PersonalDashboard() {
                       : "No Invites"}
                   </div>
                 </div>
-                <div className="team-invites rounded-md border border-input p-4 md:flex-1 overflow-y-auto h-1/2 md:h-full">
+                <div className="team-invites rounded-md border border-input p-4 md:flex-1 overflow-y-auto h-full">
                   <h1 className="font-semibold text-xl sm:text-2xl xl:text-2xl me-auto">
                     Team Invites
                   </h1>
