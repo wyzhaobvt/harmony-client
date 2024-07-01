@@ -75,9 +75,9 @@ export async function fileUpload(data, chatId){
     .catch((error) => console.error('Server Error:', error));
 }
 
-export async function fileDelete(e, chatId, fileName){
+export async function fileDelete(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/delete/${id}/${fileName}`, {
+    await fetch(`${url}/files/delete/${id}/${fileName}/${fileId}/${fileType}`, {
         method: 'DELETE',
         credentials: "include"
     })
@@ -90,9 +90,9 @@ export async function fileDelete(e, chatId, fileName){
 
 
 
-export async function fileDuplicate(e, chatId, fileName){
+export async function fileDuplicate(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
-    await fetch(`${url}/files/duplicate/${id}/${fileName}`, {
+    await fetch(`${url}/files/duplicate/${id}/${fileName}/${fileId}/${fileType}`, {
         method: 'POST',
         credentials: "include"
     })
@@ -103,10 +103,10 @@ export async function fileDuplicate(e, chatId, fileName){
     .catch((error) => console.error('Server Error:', error));
 }
 
-export async function fileRename(e, chatId, fileName){
+export async function fileRename(e, chatId, fileName, fileId, fileType){
     let id = chatIdCheck(chatId)
     const newFileName = prompt("Enter new file name");
-    await fetch(`${url}/files/rename/${id}/${fileName}`, {
+    await fetch(`${url}/files/rename/${id}/${fileName}/${fileId}/${fileType}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
