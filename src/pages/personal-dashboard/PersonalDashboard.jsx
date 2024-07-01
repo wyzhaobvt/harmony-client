@@ -232,7 +232,7 @@ function PersonalDashboard() {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                className="rounded-md border border-input h-fit mb-3 h-max"
+                className="Calendar-body rounded-md border border-input h-fit mb-3 h-max"
               />
               <div className="day-breakdown rounded-md border border-input p-4 overflow-y-auto">
                 <div className="flex justify-between items-center mb-3">
