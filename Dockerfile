@@ -16,8 +16,8 @@ COPY . /app/
 #Build the Vite application
 RUN npm run build
 
-#Expose the port Vite serves on 3000
-EXPOSE 3000
+#Expose the port Vite serves on 5173
+EXPOSE 5173
 
 #Command to run the Vite development server
 CMD ["npm", "run", "dev"]
