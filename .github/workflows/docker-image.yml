@@ -37,6 +37,9 @@ jobs:
       with:
         push: true
         tags: wyzhaobvt/harmony-client:latest
+        build-args: |
+            VITE_SERVER_ORIGIN=${{ secrets.VITE_SERVER_ORIGIN }}
+            VITE_SIGNALING_SERVER_ORIGIN=${{ secrets.VITE_SIGNALING_SERVER_ORIGIN }}
     - name: SonarQube Scan
       uses: sonarsource/sonarcloud-github-action@master
       env:
